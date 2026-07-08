@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (toggle adds .dark to <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------
+   Design tokens — the single source of truth for both prototypes.
+   Change --accent in one place to re-tint the entire platform.
+   --------------------------------------------------------------- */
+:root {
+  --paper: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #eef0f4;
+  --ink: #0e1116;
+  --ink-soft: #2b313b;
+  --muted: #6a7280;
+  --line: rgba(14, 17, 22, 0.10);
+  --line-strong: rgba(14, 17, 22, 0.18);
+  --accent: #3a5bff;
+  --accent-soft: rgba(58, 91, 255, 0.11);
+  --glow: rgba(58, 91, 255, 0.0);
+  --red: #ff3b30;
+  --bg-tint: rgba(58, 91, 255, 0.05);
+  --particle: 70, 95, 165;
+}
+
+.dark {
+  --paper: #0a0b0d;
+  --surface: #131519;
+  --surface-2: #1b1e24;
+  --ink: #eef0f3;
+  --ink-soft: #cdd1d8;
+  --muted: #878d97;
+  --line: rgba(238, 240, 243, 0.11);
+  --line-strong: rgba(238, 240, 243, 0.20);
+  --accent: #7b93ff;
+  --accent-soft: rgba(123, 147, 255, 0.14);
+  --glow: rgba(123, 147, 255, 0.24);
+  --red: #ff5147;
+  --bg-tint: rgba(96, 124, 255, 0.09);
+  --particle: 150, 172, 255;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Headers get a tighter, more Helvetica-like neo-grotesque; body stays Inter. */
+:root {
+  --font-head: "Helvetica Neue", "Helvetica", "Arial", ui-sans-serif, sans-serif;
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--paper);
+  /* super-subtle cool gradient — a barely-there celestial wash from the top */
+  background-image: radial-gradient(125% 90% at 50% -12%, var(--bg-tint), transparent 58%);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Headers: Helvetica-like grotesque, tightened. Body/everything else = Inter. */
+h1, h2, h3 {
+  font-family: var(--font-head);
+  letter-spacing: -0.022em;
+  font-weight: 600;
+}
+
+/* The red dot in the AC wordmark. */
+.ac-dot {
+  color: var(--red);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+/* The only serif in the system — reserved for the "AC" wordmark. */
+.mark {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-weight: 500;
+}
+
+/* Thin, elegant top-of-viewport rhythm */
+.container-page {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+}
+
+/* Subtle grain/vignette layer for the orbital "museum" feel */
+.field-glow {
+  background:
+    radial-gradient(60% 60% at 50% 42%, var(--accent-soft), transparent 70%);
+}
+
+@keyframes drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* subtle in-place float for orbit nodes — they breathe, they don't travel */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Uses the independent `rotate` property so it never clobbers `transform`
+   (translate/scale) on the same elements. */
+@keyframes orbit-spin {
+  to { rotate: 360deg; }
+}
+@keyframes orbit-spin-rev {
+  to { rotate: -360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; }
+}
