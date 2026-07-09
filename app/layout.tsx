@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import {
+  Fraunces,
+  Inter,
+  Playfair_Display,
+  Cormorant,
+  Libre_Baskerville,
+  Spectral,
+  DM_Serif_Display,
+} from "next/font/google";
 import { ThemeScript } from "@/components/ThemeScript";
 import "./globals.css";
 
@@ -16,6 +24,47 @@ const inter = Inter({
   display: "swap",
 });
 
+// Additional editorial display faces for the in-header font tester.
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+const cormorant = Cormorant({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+const libre = Libre_Baskerville({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-libre",
+  display: "swap",
+});
+const spectral = Spectral({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-spectral",
+  display: "swap",
+});
+const dmSerif = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-dmserif",
+  display: "swap",
+});
+
+const fontVars = [
+  fraunces.variable,
+  inter.variable,
+  playfair.variable,
+  cormorant.variable,
+  libre.variable,
+  spectral.variable,
+  dmSerif.variable,
+].join(" ");
+
 export const metadata: Metadata = {
   title: "AC — Design, Games, Systems & Worlds",
   description:
@@ -28,11 +77,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={fontVars} suppressHydrationWarning>
       <head>
         <ThemeScript />
       </head>
-      <body className={`${fraunces.variable} ${inter.variable} antialiased`}>
+      <body className="antialiased">
         {children}
       </body>
     </html>

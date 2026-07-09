@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { about, community, currentlyBuilding, featured } from "@/lib/content";
+import { StudioControls } from "./StudioControls";
 
 const reveal = {
   initial: { opacity: 0, y: 24 },
@@ -154,6 +155,9 @@ export function Footer() {
           AC<span className="ac-dot">.</span>
         </span>
         <span>The creative universe of one designer. Built to grow for years.</span>
+      </div>
+      <div className="container-page mt-6 flex justify-center sm:justify-end">
+        <StudioControls />
       </div>
     </footer>
   );

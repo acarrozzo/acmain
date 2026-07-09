@@ -1,101 +1,118 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { destinations } from "@/lib/content";
 
-// A calm circular orbit. Each node is a large circle carrying an image that
-// represents its section, with light text over it. On hover the circle lifts
-// and a CTA pill floats up to overlap it generously.
-const R = 36; // orbit radius (% from center)
+// A calm constellation. Each world is a glass orb lit from the central
+// "sun". Hover brings one into focus — it lifts and ignites, a light-spoke
+// draws out from the hub, and the others recede (depth-of-field). The whole
+// field parallaxes gently under the cursor; the orbs never travel, they breathe.
+const R = 40; // orbit radius, % from center
 
 export function OrbitalNav() {
   const [active, setActive] = useState<number | null>(null);
   const focused = active !== null ? destinations[active] : null;
   const n = destinations.length;
+  const parallax = useRef<HTMLDivElement>(null);
+
+  const onMove = (e: React.MouseEvent) => {
+    const el = parallax.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+    const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+    el.style.transform = `translate(${dx * 10}px, ${dy * 10}px)`;
+  };
+
+  const onLeave = () => {
+    setActive(null);
+    if (parallax.current) parallax.current.style.transform = "";
+  };
 
   return (
-    <div className="relative">
-      {/* ---------- Desktop: orbital field ---------- */}
-      <div className="relative mx-auto hidden aspect-square w-[min(36vw,460px)] md:block">
-        {/* concentric guide rings + accent glow */}
-        <div className="pointer-events-none absolute inset-0 grid place-items-center">
-          <div className="field-glow absolute h-[70%] w-[70%] rounded-full blur-2xl" />
-          {[100, 72, 44].map((s) => (
+    <div className="relative w-full">
+      {/* ---------- Desktop: the constellation ---------- */}
+      <div
+        className="relative hidden aspect-square w-full max-w-[520px] md:ml-auto md:block"
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+      >
+        {/* nebula + guide rings — the layer that parallaxes */}
+        <div
+          ref={parallax}
+          className="pointer-events-none absolute inset-0 transition-transform duration-300 ease-out"
+        >
+          <div className="orbit-nebula absolute -inset-[20%]" />
+          {[100, 68, 36].map((s) => (
             <div
               key={s}
-              className="absolute rounded-full border border-line"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-line"
               style={{ width: `${s}%`, height: `${s}%` }}
             />
           ))}
+          <div className="orbit-ring-spin absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 rounded-full" />
         </div>
 
-        {/* nodes — fixed positions */}
-        <div className="absolute inset-0">
-          {destinations.map((d, i) => {
-            const angle = (i / n) * Math.PI * 2 - Math.PI / 2; // start at top
-            const x = 50 + R * Math.cos(angle);
-            const y = 50 + R * Math.sin(angle);
-            const isActive = active === i;
-            const dim = active !== null && !isActive;
+        {/* the central sun — light source + resting focal point */}
+        <div className="orbit-sun absolute left-1/2 top-1/2 z-[3] h-[11px] w-[11px] -translate-x-1/2 -translate-y-1/2 rounded-full" />
 
-            return (
-              <div
-                key={d.id}
-                className="absolute -translate-x-1/2 -translate-y-1/2"
-                style={{ left: `${x}%`, top: `${y}%`, zIndex: isActive ? 20 : 10 }}
-                onMouseEnter={() => setActive(i)}
-                onMouseLeave={() => setActive(null)}
-              >
+        {/* orbs */}
+        {destinations.map((d, i) => {
+          const ang = (i / n) * Math.PI * 2 - Math.PI / 2;
+          const cos = Math.cos(ang);
+          const sin = Math.sin(ang);
+          const x = 50 + R * cos;
+          const y = 50 + R * sin;
+          const isActive = active === i;
+          const dim = active !== null && !isActive;
+
+          return (
+            <div
+              key={d.id}
+              className="absolute z-[5] -translate-x-1/2 -translate-y-1/2"
+              style={{ left: `${x}%`, top: `${y}%` }}
+              onMouseEnter={() => setActive(i)}
+              onMouseLeave={() => setActive(null)}
+            >
+              <div className="orbit-float" style={{ animationDelay: `${i * 0.55}s` }}>
                 <button
                   type="button"
+                  className="orb-btn relative block rounded-full outline-none"
+                  style={{ animationDelay: `${0.55 + i * 0.07}s` }}
                   onFocus={() => setActive(i)}
                   onBlur={() => setActive(null)}
                   onClick={() => (window.location.href = d.href)}
-                  className="group relative block rounded-full outline-none"
                   aria-label={`${d.name} — ${d.tagline}`}
                 >
-                  {/* image circle — lifts on hover */}
-                  <motion.span
-                    animate={{
-                      scale: isActive ? 1.1 : 1,
-                      y: isActive ? -8 : 0,
-                      opacity: dim ? 0.42 : 1,
-                    }}
-                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    className={`relative grid h-[100px] w-[100px] place-items-center overflow-hidden rounded-full border-2 bg-cover bg-center transition-colors duration-300 ${
-                      isActive
-                        ? "border-accent"
-                        : "border-line-strong group-hover:border-accent"
-                    }`}
-                    style={{
-                      backgroundImage: `url(/circle/${d.id}.svg)`,
-                      ...(isActive ? { boxShadow: "0 0 40px var(--glow)" } : {}),
-                    }}
+                  <div
+                    className="orb grid place-items-center rounded-full"
+                    data-active={isActive}
+                    data-dim={dim}
+                    style={
+                      {
+                        "--lx": `${(50 - cos * 26).toFixed(1)}%`,
+                        "--ly": `${(50 - sin * 26).toFixed(1)}%`,
+                        "--shx": `${(cos * 9).toFixed(1)}px`,
+                        "--shy": `${(sin * 9 + 6).toFixed(1)}px`,
+                      } as React.CSSProperties
+                    }
                   >
-                    {/* scrim so the light label always reads over the image */}
-                    <span className="absolute inset-0 bg-black/35" />
-                    <span
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.5) 100%)",
-                      }}
-                    />
-                    <span className="relative px-2 text-center text-[13px] font-semibold leading-tight tracking-tight text-white drop-shadow-sm">
+                    <span className="orb-label px-2 text-center text-[13px] font-semibold leading-tight tracking-tight">
                       {d.name}
                     </span>
-                  </motion.span>
+                  </div>
 
-                  {/* CTA pill — floats up to overlap the circle generously */}
+                  {/* CTA pill — overlaps the bottom edge of the focused orb */}
                   <AnimatePresence>
                     {isActive && (
                       <motion.span
-                        initial={{ opacity: 0, y: 6 }}
+                        initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 6 }}
-                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                        className="absolute left-1/2 top-[80%] z-30 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-3.5 py-1.5 text-[11px] font-semibold text-paper shadow-xl"
+                        exit={{ opacity: 0, y: 4 }}
+                        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                        className="orb-cta pointer-events-none absolute left-1/2 top-full z-30 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-[11px] font-semibold"
                       >
                         {d.cta} <span aria-hidden>→</span>
                       </motion.span>
@@ -103,47 +120,30 @@ export function OrbitalNav() {
                   </AnimatePresence>
                 </button>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
 
-        {/* center hub */}
-        <div className="pointer-events-none absolute inset-0 grid place-items-center">
-          <div className="flex w-[46%] flex-col items-center text-center">
-            <AnimatePresence mode="wait">
-              {focused ? (
-                <motion.div
-                  key={focused.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.28 }}
-                  className="flex flex-col items-center"
-                >
-                  <span className="text-[9px] uppercase tracking-[0.22em] text-muted">
-                    {focused.tagline}
-                  </span>
-                  <h2 className="mt-1.5 text-base leading-tight tracking-tight">
-                    {focused.name}
-                  </h2>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="idle"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.28 }}
-                  className="flex flex-col items-center"
-                >
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-muted">
-                    Explore
-                  </span>
-                  <div className="mt-2 h-1.5 w-1.5 rounded-full bg-accent" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+        {/* center hub — resolves the focused world */}
+        <div className="pointer-events-none absolute left-1/2 top-1/2 z-[4] w-[42%] -translate-x-1/2 -translate-y-1/2 text-center">
+          <AnimatePresence mode="wait">
+            {focused && (
+              <motion.div
+                key={focused.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="text-[9px] uppercase tracking-[0.22em] text-muted">
+                  {focused.tagline}
+                </div>
+                <div className="mt-1.5 text-base font-semibold leading-tight tracking-tight text-ink">
+                  {focused.name}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

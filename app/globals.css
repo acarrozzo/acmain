@@ -8,38 +8,85 @@
    Change --accent in one place to re-tint the entire platform.
    --------------------------------------------------------------- */
 :root {
-  --paper: #f7f8fa;
+  /* Warm-neutral paper + aurora-green accent (light). */
+  --paper: #eaeee6;
   --surface: #ffffff;
-  --surface-2: #eef0f4;
-  --ink: #0e1116;
-  --ink-soft: #2b313b;
-  --muted: #6a7280;
-  --line: rgba(14, 17, 22, 0.10);
-  --line-strong: rgba(14, 17, 22, 0.18);
-  --accent: #3a5bff;
-  --accent-soft: rgba(58, 91, 255, 0.11);
-  --glow: rgba(58, 91, 255, 0.0);
+  --surface-2: #eef2ea;
+  --ink: #141712;
+  --ink-soft: #333831;
+  --muted: #697066;
+  --line: rgba(20, 23, 18, 0.11);
+  --line-strong: rgba(20, 23, 18, 0.18);
+  /* Fixed accent: amber in light, aurora green in dark. */
+  --acc-l: #a5620d;
+  --acc-hi-l: #c78a2e;
+  --acc-d: #63c99a;
+  --acc-hi-d: #9cebc2;
+  --accent: var(--acc-l);
+  --accent-hi: var(--acc-hi-l);
+
+  /* Center-of-orbit "sun" dot — matches the active primary accent so the
+     whole platform reads as one hue (amber in light, green in dark). */
+  --sun: var(--accent);
+  --sun-hi: var(--accent-hi);
+  --sun-glow: color-mix(in oklab, var(--sun) 30%, transparent);
+  --sun-soft: color-mix(in oklab, var(--sun) 14%, transparent);
+  --accent-soft: color-mix(in oklab, var(--accent) 11%, transparent);
+  --accent-line: color-mix(in oklab, var(--accent) 40%, var(--line));
+  --glow: color-mix(in oklab, var(--accent) 30%, transparent);
   --red: #ff3b30;
-  --bg-tint: rgba(58, 91, 255, 0.05);
-  --particle: 70, 95, 165;
+  --bg-tint: color-mix(in oklab, var(--accent) 12%, transparent);
+  --nebula-a: color-mix(in oklab, var(--accent) 18%, transparent);
+  --nebula-b: color-mix(in oklab, var(--accent-hi) 10%, transparent);
+  --orb-hi: rgba(255, 255, 255, 0.9);
+  --particle: 60, 110, 85;
+  --ease-orbit: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dark {
-  --paper: #0a0b0d;
-  --surface: #131519;
-  --surface-2: #1b1e24;
-  --ink: #eef0f3;
-  --ink-soft: #cdd1d8;
-  --muted: #878d97;
-  --line: rgba(238, 240, 243, 0.11);
-  --line-strong: rgba(238, 240, 243, 0.20);
-  --accent: #7b93ff;
-  --accent-soft: rgba(123, 147, 255, 0.14);
-  --glow: rgba(123, 147, 255, 0.24);
+  /* Warm-dark "unlit observatory" ground + luminous aurora green. */
+  --paper: #090a09;
+  --surface: #161a17;
+  --surface-2: #1d221e;
+  --ink: #eef0ec;
+  --ink-soft: #ccd1c8;
+  --muted: #868c83;
+  --line: rgba(238, 240, 236, 0.11);
+  --line-strong: rgba(238, 240, 236, 0.20);
+  --accent: var(--acc-d);
+  --accent-hi: var(--acc-hi-d);
+  /* sun continues to track the accent (green in dark) — brighter glow */
+  --sun: var(--accent);
+  --sun-hi: var(--accent-hi);
+  --sun-glow: color-mix(in oklab, var(--sun) 55%, transparent);
+  --sun-soft: color-mix(in oklab, var(--sun) 16%, transparent);
+  --accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
+  --accent-line: color-mix(in oklab, var(--accent) 42%, var(--line));
+  --glow: color-mix(in oklab, var(--accent) 55%, transparent);
   --red: #ff5147;
-  --bg-tint: rgba(96, 124, 255, 0.09);
-  --particle: 150, 172, 255;
+  --bg-tint: color-mix(in oklab, var(--accent) 16%, transparent);
+  --nebula-a: color-mix(in oklab, var(--accent) 30%, transparent);
+  --nebula-b: color-mix(in oklab, var(--accent-hi) 18%, transparent);
+  --orb-hi: rgba(255, 255, 255, 0.14);
+  --particle: 150, 220, 185;
 }
+
+/* ---------------------------------------------------------------
+   Main font — chosen live via [data-font] on <html]. Swaps the
+   heading/display family (h1–h3). Fraunces + Inter are the loaded
+   webfonts; the rest are system stacks for quick comparison.
+   --------------------------------------------------------------- */
+:root[data-font="fraunces"]  { --font-head: var(--font-fraunces), Georgia, serif; }
+:root[data-font="playfair"]  { --font-head: var(--font-playfair), Georgia, serif; }
+:root[data-font="cormorant"] { --font-head: var(--font-cormorant), Georgia, serif; }
+:root[data-font="libre"]     { --font-head: var(--font-libre), Georgia, serif; }
+:root[data-font="spectral"]  { --font-head: var(--font-spectral), Georgia, serif; }
+:root[data-font="dmserif"]   { --font-head: var(--font-dmserif), Georgia, serif; }
+:root[data-font="inter"]     { --font-head: var(--font-inter), ui-sans-serif, system-ui, sans-serif; }
+:root[data-font="helvetica"] { --font-head: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, sans-serif; }
+:root[data-font="georgia"]   { --font-head: Georgia, "Times New Roman", serif; }
+:root[data-font="system"]    { --font-head: ui-sans-serif, system-ui, sans-serif; }
+:root[data-font="mono"]      { --font-head: ui-monospace, "SF Mono", Menlo, monospace; }
 
 @theme inline {
   --color-paper: var(--paper);
@@ -57,9 +104,10 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Headers get a tighter, more Helvetica-like neo-grotesque; body stays Inter. */
+/* Default heading family — Fraunces (editorial serif). Swappable live via
+   the in-header font tester ([data-font]); body stays Inter. */
 :root {
-  --font-head: "Helvetica Neue", "Helvetica", "Arial", ui-sans-serif, sans-serif;
+  --font-head: var(--font-fraunces), Georgia, "Times New Roman", serif;
 }
 
 * {
@@ -74,8 +122,8 @@ html {
 
 body {
   background-color: var(--paper);
-  /* super-subtle cool gradient — a barely-there celestial wash from the top */
-  background-image: radial-gradient(125% 90% at 50% -12%, var(--bg-tint), transparent 58%);
+  /* a barely-there aurora wash, drifting in from the top-right */
+  background-image: radial-gradient(90% 70% at 80% -6%, var(--nebula-a), transparent 52%);
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-sans);
@@ -89,9 +137,10 @@ h1, h2, h3 {
   font-weight: 600;
 }
 
-/* The red dot in the AC wordmark. */
+/* The dot in the AC wordmark — carries the accent so the mark
+   stays in the palette rather than introducing a second hue. */
 .ac-dot {
-  color: var(--red);
+  color: var(--accent);
 }
 
 ::selection {
@@ -142,6 +191,92 @@ h1, h2, h3 {
 }
 @keyframes orbit-spin-rev {
   to { rotate: -360deg; }
+}
+
+/* ---------------------------------------------------------------
+   Orbital hub — lit spheres in open space, lit by the center sun.
+   Worlds are glass orbs; the focused one ignites, the rest recede.
+   --------------------------------------------------------------- */
+.orbit-nebula {
+  background:
+    radial-gradient(40% 40% at 50% 48%, var(--nebula-a), transparent 60%),
+    radial-gradient(46% 42% at 66% 70%, var(--nebula-b), transparent 62%);
+  filter: blur(8px);
+}
+
+.orbit-sun {
+  background: radial-gradient(circle, var(--sun-hi), var(--sun));
+  box-shadow: 0 0 22px 5px var(--sun-glow), 0 0 70px 18px var(--sun-soft);
+  animation: sun-breathe 5s var(--ease-orbit) infinite;
+}
+@keyframes sun-breathe {
+  0%, 100% { scale: 1; opacity: 0.9; }
+  50% { scale: 1.35; opacity: 1; }
+}
+
+/* one accent arc that drifts slowly around the outer ring */
+.orbit-ring-spin {
+  border: 1px solid transparent;
+  background: conic-gradient(from 0deg, transparent 0 74%, var(--accent-line) 86%, transparent 100%) border-box;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+          mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+  animation: orbit-spin 50s linear infinite;
+}
+
+/* ambient float — the orbs breathe in place, staggered */
+.orbit-float { animation: float-y 7s ease-in-out infinite; }
+
+/* CTA pill — floats up to overlap the bottom of the focused orb */
+.orb-cta {
+  background: var(--accent);
+  color: var(--paper);
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.6), 0 0 24px -4px var(--glow);
+}
+
+/* the sphere: lit from the center (--lx/--ly), casting outward (--shx/--shy) */
+.orb {
+  height: 96px;
+  width: 96px;
+  background: radial-gradient(circle at var(--lx) var(--ly), var(--orb-hi), var(--surface) 46%, var(--surface-2) 100%);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shx) var(--shy) 28px -8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: transform 0.5s var(--ease-orbit), box-shadow 0.5s var(--ease-orbit),
+    border-color 0.45s, opacity 0.45s var(--ease-orbit), filter 0.45s var(--ease-orbit);
+}
+:root:not(.dark) .orb {
+  box-shadow: var(--shx) var(--shy) 26px -10px rgba(30, 50, 35, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.orb[data-active="true"] {
+  transform: translateY(-7px) scale(1.13);
+  border-color: var(--accent);
+  background: radial-gradient(circle at var(--lx) var(--ly), color-mix(in oklab, var(--accent) 32%, var(--surface)), var(--surface) 58%);
+  box-shadow: var(--shx) 26px 48px -18px rgba(0, 0, 0, 0.85), 0 0 60px -2px var(--glow), inset 0 0 26px -8px var(--glow);
+}
+.orb[data-dim="true"] { opacity: 0.34; filter: blur(1.4px) saturate(0.7); }
+.orb-label { color: var(--ink-soft); transition: color 0.3s; }
+.orb[data-active="true"] .orb-label { color: var(--ink); }
+
+.orb-btn { animation: orb-pop 0.6s var(--ease-orbit) both; }
+@keyframes orb-pop {
+  from { opacity: 0; scale: 0.6; }
+  to { opacity: 1; scale: 1; }
+}
+
+/* ---------------------------------------------------------------
+   Hero photo — the sunset-forest image ghosted behind the top hero
+   only. Faint, and dissolved to nothing before the fold so it never
+   bleeds into the sections below.
+   --------------------------------------------------------------- */
+.hero-photo {
+  background-image: url("/img/65a16bc0-0349-47e1-b7ca-cd9a05479368.png");
+  background-size: cover;
+  background-position: center 28%;
+  opacity: 0.12;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 34%, transparent 88%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 34%, transparent 88%);
+}
+.dark .hero-photo {
+  opacity: 0.22;
 }
 
 @media (prefers-reduced-motion: reduce) {
