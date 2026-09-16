@@ -1,122 +1,125 @@
-export type Destination = {
-  id: string;
-  name: string;
-  /** Short line shown under the name on cards. */
-  tagline: string;
-  /** Longer line surfaced by the orbital hub when focused. */
-  description: string;
-  cta: string;
-  href: string;
+import { projects } from "@/content/projects";
+import { worlds } from "@/content/worlds";
+import type { Entry, Project, Status, World, WorldId } from "@/content/types";
+
+export type { Entry, Project, Status, World, WorldId };
+export { projects, worlds };
+
+export type EntryWithProject = Entry & { project: Project; world: World };
+
+export const STATUS_LABEL: Record<Status, string> = {
+  idea: "Idea",
+  paper: "On paper",
+  prototype: "Prototype",
+  playable: "Playable",
+  live: "Live",
+  resting: "Resting",
+  archived: "Archived",
 };
 
-/**
- * The primary destinations — the "worlds". Navigation is meant to stay
- * stable for years; new projects live *inside* these, not beside them.
- */
-export const destinations: Destination[] = [
-  {
-    id: "product-design",
-    name: "Product Design",
-    tagline: "Software, systems & UX",
-    description:
-      "Modern product thinking — design systems, prototypes, and the software I build. Less “look what I made,” more “look at how I think.”",
-    cta: "View the work",
-    href: "/product-design",
-  },
-  {
-    id: "games",
-    name: "Games & Worlds",
-    tagline: "Playable universes",
-    description:
-      "Light Gray RPG, Coin & Castle, AC Tower Defense, Archimedes Games, and whatever is being built next. Come play.",
-    cta: "Play the games",
-    href: "/games",
-  },
-  {
-    id: "starter-box",
-    name: "Starter Box",
-    tagline: "A worldbuilding platform",
-    description:
-      "A system, an application, and a community for building worlds — with tutorials and examples to start from.",
-    cta: "Start building",
-    href: "/starter-box",
-  },
-  {
-    id: "music-lab",
-    name: "AC Music Lab",
-    tagline: "Sound across decades",
-    description:
-      "A personal music archive — albums, experiments, and creative history spanning years of making sound.",
-    cta: "Listen",
-    href: "/music-lab",
-  },
-  {
-    id: "design-archive",
-    name: "Design Archive",
-    tagline: "The foundation, 2000–2020",
-    description:
-      "The original hand-coded portfolio. Where the journey began — preserved as the foundation of everything since.",
-    cta: "Enter the archive",
-    href: "/design-archive",
-  },
-  {
-    id: "updates",
-    name: "Updates",
-    tagline: "A living development log",
-    description:
-      "Current projects, progress, and behind-the-scenes thinking. The pulse that keeps the platform alive.",
-    cta: "Follow along",
-    href: "/updates",
-  },
-];
+/** Statuses that count as "currently building". */
+const BUILDING: Status[] = ["prototype", "playable"];
 
-export const nav = [
-  { label: "Product Design", href: "/product-design" },
-  { label: "Games", href: "/games" },
-  { label: "Worlds", href: "/starter-box" },
-  { label: "AC Music Lab", href: "/music-lab" },
-  { label: "Design Archive", href: "/design-archive" },
-  { label: "Updates", href: "/updates" },
-  { label: "About", href: "#about" },
-];
+export function worldById(id: WorldId): World {
+  const w = worlds.find((w) => w.id === id);
+  if (!w) throw new Error(`Unknown world: ${id}`);
+  return w;
+}
 
-export const hero = {
-  line: "I design software, games, tools, systems, and worlds.",
-  sub: "This is the central hub for my work — past, present, and in progress.",
-};
+export function worldBySlug(slug: string): World | undefined {
+  return worlds.find((w) => w.slug === slug);
+}
 
-export const currentlyBuilding = [
-  {
-    title: "Light Gray RPG — Multiplayer",
-    status: "In progress",
-    note: "Shared worlds, real-time play, and a persistent map.",
-  },
-  {
-    title: "Starter Box v2",
-    status: "In progress",
-    note: "A faster, more open worldbuilding engine.",
-  },
-  {
-    title: "Product Design case studies",
-    status: "Writing",
-    note: "Documenting how the systems were actually made.",
-  },
-];
+export function worldPath(world: World): string {
+  return `/${world.slug}`;
+}
 
-export const featured = [
-  { title: "Light Gray RPG", kind: "Game", href: "/games" },
-  { title: "Starter Box", kind: "Platform", href: "/starter-box" },
-  { title: "Design System", kind: "Product Design", href: "/product-design" },
-  { title: "Coin & Castle", kind: "Game", href: "/games" },
-];
+export function projectPath(p: Project): string {
+  return `/${worldById(p.world).slug}/${p.slug}`;
+}
 
-export const about = {
-  body:
-    "I’m a designer with over twenty years spent making product design, software, games, interactive systems, music, and worldbuilding tools. Different mediums, one way of thinking: build thoughtful systems, keep them calm, and leave room to explore.",
-};
+export function getProject(worldSlug: string, slug: string): Project | undefined {
+  const w = worldBySlug(worldSlug);
+  if (!w) return undefined;
+  return projects.find((p) => p.world === w.id && p.slug === slug);
+}
 
-export const community = [
-  { label: "Updates log", href: "/updates" },
-  { label: "Join a world", href: "/starter-box" },
-  { label: "Get in touch", href: "mailto:acarrozzo@mountain.com" },
-];
+export function projectBySlug(slug: string): Project | undefined {
+  return projects.find((p) => p.slug === slug);
+}
+
+function bySlugOrder(order: string[] | undefined) {
+  return (a: Project, b: Project) => {
+    const ia = order?.indexOf(a.slug) ?? -1;
+    const ib = order?.indexOf(b.slug) ?? -1;
+    const ra = ia === -1 ? Number.MAX_SAFE_INTEGER : ia;
+    const rb = ib === -1 ? Number.MAX_SAFE_INTEGER : ib;
+    if (ra !== rb) return ra - rb;
+    return a.name.localeCompare(b.name);
+  };
+}
+
+/** Projects that belong to a world, in the world's featured order, then the rest. */
+export function projectsInWorld(world: World): Project[] {
+  return projects
+    .filter((p) => p.world === world.id)
+    .sort(bySlugOrder(world.featured));
+}
+
+/** Projects from other worlds that a world page also shows. */
+export function alsoInWorld(world: World): Project[] {
+  return (world.also ?? [])
+    .map((slug) => projectBySlug(slug))
+    .filter((p): p is Project => Boolean(p));
+}
+
+export function entriesOf(p: Project): Entry[] {
+  return [...(p.entries ?? [])].sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function latestEntryOf(p: Project): Entry | undefined {
+  return entriesOf(p)[0];
+}
+
+/** Every entry on the site, newest first. */
+export function allEntries(): EntryWithProject[] {
+  const out: EntryWithProject[] = [];
+  for (const project of projects) {
+    const world = worldById(project.world);
+    for (const e of project.entries ?? []) out.push({ ...e, project, world });
+  }
+  return out.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+}
+
+export function latestEntries(n: number): EntryWithProject[] {
+  return allEntries().slice(0, n);
+}
+
+export function latestEntryInWorld(world: World): EntryWithProject | undefined {
+  return allEntries().find((e) => e.world.id === world.id);
+}
+
+/** Projects with fresh work, newest activity first. */
+export function building(): Project[] {
+  return projects
+    .filter((p) => BUILDING.includes(p.status))
+    .sort((a, b) => {
+      const da = latestEntryOf(a)?.date ?? "";
+      const db = latestEntryOf(b)?.date ?? "";
+      if (da !== db) return da < db ? 1 : -1;
+      return a.name.localeCompare(b.name);
+    });
+}
+
+/** Group a world's projects for listing: live and playable first, then building, then the rest. */
+export function groupByStatus(list: Project[]): { label: string; projects: Project[] }[] {
+  const groups: { label: string; statuses: Status[] }[] = [
+    { label: "Live and playable", statuses: ["live", "playable"] },
+    { label: "Being built", statuses: ["prototype", "paper", "idea"] },
+    { label: "Resting", statuses: ["resting"] },
+    { label: "Archive", statuses: ["archived"] },
+  ];
+  return groups
+    .map((g) => ({ label: g.label, projects: list.filter((p) => g.statuses.includes(p.status)) }))
+    .filter((g) => g.projects.length > 0);
+}

@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { nav } from "@/lib/content";
 import { ThemeToggle } from "./ThemeToggle";
-import { AccentPicker } from "./AccentPicker";
 
-export function SiteNav() {
+export type NavItem = { label: string; href: string };
+
+export function SiteNav({ items }: { items: NavItem[] }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -25,23 +25,12 @@ export function SiteNav() {
       }`}
     >
       <div className="container-page flex h-16 items-center justify-between gap-6">
-        {/* Picker sits at the far left so its panel opens over the hero copy
-            rather than across the orbit — the orbit is the thing you're
-            actually judging the accent against. Temporary rig; remove with
-            StudioControls before launch. */}
-        <div className="flex items-center gap-2.5">
-          <AccentPicker />
-          <a
-            href="/"
-            className="mark text-xl tracking-tight text-ink"
-            aria-label="Home"
-          >
-            AC<span className="ac-dot">.</span>
-          </a>
-        </div>
+        <a href="/" className="mark text-xl tracking-tight text-ink" aria-label="Home">
+          AC<span className="ac-dot">.</span>
+        </a>
 
-        <nav className="hidden items-center gap-7 md:flex">
-          {nav.map((item) => (
+        <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
+          {items.map((item) => (
             <a
               key={item.href}
               href={item.href}
@@ -70,8 +59,8 @@ export function SiteNav() {
 
       {open && (
         <div className="border-t border-line bg-paper/95 backdrop-blur-xl md:hidden">
-          <nav className="container-page flex flex-col py-3">
-            {nav.map((item) => (
+          <nav className="container-page flex flex-col py-3" aria-label="Primary, mobile">
+            {items.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
