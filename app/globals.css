@@ -14,19 +14,24 @@
   --surface-2: #eef2ea;
   --ink: #141712;
   --ink-soft: #333831;
-  --muted: #697066;
+  /* 5.05:1 on --paper — clears AA at the 11–13px sizes this is used at. */
+  --muted: #5f665c;
   --line: rgba(20, 23, 18, 0.11);
   --line-strong: rgba(20, 23, 18, 0.18);
-  /* Fixed accent: amber in light, aurora green in dark. */
-  --acc-l: #a5620d;
-  --acc-hi-l: #c78a2e;
+  /* One accent, two lightnesses — deep forest in light, luminous aurora in
+     dark. Same hue and saturation in both (h153 s47% l28% vs h152 s49% l59%),
+     so toggling the theme changes the light level, never the brand colour.
+     --acc-l is 5.58:1 on --paper / 6.55:1 on --surface, so it holds up as
+     small text and as the label on the filled CTA pill. */
+  --acc-l: #26694b;
+  --acc-hi-l: #3d8f68;
   --acc-d: #63c99a;
   --acc-hi-d: #9cebc2;
   --accent: var(--acc-l);
   --accent-hi: var(--acc-hi-l);
 
   /* Center-of-orbit "sun" dot — matches the active primary accent so the
-     whole platform reads as one hue (amber in light, green in dark). */
+     whole platform reads as one hue in whichever theme is showing. */
   --sun: var(--accent);
   --sun-hi: var(--accent-hi);
   --sun-glow: color-mix(in oklab, var(--sun) 30%, transparent);
@@ -39,7 +44,12 @@
   --nebula-a: color-mix(in oklab, var(--accent) 18%, transparent);
   --nebula-b: color-mix(in oklab, var(--accent-hi) 10%, transparent);
   --orb-hi: rgba(255, 255, 255, 0.9);
-  --particle: 60, 110, 85;
+  /* Raw "r, g, b" channels — the canvas field composes its own alpha per
+     particle, so this can't be a colour. Follows the accent-hi of the active
+     theme, same light/dark pairing as --acc-l / --acc-d. */
+  --particle-l: 61, 143, 104;
+  --particle-d: 156, 235, 194;
+  --particle: var(--particle-l);
   --ease-orbit: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -68,8 +78,21 @@
   --nebula-a: color-mix(in oklab, var(--accent) 30%, transparent);
   --nebula-b: color-mix(in oklab, var(--accent-hi) 18%, transparent);
   --orb-hi: rgba(255, 255, 255, 0.14);
-  --particle: 150, 220, 185;
+  --particle: var(--particle-d);
 }
+
+/* ---------------------------------------------------------------
+   Accent — the values below are the shipped default (deep forest in
+   light, luminous aurora in dark). The header AccentPicker is a
+   temporary rig that overrides --acc-l / --acc-hi-l / --particle-l
+   (and the -d trio) as inline styles on <html>, per theme and
+   independently, so light and dark can sit at different lightnesses.
+   Everything else is color-mix'd off --accent, so one swap retints
+   the whole platform.
+   When a winner is picked: paste its hexes into :root / .dark above,
+   then delete AccentPicker.tsx, lib/accents.ts and the ac-accent
+   line in ThemeScript.
+   --------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------
    Main font — chosen live via [data-font] on <html]. Swaps the
@@ -263,20 +286,30 @@ h1, h2, h3 {
 }
 
 /* ---------------------------------------------------------------
-   Hero photo — the sunset-forest image ghosted behind the top hero
-   only. Faint, and dissolved to nothing before the fold so it never
-   bleeds into the sections below.
+   Hero photo — a sky ghosted behind the top hero only. Faint, and
+   dissolved to nothing before the fold so it never bleeds into the
+   sections below. Each theme gets its own sky: open daylight cloud
+   in light, the sunset-forest horizon in dark.
    --------------------------------------------------------------- */
 .hero-photo {
-  background-image: url("/img/65a16bc0-0349-47e1-b7ca-cd9a05479368.png");
+  background-image: url("/img/sky-light.webp");
   background-size: cover;
-  background-position: center 28%;
-  opacity: 0.12;
+  background-position: center 34%;
+  /* The daylight sky is high-key, so it needs a touch more presence than
+     the dark plate to register at all against --paper. */
+  opacity: 0.16;
+  /* Mirrored so the sun falls on the orbit side rather than sitting behind
+     the headline. The mask below is a vertical gradient, so flipping the
+     element horizontally leaves the fade untouched. */
+  transform: scaleX(-1);
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 34%, transparent 88%);
           mask-image: linear-gradient(to bottom, #000 0%, #000 34%, transparent 88%);
 }
 .dark .hero-photo {
+  background-image: url("/img/forest-dark.webp");
+  background-position: center 28%;
   opacity: 0.22;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

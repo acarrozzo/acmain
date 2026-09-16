@@ -1,15 +1,33 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { about, community, currentlyBuilding, featured } from "@/lib/content";
 import { StudioControls } from "./StudioControls";
 
-const reveal = {
+const revealMotion = {
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-80px" },
   transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
 };
+
+/**
+ * Scroll reveal, honouring prefers-reduced-motion.
+ *
+ * The CSS `@media (prefers-reduced-motion)` rule in globals.css only disables
+ * CSS animations — these reveals are driven by Motion in JS, so they slid past
+ * it. For reduced-motion users the section is simply rendered in place: no
+ * offset, no fade, and critically no `initial` opacity:0 to get stuck at.
+ */
+function useReveal() {
+  const reduced = useReducedMotion();
+  return (delay = 0) => {
+    if (reduced) return {};
+    return delay
+      ? { ...revealMotion, transition: { ...revealMotion.transition, delay } }
+      : revealMotion;
+  };
+}
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -20,10 +38,11 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export function CurrentlyBuilding() {
+  const reveal = useReveal();
   return (
     <section className="border-t border-line py-24 md:py-32">
       <div className="container-page">
-        <motion.div {...reveal}>
+        <motion.div {...reveal()}>
           <SectionLabel>Currently building</SectionLabel>
           <h2 className="mt-4 max-w-2xl text-3xl leading-tight tracking-tight md:text-5xl">
             What’s in the workshop right now.
@@ -33,8 +52,7 @@ export function CurrentlyBuilding() {
           {currentlyBuilding.map((item, i) => (
             <motion.div
               key={item.title}
-              {...reveal}
-              transition={{ ...reveal.transition, delay: i * 0.08 }}
+              {...reveal(i * 0.08)}
               className="flex flex-col gap-4 bg-surface p-7"
             >
               <span className="inline-flex w-fit items-center gap-2 rounded-full bg-accent-soft px-3 py-1 text-xs font-medium text-accent">
@@ -52,10 +70,11 @@ export function CurrentlyBuilding() {
 }
 
 export function FeaturedWork() {
+  const reveal = useReveal();
   return (
     <section className="border-t border-line py-24 md:py-32">
       <div className="container-page">
-        <motion.div {...reveal}>
+        <motion.div {...reveal()}>
           <SectionLabel>Featured work</SectionLabel>
           <h2 className="mt-4 max-w-2xl text-3xl leading-tight tracking-tight md:text-5xl">
             A few things worth discovering.
@@ -66,8 +85,7 @@ export function FeaturedWork() {
             <motion.a
               key={item.title}
               href={item.href}
-              {...reveal}
-              transition={{ ...reveal.transition, delay: i * 0.06 }}
+              {...reveal(i * 0.06)}
               className="group relative flex aspect-[16/10] flex-col justify-end overflow-hidden rounded-2xl border border-line bg-surface-2 p-7"
             >
               {/* Imagery placeholder — a calm tonal field carries the space until art lands */}
@@ -102,14 +120,15 @@ export function FeaturedWork() {
 }
 
 export function About() {
+  const reveal = useReveal();
   return (
     <section id="about" className="scroll-mt-24 border-t border-line py-24 md:py-32">
       <div className="container-page grid gap-10 md:grid-cols-[1fr_2fr] md:gap-16">
-        <motion.div {...reveal}>
+        <motion.div {...reveal()}>
           <SectionLabel>About</SectionLabel>
         </motion.div>
         <motion.p
-          {...reveal}
+          {...reveal()}
           className="max-w-2xl text-2xl leading-snug tracking-tight text-ink-soft md:text-4xl"
         >
           {about.body}
@@ -120,10 +139,11 @@ export function About() {
 }
 
 export function Community() {
+  const reveal = useReveal();
   return (
     <section className="border-t border-line py-24 md:py-32">
       <div className="container-page">
-        <motion.div {...reveal} className="flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
+        <motion.div {...reveal()} className="flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
           <div>
             <SectionLabel>Community & follow</SectionLabel>
             <h2 className="mt-4 max-w-xl text-3xl leading-tight tracking-tight md:text-5xl">

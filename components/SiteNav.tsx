@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { nav } from "@/lib/content";
 import { ThemeToggle } from "./ThemeToggle";
+import { AccentPicker } from "./AccentPicker";
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
@@ -24,13 +25,20 @@ export function SiteNav() {
       }`}
     >
       <div className="container-page flex h-16 items-center justify-between gap-6">
-        <a
-          href="/"
-          className="mark text-xl tracking-tight text-ink"
-          aria-label="Home"
-        >
-          AC<span className="ac-dot">.</span>
-        </a>
+        {/* Picker sits at the far left so its panel opens over the hero copy
+            rather than across the orbit — the orbit is the thing you're
+            actually judging the accent against. Temporary rig; remove with
+            StudioControls before launch. */}
+        <div className="flex items-center gap-2.5">
+          <AccentPicker />
+          <a
+            href="/"
+            className="mark text-xl tracking-tight text-ink"
+            aria-label="Home"
+          >
+            AC<span className="ac-dot">.</span>
+          </a>
+        </div>
 
         <nav className="hidden items-center gap-7 md:flex">
           {nav.map((item) => (

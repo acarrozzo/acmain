@@ -77,13 +77,15 @@ export function OrbitalNav() {
               onMouseLeave={() => setActive(null)}
             >
               <div className="orbit-float" style={{ animationDelay: `${i * 0.55}s` }}>
-                <button
-                  type="button"
+                {/* A real anchor, not a button with a location assignment: these
+                    six links are the site's primary navigation, so they need to
+                    be crawlable and to honour cmd/middle-click "open in new tab". */}
+                <a
+                  href={d.href}
                   className="orb-btn relative block rounded-full outline-none"
                   style={{ animationDelay: `${0.55 + i * 0.07}s` }}
                   onFocus={() => setActive(i)}
                   onBlur={() => setActive(null)}
-                  onClick={() => (window.location.href = d.href)}
                   aria-label={`${d.name} — ${d.tagline}`}
                 >
                   <div
@@ -118,7 +120,7 @@ export function OrbitalNav() {
                       </motion.span>
                     )}
                   </AnimatePresence>
-                </button>
+                </a>
               </div>
             </div>
           );
