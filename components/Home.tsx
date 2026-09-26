@@ -4,13 +4,17 @@ import {
   featuredItems,
   latestEntries,
   latestEntryInWorld,
+  latestEntryOf,
   projectBySlug,
+  projectPath,
   projectsInWorld,
+  STATUS_LABEL,
   toCapsule,
   workshopTabs,
   worldPath,
   worlds,
   type EntryWithProject,
+  type Project,
   type World,
 } from "@/lib/content";
 import { formatDate } from "@/lib/format";
@@ -18,7 +22,7 @@ import { Featured } from "./Featured";
 import { Workshop } from "./Workshop";
 import { CapsuleGrid } from "./Capsule";
 import { Kicker, SectionHead } from "./ui";
-import { OrbitalNav, type OrbitEntry, type OrbitWorld } from "./OrbitalNav";
+import { OrbitalNav, type OrbitEntry, type OrbitProject, type OrbitWorld } from "./OrbitalNav";
 
 /** Featured & fresh. */
 export function FeaturedSection() {
@@ -158,12 +162,27 @@ export function WorkshopSection() {
 export function HeroOrbit() {
   const toOrbit = (e: EntryWithProject | undefined): OrbitEntry | null =>
     e ? { date: e.date, title: e.title, project: e.project.name } : null;
+  const toMoon = (p: Project): OrbitProject => {
+    const e = latestEntryOf(p);
+    return {
+      slug: p.slug,
+      name: p.name,
+      short: p.short ?? p.name,
+      href: projectPath(p),
+      kind: p.kind,
+      status: p.status,
+      statusLabel: STATUS_LABEL[p.status],
+      line: p.line,
+      latest: e ? { date: e.date, title: e.title, project: p.name } : null,
+    };
+  };
   const orbitWorlds: OrbitWorld[] = worlds.map((w) => ({
     slug: w.slug,
     name: w.name,
     tagline: w.tagline,
     count: projectsInWorld(w).length,
     latest: toOrbit(latestEntryInWorld(w)),
+    projects: projectsInWorld(w).map(toMoon),
   }));
   const latest = toOrbit(latestEntries(1)[0]);
   return (

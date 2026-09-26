@@ -3,6 +3,7 @@ import type { Project } from "../types";
 export const tinyKingdomManager: Project = {
   slug: "tiny-kingdom-manager",
   name: "Tiny Kingdom Manager",
+  short: "Tiny Kingdom",
   world: "games",
   kind: "Game",
   status: "prototype",

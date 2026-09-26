@@ -3,6 +3,7 @@ import type { Project } from "../types";
 export const newsdaySpecialProjects: Project = {
   slug: "newsday-special-projects",
   name: "Newsday special projects",
+  short: "Special projects",
   world: "design",
   kind: "Case study",
   status: "live",

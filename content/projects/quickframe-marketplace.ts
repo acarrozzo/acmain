@@ -3,6 +3,7 @@ import type { Project } from "../types";
 export const quickframeMarketplace: Project = {
   slug: "quickframe-marketplace",
   name: "QuickFrame Marketplace",
+  short: "Marketplace",
   world: "design",
   kind: "Case study",
   status: "live",

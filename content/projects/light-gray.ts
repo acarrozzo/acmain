@@ -3,6 +3,7 @@ import type { Project } from "../types";
 export const lightGray: Project = {
   slug: "light-gray",
   name: "Light Gray RPG",
+  short: "Light Gray",
   world: "games",
   kind: "Game",
   status: "playable",

@@ -14,7 +14,7 @@ npm run build    # static pages for every route
 
 | Noun | How many | Lives in | Renders |
 |------|----------|----------|---------|
-| **Person** | one | `content/person.ts` | masthead motto, editor box, about page |
+| **Person** | one | `content/person.ts` | masthead name, editor box, about page |
 | **World** | three (Design, Games, Music) | `content/worlds.ts` | nav, world tiles, `/work` `/games` `/music` |
 | **Project** | many | `content/projects/<slug>.ts` | capsules, `/<world>/<slug>` |
 | **Entry** | endless | on its project (`entries: []`) | the log column, the workshop, `/log`, changelogs |
@@ -26,7 +26,8 @@ carousel.
 
 1. Create `content/projects/<slug>.ts`, export a `Project` (see `content/types.ts`).
    Give it `tags` (two to four words) and, if there is no artwork yet, a `mark`
-   (two letters) for the typographic tile.
+   (two letters) for the typographic tile. If the name is long, add a `short`
+   (two words) for its moon on the home page orbit.
 2. Import it in `content/projects/index.ts`.
 3. Optionally add the slug to its world's `featured` list in `content/worlds.ts`.
 4. Drop a hero image in `public/img/p/<slug>.webp` and set `hero`. Albums set
@@ -47,8 +48,17 @@ house, moss, a plaque. Retirement is a status, not a deletion.
 
 ## The front page (Broadsheet + storefront)
 
-- **Masthead**: "AC." wordmark left, the A mark centered with the motto, search and
+- **Masthead**: the name left, the A mark centered, search and
   theme toggle right, a centered section nav under a double rule. Not sticky.
+- **The orbit** (`OrbitalNav`): the opening band. Three world orbs drift clockwise
+  around the hub, each with its projects orbiting it as tiny status-coloured moons,
+  also clockwise. Hover or focus a world and everything eases to a stop while the
+  camera pushes in: the orb grows, the moons spread out and become labelled links
+  to the project pages. The hub in the middle shows
+  the newest entry on the site, in the hovered world, or on the hovered moon.
+  Geometry constants sit at the top of the component; the orbit itself is one
+  `requestAnimationFrame` loop that sleeps off-screen and under reduced motion.
+  Below `md` it is three cards.
 - **Featured & fresh**: an auto-advancing carousel (six seconds an item, play/pause,
   counter, progress bar) from `content/featured.ts`, with side thumbnails.
 - **In the workshop**: tabs (Fresh commits, Building, Live, Resting) with a hover
@@ -56,9 +66,6 @@ house, moss, a plaque. Retirement is a status, not a deletion.
 - **Right column**: the log (eight newest entries), now playing (hand-picked in
   `person.nowPlaying`), about the editor.
 - **Worlds, then capsule grids** for Games, Design and Music.
-- **Reference**: the phase-one orbit sits at the bottom of the home page for
-  comparison. Delete `OrbitReference` in `components/Home.tsx`, `OrbitalNav.tsx` and
-  the orbit block in `globals.css` when done with it.
 
 ⌘K (or the search pill) opens a command palette that jumps to any page or project.
 
@@ -107,4 +114,3 @@ the theme toggle.
 - [ ] Real imagery passes: QuickFrame, Tiny Kingdom, Starter Box, Tower Test, and the
       Battle and Party screenshots for Light Gray.
 - [ ] Replace the hand-picked now-playing track with a feed from AC Music.
-- [ ] Remove the orbit reference section.

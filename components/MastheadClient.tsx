@@ -14,13 +14,11 @@ function isActive(pathname: string, href: string) {
 export function MastheadClient({
   nav,
   palette,
-  motto,
   name,
   role,
 }: {
   nav: NavItem[];
   palette: PaletteItem[];
-  motto: string;
   name: string;
   role: string;
 }) {
@@ -34,7 +32,6 @@ export function MastheadClient({
         </a>
         <a className="mast-mark" href="/" aria-label="Home">
           <Mark />
-          <span className="motto">{motto}</span>
         </a>
         <div className="mast-right">
           <CommandPalette items={palette} />

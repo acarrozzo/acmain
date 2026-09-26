@@ -3,6 +3,7 @@ import type { Project } from "../types";
 export const acDesignSystem: Project = {
   slug: "ac-design-system",
   name: "AC Design System",
+  short: "Design System",
   world: "design",
   kind: "Design system",
   status: "prototype",

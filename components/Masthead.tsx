@@ -1,5 +1,4 @@
 import { navItems, paletteItems } from "@/lib/nav";
-import { site } from "@/content/site";
 import { person } from "@/content/person";
 import type { Backdrop as BackdropImages } from "@/content/types";
 import { Backdrop } from "./Backdrop";
@@ -17,7 +16,6 @@ export function Masthead({ backdrop }: { backdrop?: BackdropImages } = {}) {
       <MastheadClient
         nav={navItems}
         palette={paletteItems}
-        motto={site.motto}
         name={person.name}
         role={person.title}
       />

@@ -49,6 +49,8 @@ export type Project = {
   /** Short noun shown above the name: "Game", "Case study", "Albums"… */
   kind: string;
   status: Status;
+  /** Two or three short words for the moon on the home page orbit. Defaults to `name`. */
+  short?: string;
   /** One line. Shows on cards and as the page subtitle. */
   line: string;
   /** Paragraphs for the project page. */

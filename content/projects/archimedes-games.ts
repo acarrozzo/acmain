@@ -3,6 +3,7 @@ import type { Project } from "../types";
 export const archimedesGames: Project = {
   slug: "archimedes-games",
   name: "Archimedes Games",
+  short: "Archimedes",
   world: "games",
   kind: "Card games",
   status: "live",

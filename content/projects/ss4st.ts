@@ -3,6 +3,7 @@ import type { Project } from "../types";
 export const ss4st: Project = {
   slug: "ss4st",
   name: "Strange Sounds for Strange Times",
+  short: "Strange Sounds",
   world: "music",
   kind: "Albums",
   status: "live",

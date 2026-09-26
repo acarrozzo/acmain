@@ -6,8 +6,6 @@ export const site = {
   url: "https://acarrozzo.com",
   title: "Anthony Carrozzo",
   tagline: "Design, games, music.",
-  /** Under the mark in the masthead. */
-  motto: "All the news that’s fit to ship.",
   /** Footer version line. Bump it when the site changes shape. */
   version: "v.26",
   since: "since the 90s",
