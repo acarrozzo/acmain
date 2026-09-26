@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { formatDate } from "@/lib/format";
 import type { Status } from "@/content/types";
 
 export type OrbitEntry = { date: string; title: string; project: string };
@@ -232,9 +231,7 @@ export function OrbitalNav({ worlds, latest }: Props) {
     ? {
         key: `p:${moon.slug}`,
         label: moon.name,
-        meta: moon.latest
-          ? `${formatDate(moon.latest.date)} · ${moon.statusLabel}`
-          : `${moon.kind} · ${moon.statusLabel}`,
+        meta: `${moon.kind} · ${moon.statusLabel}`,
         title: moon.latest?.title ?? moon.line,
         fallback: "",
       }
@@ -242,14 +239,14 @@ export function OrbitalNav({ worlds, latest }: Props) {
       ? {
           key: focused.slug,
           label: focused.name,
-          meta: focused.latest ? `${formatDate(focused.latest.date)} · ${focused.latest.project}` : "",
+          meta: focused.latest?.project ?? "",
           title: focused.latest?.title ?? "",
           fallback: focused.tagline,
         }
       : {
           key: "now",
           label: "Now",
-          meta: latest ? `${formatDate(latest.date)} · ${latest.project}` : "",
+          meta: latest?.project ?? "",
           title: latest?.title ?? "",
           fallback: "Always building.",
         };
@@ -420,7 +417,7 @@ export function OrbitalNav({ worlds, latest }: Props) {
               <div className="mt-1 text-xl font-semibold tracking-tight text-ink">{w.name}</div>
               {w.latest && (
                 <div className="mono mt-1.5 truncate text-[11px] text-muted">
-                  {formatDate(w.latest.date)} · {w.latest.title}
+                  {w.latest.title}
                 </div>
               )}
             </div>

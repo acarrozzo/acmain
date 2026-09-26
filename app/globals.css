@@ -5,25 +5,26 @@
 
 /* ---------------------------------------------------------------
    Design tokens — the single source of truth.
-   One accent, two lightnesses: deep forest in light, luminous aurora
-   in dark. Everything else is derived, so one swap retints the site.
+   One accent per theme: newsprint ink-blue on near-white in light,
+   luminous aurora green on forest black in dark. Everything else is
+   derived, so one swap retints the theme.
    --------------------------------------------------------------- */
 :root {
-  --paper: #eaeee6;
+  --paper: #f7f8fa;
   --surface: #ffffff;
-  --surface-2: #eef2ea;
-  --surface-3: #e1e7dc;
-  --ink: #141712;
-  --ink-soft: #333831;
-  --muted: #5f665c;
-  --line: rgba(20, 23, 18, 0.11);
-  --line-strong: rgba(20, 23, 18, 0.22);
-  --accent: #26694b;
-  --accent-hi: #3d8f68;
+  --surface-2: #eef1f5;
+  --surface-3: #e4e8ee;
+  --ink: #12161b;
+  --ink-soft: #313740;
+  --muted: #5b6470;
+  --line: rgba(18, 22, 27, 0.11);
+  --line-strong: rgba(18, 22, 27, 0.22);
+  --accent: #24558f;
+  --accent-hi: #3b78c2;
   --accent-ink: #ffffff;
-  --accent-soft: rgba(38, 105, 75, 0.10);
-  --glow: rgba(38, 105, 75, 0.25);
-  --shade: rgba(20, 23, 18, 0.55);
+  --accent-soft: rgba(36, 85, 143, 0.10);
+  --glow: rgba(36, 85, 143, 0.25);
+  --shade: rgba(18, 22, 27, 0.55);
   --orb-hi: rgba(255, 255, 255, 0.9);
   --nebula-a: color-mix(in oklab, var(--accent) 18%, transparent);
   --nebula-b: color-mix(in oklab, var(--accent-hi) 10%, transparent);
@@ -189,7 +190,7 @@ a { color: inherit; }
 .iconbtn { width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--line); background: color-mix(in oklab, var(--surface) 55%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: var(--muted); display: grid; place-items: center; cursor: pointer; padding: 0; transition: border-color .2s, color .2s, background-color .2s; }
 .iconbtn:hover { border-color: var(--line-strong); color: var(--ink); background: color-mix(in oklab, var(--surface) 80%, transparent); }
 .iconbtn svg { width: 16px; height: 16px; }
-.mast-nav { display: flex; align-items: center; justify-content: center; gap: 20px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line-strong); padding: 10px 0; }
+.mast-nav { display: flex; align-items: center; justify-content: center; gap: 20px; border-bottom: 1px solid var(--line-strong); padding: 10px 0; }
 .mast-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 26px; }
 .mast-nav a { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); padding: 2px 0; border-bottom: 2px solid transparent; }
 .mast-nav a:hover, .mast-nav a.on { color: var(--ink); border-bottom-color: var(--accent); }
@@ -433,7 +434,7 @@ a { color: inherit; }
 .moon-pos { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
 /* A moon is always its zoomed self; at rest it is scaled down to a dot, and the ::before is the dot's face (status-coloured) laid over it. */
 .moon { position: absolute; left: 0; top: 0; translate: -50% -50%; scale: .12; width: 60px; height: 60px; box-sizing: border-box; padding: 3px; display: grid; place-items: center; border-radius: 50%; text-align: center; text-decoration: none; outline: none; pointer-events: auto; background: radial-gradient(circle at 34% 30%, var(--orb-hi), var(--surface) 50%, var(--surface-2) 100%); border: 1px solid var(--line-strong); box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.6); transition: scale .5s var(--ease-orbit), border-color .3s, box-shadow .3s, background .3s, opacity .4s var(--ease-orbit); }
-:root:not(.dark) .moon { box-shadow: 0 6px 16px -8px rgba(30, 50, 35, 0.35); }
+:root:not(.dark) .moon { box-shadow: 0 6px 16px -8px rgba(25, 40, 70, 0.30); }
 .moon::before { content: ""; position: absolute; inset: -1px; border-radius: 50%; background: var(--ink-soft); opacity: .85; transition: opacity .25s; }
 .moon[data-status="live"]::before { background: var(--accent); box-shadow: 0 0 44px 12px var(--glow); }
 .moon[data-status="paper"]::before, .moon[data-status="idea"]::before { background: radial-gradient(circle, transparent 52%, var(--ink-soft) 58%); }
@@ -449,7 +450,7 @@ a { color: inherit; }
 .orb-btn { display: block; position: absolute; left: 50%; top: 50%; translate: -50% -50%; border-radius: 9999px; outline: none; pointer-events: auto; }
 .orb-btn:focus-visible .orb { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft), 0 0 40px -4px var(--glow); }
 .orb { height: 116px; width: 116px; display: grid; place-items: center; align-content: center; gap: 2px; border-radius: 50%; background: radial-gradient(circle at var(--lx) var(--ly), var(--orb-hi), var(--surface) 46%, var(--surface-2) 100%); border: 1px solid var(--line-strong); box-shadow: var(--shx) var(--shy) 28px -8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05); transition: transform 0.5s var(--ease-orbit), box-shadow 0.5s var(--ease-orbit), border-color 0.45s, opacity 0.45s var(--ease-orbit), filter 0.45s var(--ease-orbit); }
-:root:not(.dark) .orb { box-shadow: var(--shx) var(--shy) 26px -10px rgba(30, 50, 35, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.7); }
+:root:not(.dark) .orb { box-shadow: var(--shx) var(--shy) 26px -10px rgba(25, 40, 70, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.7); }
 .orb[data-active="true"] { transform: scale(1.1); border-color: var(--accent); background: radial-gradient(circle at var(--lx) var(--ly), color-mix(in oklab, var(--accent) 30%, var(--surface)), var(--surface) 58%); box-shadow: var(--shx) 26px 48px -18px rgba(0, 0, 0, 0.8), 0 0 60px -2px var(--glow), inset 0 0 26px -8px var(--glow); }
 .orb[data-dim="true"] { opacity: 0.45; filter: saturate(0.7); transform: scale(0.94); }
 .orb-label { color: var(--ink); transition: color 0.3s; }

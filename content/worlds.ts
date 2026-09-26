@@ -22,7 +22,6 @@ export const worlds: World[] = [
       "quickframe-marketplace",
       "newsday-com",
       "newsday-special-projects",
-      "ac-design-system",
     ],
     also: ["light-gray"],
     sections: [
@@ -35,7 +34,7 @@ export const worlds: World[] = [
           },
           {
             name: "Design systems",
-            text: "Styles, components and variants in Figma; tokens, themes and components in code. This site runs on one: a single accent, two lightnesses, and a content model where a new project never needs a new layout.",
+            text: "Styles, components and variants in Figma; tokens, themes and components in code. This site runs on one: a small token set, one accent per theme, and a content model where a new project never needs a new layout.",
           },
           {
             name: "Front-end and AI-assisted engineering",

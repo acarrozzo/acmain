@@ -4,7 +4,6 @@ import { quickframeAi } from "./quickframe-ai";
 import { quickframeMarketplace } from "./quickframe-marketplace";
 import { newsdayCom } from "./newsday-com";
 import { newsdaySpecialProjects } from "./newsday-special-projects";
-import { acDesignSystem } from "./ac-design-system";
 
 import { lightGray } from "./light-gray";
 import { coinAndCastle } from "./coin-and-castle";
@@ -27,7 +26,6 @@ export const projects: Project[] = [
   quickframeMarketplace,
   newsdayCom,
   newsdaySpecialProjects,
-  acDesignSystem,
   // Games
   lightGray,
   coinAndCastle,
