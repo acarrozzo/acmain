@@ -87,6 +87,7 @@ house, moss, a plaque. Retirement is a status, not a deletion.
 | `/log` | Every entry, newest first, grouped by month |
 | `/about` | The person, the timeline, the site's origin story |
 | `/archive` | Points at the original acarrozzo.com, kept unedited |
+| `/system` | Temporary workbench: every token, class, component, record and query, read from the source at build time. Not indexed. Remove when done (`app/system`, `components/system`, `lib/system*.ts`, `lib/routes.ts`, the nav entry, the last block of `globals.css`). |
 
 Old prototype routes redirect in `next.config.mjs`.
 

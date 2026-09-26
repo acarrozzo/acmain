@@ -50,6 +50,8 @@ export const navItems: NavItem[] = [
   { label: "Log", href: "/log" },
   { label: "About", href: "/about" },
   { label: "Archive", href: "/archive" },
+  /** Temporary: the design-system workbench. Remove when it has done its job. */
+  { label: "System", href: "/system" },
 ];
 
 /** Everything the command palette can jump to. */

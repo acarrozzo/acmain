@@ -158,8 +158,8 @@ export function WorkshopSection() {
   return <Workshop tabs={workshopTabs()} />;
 }
 
-/** The opening band: who this is, in one line, beside the orbit of three worlds. */
-export function HeroOrbit() {
+/** The orbit's data: three worlds with their moons, and the newest entry on the site. */
+export function orbitData(): { worlds: OrbitWorld[]; latest: OrbitEntry | null } {
   const toOrbit = (e: EntryWithProject | undefined): OrbitEntry | null =>
     e ? { date: e.date, title: e.title, project: e.project.name } : null;
   const toMoon = (p: Project): OrbitProject => {
@@ -185,6 +185,12 @@ export function HeroOrbit() {
     projects: projectsInWorld(w).map(toMoon),
   }));
   const latest = toOrbit(latestEntries(1)[0]);
+  return { worlds: orbitWorlds, latest };
+}
+
+/** The opening band: who this is, in one line, beside the orbit of three worlds. */
+export function HeroOrbit() {
+  const { worlds: orbitWorlds, latest } = orbitData();
   return (
     <section className="hero-band">
       <div className="flex flex-col gap-5">
