@@ -9,7 +9,6 @@ export const worlds: World[] = [
     id: "design",
     slug: "work",
     name: "Design",
-    label: "Work",
     tagline: "Product design, design systems, front-end",
     headline: "Product design, design systems, and the front-end to make them real.",
     intro: [
@@ -17,6 +16,7 @@ export const worlds: World[] = [
       "I hand-coded front-ends before it was called engineering, and I still do. These days that means Figma and React in the same week, PRs alongside the engineers, and a multiplayer game on the side to keep the range honest.",
     ],
     listing: "featured",
+    hero: "/img/p/newsday-special-projects.webp",
     featured: [
       "quickframe-ai",
       "quickframe-marketplace",
@@ -67,6 +67,7 @@ export const worlds: World[] = [
       "Some are playable today. Some are being rebuilt as real web applications. One is a system for making the rest. The physical ones have their own store.",
     ],
     listing: "status",
+    hero: "/img/p/light-gray-forest.webp",
     featured: [
       "light-gray",
       "coin-and-castle",
@@ -86,6 +87,7 @@ export const worlds: World[] = [
       "Most of it lives at AC Music, where the songs finally sound the way I heard them. The albums are on the streaming services. The band is a fond memory with a four-song demo.",
     ],
     listing: "status",
+    hero: "/img/p/bftz.webp",
     featured: ["ac-music", "ss4st", "bftz"],
   },
 ];

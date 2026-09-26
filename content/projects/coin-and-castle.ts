@@ -8,6 +8,7 @@ export const coinAndCastle: Project = {
   status: "prototype",
   line: "An idle game about finding one coin and ending up with a kingdom.",
   hero: "/img/p/coin-and-castle.webp",
+  tags: ["Idle", "Settlement", "Svelte 5"],
   body: [
     "Inspired by the paperclips game and the castle-building of the original Warcraft. You find a coin, buy a tool, gather a resource, build a thing that gathers more resources, and eventually you have walls to defend and a reason to defend them.",
     "The original was a monolithic prototype. The remake is a data-driven engine in Svelte 5 with one serializable state object, big-number math, tests, and the old game as the design spec: the numbers and progression are ported, the code is not.",

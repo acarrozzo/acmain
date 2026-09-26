@@ -9,6 +9,7 @@ export const newsdayCom: Project = {
   started: 2011,
   line: "Three redesigns of one of the biggest regional news sites in the country, and the module system behind the last one.",
   hero: "/img/p/newsday-com.webp",
+  tags: ["Redesign", "Module system", "A/B"],
   body: [
     "In over ten years at Newsday I was involved in at least three complete redesigns of newsday.com. For the 2020 redesign I spearheaded the module system that gives editors the flexibility to adapt the homepage to any news situation, from a quiet Tuesday to election night.",
     "Every step of it: goals with stakeholders, research and user testing, wireframes, design, front-end development, QA, beta, launch, and the loop of A/B tests afterward that never ends. Also NewsdayTV, a streaming news interface built to feel like the services people already use; Sports Central, a results tool for schools and coaches; Faces of Long Island; and the election-night data takeovers.",

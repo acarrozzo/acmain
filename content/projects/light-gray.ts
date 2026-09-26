@@ -9,6 +9,19 @@ export const lightGray: Project = {
   line: "A turn-based browser RPG I've been building for over a decade, now multiplayer.",
   hero: "/img/p/light-gray.webp",
   gallery: ["/img/p/light-gray-forest.webp"],
+  galleryPending: ["Battle", "Party"],
+  tags: ["Turn-based", "Multiplayer", "Browser", "No level cap"],
+  version: "v0.1.8",
+  blurb:
+    "A turn-based browser RPG, twenty years in the making. Room-first exploration, readable combat, guilds, spells, mounts, pets, and a mountain range you can go over.",
+  facts: [
+    { label: "Stack", value: "Next.js · Socket.IO · Postgres" },
+    { label: "Players", value: "Parties of six, live chat" },
+  ],
+  cta: { label: "Play · opens in a few months" },
+  links: [
+    { label: "LG Tactics · the card game", href: "https://www.archimedesgames.com" },
+  ],
   body: [
     "Light Gray started as a way to learn PHP and got out of hand: close to a thousand locations, more than fifty quests, guilds, spells, mounts, pets, crafting, an ocean you can go under and a mountain range you can go over. No level cap. Playable on a phone in a waiting room.",
     "The current version is a from-scratch rebuild: Next.js and Socket.IO, server-authoritative, with parties of up to six, live chat and presence. The rule for the rebuild is simple. Keep the game's identity: its gray, restrained look, its readable numbers, its hand-authored weirdness. Replace everything fragile underneath.",
@@ -19,21 +32,25 @@ export const lightGray: Project = {
       date: "2026-09-12",
       title: "v0.1.8 on Fly",
       note: "Deploy fix, and buying character points straight from the level-up box.",
+      version: "v0.1.8",
     },
     {
       date: "2026-09-11",
       title: "The Mountains are in",
       note: "Four new maps, plus a one-room Star City to seed the next region.",
+      version: "v0.1.8",
     },
     {
       date: "2026-09-09",
       title: "Party UI, thinner and clearer",
       note: "Leader and follower states, and a slimmer party bar.",
+      version: "v0.1.8",
     },
     {
       date: "2026-09-08",
       title: "Regen, buffs, and one item panel",
       note: "A big consolidation of spell, skill and item displays, plus teleport and retreat rules.",
+      version: "v0.1.8",
     },
   ],
 };

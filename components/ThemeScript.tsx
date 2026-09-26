@@ -1,8 +1,8 @@
 /**
  * Runs before paint to set the theme class, preventing a flash of the
- * wrong theme. Reads a saved choice, else falls back to system preference.
+ * wrong theme. Dark is the default; a saved choice wins.
  */
 export function ThemeScript() {
-  const code = `(function(){try{var e=document.documentElement;var s=localStorage.getItem('ac-theme');var d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;e.classList.toggle('dark',d);e.dataset.theme=d?'dark':'light';}catch(x){}})();`;
+  const code = `(function(){try{var e=document.documentElement;var s=localStorage.getItem('ac-theme');var d=s?s==='dark':true;e.classList.toggle('dark',d);e.dataset.theme=d?'dark':'light';}catch(x){document.documentElement.classList.add('dark');}})();`;
   return <script dangerouslySetInnerHTML={{ __html: code }} />;
 }

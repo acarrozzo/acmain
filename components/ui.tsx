@@ -1,95 +1,116 @@
 import { STATUS_LABEL, type Status } from "@/lib/content";
 
-export function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="text-[11px] font-medium uppercase tracking-[0.25em] text-muted">
-      {children}
-    </span>
-  );
-}
-
-export function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="flex items-center gap-2.5 text-[11px] font-medium uppercase tracking-[0.24em] text-accent">
-      <span className="h-2 w-2 rounded-full bg-accent" style={{ boxShadow: "0 0 12px var(--glow)" }} />
-      {children}
-    </p>
-  );
-}
-
-const STATUS_TONE: Record<Status, string> = {
-  live: "bg-accent-soft text-accent",
-  playable: "bg-accent-soft text-accent",
-  prototype: "bg-accent-soft text-accent",
-  paper: "bg-surface-2 text-muted",
-  idea: "bg-surface-2 text-muted",
-  resting: "bg-surface-2 text-muted",
-  archived: "bg-surface-2 text-muted",
+/** Status drawn as a mark that grows: a dot, a stake, a frame, a house, a lit house, moss, a plaque. */
+const GLYPH: Record<Status, React.ReactNode> = {
+  idea: <circle cx="8" cy="8" r="2.4" fill="currentColor" />,
+  paper: (
+    <>
+      <path d="M8 14V3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M8 3h5l-1.5 2L13 7H8z" fill="currentColor" />
+    </>
+  ),
+  prototype: <rect x="3" y="3" width="10" height="10" rx="1" fill="none" stroke="currentColor" strokeWidth="1.6" strokeDasharray="3 2" />,
+  playable: <path d="M3 8l5-5 5 5v6H3z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />,
+  live: (
+    <>
+      <path d="M3 8l5-5 5 5v6H3z" fill="currentColor" />
+      <rect x="6.5" y="8.5" width="3" height="3" fill="var(--surface)" />
+    </>
+  ),
+  resting: (
+    <>
+      <path d="M3 8l5-5 5 5v6H3z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M2 14c1.5-1.2 3-1.2 4.5 0S9.5 15.2 11 14s3-1.2 4 0" fill="none" stroke="currentColor" strokeWidth="1.4" />
+    </>
+  ),
+  archived: (
+    <>
+      <rect x="2.5" y="4.5" width="11" height="7" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M5 8h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </>
+  ),
 };
 
-export function StatusPill({ status }: { status: Status }) {
-  const dot = status === "live" || status === "playable" || status === "prototype";
+const HOT: Status[] = ["live", "playable", "prototype"];
+
+export function StatusChip({ status, onImage = false }: { status: Status; onImage?: boolean }) {
+  const cls = ["chip", onImage ? "on-image" : HOT.includes(status) ? "hot" : ""].filter(Boolean).join(" ");
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium ${STATUS_TONE[status]}`}
-    >
-      {dot && <span className="h-1.5 w-1.5 rounded-full bg-accent" />}
+    <span className={cls}>
+      <svg viewBox="0 0 16 16" aria-hidden="true">{GLYPH[status]}</svg>
       {STATUS_LABEL[status]}
     </span>
   );
 }
 
-/** An image if the project has one, a calm tonal field if it doesn't. */
-export function Art({
-  src,
-  alt = "",
-  className = "",
-  position,
-}: {
-  src?: string;
-  alt?: string;
-  className?: string;
-  position?: string;
-}) {
-  if (!src) return <div className={`art-field ${className}`} aria-hidden />;
+export function Tags({ items, world }: { items: string[]; world: string }) {
+  if (items.length === 0) return null;
   return (
-    <div className={`relative overflow-hidden bg-surface-2 ${className}`}>
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        className="absolute inset-0 h-full w-full object-cover"
-        style={position ? { objectPosition: position } : undefined}
-      />
+    <div className={`tags t-${world}`}>
+      {items.map((t) => (
+        <span key={t}>{t}</span>
+      ))}
     </div>
   );
 }
 
-export function PageHeader({
-  eyebrow,
+/** Stands in for artwork that does not exist yet. */
+export function TypeTile({ mark, note = "artwork coming", className = "" }: { mark: string; note?: string; className?: string }) {
+  return (
+    <div className={`type-tile ${className}`}>
+      <span>{mark}</span>
+      <small>{note}</small>
+    </div>
+  );
+}
+
+export function Kicker({ children, muted = false, className = "" }: { children: React.ReactNode; muted?: boolean; className?: string }) {
+  return <span className={`kicker ${muted ? "mut" : ""} ${className}`.trim()}>{children}</span>;
+}
+
+/** A section head: kicker, optional headline, and a link or a note on the right. */
+export function SectionHead({
+  kicker,
   title,
-  intro,
-  children,
+  more,
+  moreHref = "#",
+  dek,
+  rule = true,
 }: {
-  eyebrow: string;
-  title: string;
-  intro?: string[];
-  children?: React.ReactNode;
+  kicker: string;
+  title?: string;
+  more?: string;
+  moreHref?: string;
+  dek?: string;
+  rule?: boolean;
 }) {
   return (
-    <section className="container-page pt-32 pb-12 md:pt-40 md:pb-16">
-      <Eyebrow>{eyebrow}</Eyebrow>
-      <h1 className="mt-5 max-w-3xl text-4xl leading-[1.05] md:text-6xl">{title}</h1>
-      {intro && (
-        <div className="copy mt-7 max-w-2xl text-lg leading-relaxed text-ink-soft">
-          {intro.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
-      )}
-      {children}
-    </section>
+    <div className={`sec-head ${rule ? "rule" : ""}`}>
+      <div className="flex flex-col">
+        <Kicker>{kicker}</Kicker>
+        {title && <h2>{title}</h2>}
+      </div>
+      {more ? (
+        <a className="more" href={moreHref}>
+          {more}
+        </a>
+      ) : dek ? (
+        <span className="dek">{dek}</span>
+      ) : null}
+    </div>
+  );
+}
+
+export function Crumbs({ items }: { items: { label: string; href?: string }[] }) {
+  return (
+    <div className="crumbs">
+      {items.map((c, i) => (
+        <span key={c.label} className="contents">
+          {i > 0 && <span>/</span>}
+          {c.href ? <a href={c.href}>{c.label}</a> : <span>{c.label}</span>}
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -99,4 +120,32 @@ export function ExternalMark() {
 
 export function isExternal(href: string) {
   return /^https?:\/\//.test(href);
+}
+
+export function Btn({
+  href,
+  children,
+  primary = false,
+  small = false,
+  ghost = false,
+  disabled = false,
+  onImage = false,
+}: {
+  href?: string;
+  children: React.ReactNode;
+  primary?: boolean;
+  small?: boolean;
+  ghost?: boolean;
+  disabled?: boolean;
+  onImage?: boolean;
+}) {
+  const cls = ["btn", primary && "pri", small && "sm", ghost && "ghost", disabled && "dis", onImage && "on-image"].filter(Boolean).join(" ");
+  if (!href || disabled) return <span className={cls}>{children}</span>;
+  const ext = isExternal(href);
+  return (
+    <a href={href} className={cls} {...(ext ? { target: "_blank", rel: "noopener" } : {})}>
+      {children}
+      {ext && <ExternalMark />}
+    </a>
+  );
 }

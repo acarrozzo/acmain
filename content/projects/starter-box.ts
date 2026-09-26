@@ -7,6 +7,8 @@ export const starterBox: Project = {
   kind: "Tool",
   status: "resting",
   line: "A world builder for making games the way I make games.",
+  tags: ["Tool", "World builder", "TypeScript"],
+  mark: "SB",
   body: [
     "Starter Box is the tool underneath the games: rooms connected in eight directions, an edit mode for building and a play mode for walking through it, items to place and pick up, a map that draws itself. It has been rebuilt four times, most recently in TypeScript with tests and full keyboard navigation.",
     "The real ambition is a system: a layered way of describing a world once and generating the game from it. Light Gray is the first customer.",

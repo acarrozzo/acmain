@@ -1,196 +1,195 @@
 import { person } from "@/content/person";
 import { site } from "@/content/site";
 import {
-  building,
+  featuredItems,
   latestEntries,
-  projectPath,
+  latestEntryInWorld,
+  projectBySlug,
   projectsInWorld,
+  toCapsule,
+  workshopTabs,
   worldPath,
   worlds,
+  type EntryWithProject,
+  type World,
 } from "@/lib/content";
 import { formatDate } from "@/lib/format";
-import { ProjectCard } from "./ProjectCard";
-import { Art, SectionLabel } from "./ui";
+import { Featured } from "./Featured";
+import { Workshop } from "./Workshop";
+import { CapsuleGrid } from "./Capsule";
+import { Kicker, SectionHead } from "./ui";
+import { OrbitalNav, type OrbitEntry, type OrbitWorld } from "./OrbitalNav";
 
-function SectionHead({
-  label,
-  title,
-  aside,
-}: {
-  label: string;
-  title: string;
-  aside?: React.ReactNode;
-}) {
+/** Featured & fresh. */
+export function FeaturedSection() {
+  const items = featuredItems();
+  if (items.length === 0) return null;
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-      <div>
-        <SectionLabel>{label}</SectionLabel>
-        <h2 className="mt-3 max-w-2xl text-3xl leading-tight md:text-4xl">{title}</h2>
-      </div>
-      {aside}
-    </div>
+    <section className="featured scroll-mt-6" id="featured">
+      <SectionHead kicker="Featured & fresh" more="What’s new, in order →" moreHref="/log" rule={false} />
+      <Featured items={items} />
+    </section>
   );
 }
 
-function MoreLink({ href, children }: { href: string; children: React.ReactNode }) {
+function Module({ kicker, right, children }: { kicker: string; right?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <a
-      href={href}
-      className="group inline-flex items-center gap-1.5 text-sm text-accent hover:underline"
-    >
+    <section className="module">
+      <div className="mod-head">
+        <Kicker>{kicker}</Kicker>
+        {right}
+      </div>
       {children}
-      <span className="transition-transform group-hover:translate-x-0.5">→</span>
-    </a>
+    </section>
   );
 }
 
-/** The newest entries across every project. This is the pulse. */
-export function NowStrip() {
-  const entries = latestEntries(4);
+function shortDate(d: string) {
+  const full = formatDate(d);
+  return full.replace(/ \d{4}$/, "");
+}
+
+export function LogColumn() {
+  const entries = latestEntries(8);
   return (
-    <section id="now" className="scroll-mt-20 border-t border-line py-16 md:py-20">
-      <div className="container-page">
-        <SectionHead
-          label="Now"
-          title="What's happening in the workshop."
-          aside={<MoreLink href="/log">Everything, in order</MoreLink>}
-        />
-        <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {entries.map((e, i) => (
-            <li key={`${e.project.slug}-${e.date}-${i}`}>
-              <a
-                href={e.href && !e.href.startsWith("http") ? e.href : projectPath(e.project)}
-                className="group flex h-full gap-4 rounded-2xl border border-line bg-surface p-4 transition-colors hover:border-accent"
-              >
-                <div className="flex min-w-0 flex-1 flex-col">
-                  <time dateTime={e.date} className="mono text-[11px] text-muted">
-                    {formatDate(e.date)}
-                  </time>
-                  <span className="mt-1 text-[12px] font-medium text-accent">{e.project.name}</span>
-                  <span className="mt-1 text-[15px] font-semibold leading-snug tracking-tight text-ink">
-                    {e.title}
-                  </span>
-                  {e.note && (
-                    <span className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted">{e.note}</span>
-                  )}
-                  <span className="mt-auto pt-3 text-[11px] uppercase tracking-widest text-muted">
-                    {e.world.name}
-                  </span>
-                </div>
-                <Art
-                  src={e.project.hero}
-                  className="h-16 w-16 shrink-0 self-start rounded-xl"
-                  position={e.project.slug === "coin-and-castle" ? "center top" : undefined}
-                />
+    <Module kicker="The log" right={<span className="mono text-muted">newest first</span>}>
+      <ol className="log-list">
+        {entries.map((e, i) => (
+          <li key={`${e.project.slug}-${e.date}-${i}`}>
+            <span className="mono">{shortDate(e.date)}</span>
+            <div>
+              <a href={`/${e.world.slug}/${e.project.slug}`} className="p">
+                {e.project.name}
               </a>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-  );
-}
-
-/** Projects with fresh work, straight from their status. */
-export function BuildingStrip() {
-  const list = building().slice(0, 4);
-  if (list.length === 0) return null;
-  return (
-    <section className="border-t border-line py-16 md:py-20">
-      <div className="container-page">
-        <SectionHead label="Currently building" title="The ones with fresh commits." />
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {list.map((p) => (
-            <ProjectCard key={p.slug} project={p} showWorld compact />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/** The three worlds, with a taste of what is inside each. */
-export function WorldsRow() {
-  return (
-    <section className="border-t border-line py-16 md:py-20">
-      <div className="container-page">
-        <SectionHead label="Three worlds" title="Everything I make lives in one of these." />
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {worlds.map((w) => {
-            const list = projectsInWorld(w);
-            return (
-              <a
-                key={w.id}
-                href={worldPath(w)}
-                className="group flex flex-col gap-4 rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-accent"
-              >
-                <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="text-2xl tracking-tight">{w.name}</h3>
-                  <span className="mono text-[11px] text-muted">
-                    {list.length} {list.length === 1 ? "project" : "projects"}
-                  </span>
-                </div>
-                <p className="text-sm text-muted">{w.tagline}</p>
-                <ul className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-ink-soft">
-                  {list.slice(0, 4).map((p) => (
-                    <li key={p.slug}>{p.name}</li>
-                  ))}
-                  {list.length > 4 && <li className="text-muted">and more</li>}
-                </ul>
-                <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-sm text-accent">
-                  Enter <span className="transition-transform group-hover:translate-x-0.5">→</span>
-                </span>
-              </a>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/** Who is behind all this, briefly. */
-export function AboutTeaser() {
-  return (
-    <section className="border-t border-line py-16 md:py-20">
-      <div className="container-page grid gap-8 md:grid-cols-[1fr_2fr] md:gap-16">
-        <div className="flex items-start gap-5">
-          <img
-            src={person.portrait}
-            alt={person.name}
-            width={72}
-            height={72}
-            loading="lazy"
-            className="h-[72px] w-[72px] shrink-0 rounded-full border border-line-strong object-cover"
-          />
-          <div>
-            <SectionLabel>About</SectionLabel>
-            <div className="mt-2 text-lg font-semibold tracking-tight">{person.name}</div>
-            <div className="text-sm text-muted">
-              {person.role} · {person.location}
+              <div className="t">{e.title}</div>
+              {e.note && <div className="n">{e.note}</div>}
             </div>
-          </div>
-        </div>
+          </li>
+        ))}
+      </ol>
+      <a className="log-more" href="/log">
+        Everything, in order →
+      </a>
+    </Module>
+  );
+}
+
+export function NowPlaying() {
+  const np = person.nowPlaying;
+  return (
+    <Module kicker="Now playing" right={<span className="mono text-muted">from AC Music</span>}>
+      <div className="playing">
+        <img src={np.art} alt="" loading="lazy" />
         <div>
-          <p className="max-w-xl text-xl leading-snug tracking-tight text-ink-soft md:text-2xl">
-            {person.teaser}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a
-              href="/about"
-              className="rounded-full border border-line-strong px-5 py-2.5 text-sm text-ink-soft transition-colors hover:border-accent hover:text-accent"
-            >
-              More about me
-            </a>
-            <a
-              href={`mailto:${site.email}`}
-              className="rounded-full border border-line-strong px-5 py-2.5 text-sm text-ink-soft transition-colors hover:border-accent hover:text-accent"
-            >
-              {site.email}
-            </a>
+          <b>{np.title}</b>
+          <span>
+            {np.by} · {np.note}
+          </span>
+        </div>
+        <a className="play" href={np.href} target="_blank" rel="noopener" aria-label={`Play ${np.title} at AC Music`}>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M6 4l14 8-14 8z" />
+          </svg>
+        </a>
+      </div>
+    </Module>
+  );
+}
+
+export function Editor() {
+  return (
+    <Module kicker="About the editor">
+      <div className="editor">
+        <img src={person.portrait} alt={person.name} loading="lazy" />
+        <div>
+          <p>{person.editorBlurb}</p>
+          <div className="links">
+            <a href="/about">The long version →</a>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
           </div>
         </div>
       </div>
+    </Module>
+  );
+}
+
+export function WorldsTiles() {
+  return (
+    <section className="sec">
+      <SectionHead kicker="Three worlds" title="Everything I make lives in one of these." />
+      <div className="worlds">
+        {worlds.map((w) => {
+          const list = projectsInWorld(w);
+          return (
+            <a key={w.id} href={worldPath(w)} className="world">
+              {w.hero && <img src={w.hero} alt="" loading="lazy" />}
+              <div className="ov" />
+              <div className="txt">
+                <Kicker>
+                  {list.length} {list.length === 1 ? "project" : "projects"}
+                </Kicker>
+                <h3>{w.name}</h3>
+                <p>{w.tagline}</p>
+                <span className="who">{list.slice(0, 3).map((p) => p.name).join(" · ")}</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
     </section>
   );
+}
+
+export function WorldGrid({ world, count, title, more }: { world: World; count: number; title: string; more: string }) {
+  const items = projectsInWorld(world).slice(0, count).map(toCapsule);
+  return (
+    <section className="sec">
+      <SectionHead kicker={world.name} title={title} more={more} moreHref={worldPath(world)} />
+      <CapsuleGrid items={items} />
+    </section>
+  );
+}
+
+export function WorkshopSection() {
+  return <Workshop tabs={workshopTabs()} />;
+}
+
+/** The opening band: who this is, in one line, beside the orbit of three worlds. */
+export function HeroOrbit() {
+  const toOrbit = (e: EntryWithProject | undefined): OrbitEntry | null =>
+    e ? { date: e.date, title: e.title, project: e.project.name } : null;
+  const orbitWorlds: OrbitWorld[] = worlds.map((w) => ({
+    slug: w.slug,
+    name: w.name,
+    tagline: w.tagline,
+    count: projectsInWorld(w).length,
+    latest: toOrbit(latestEntryInWorld(w)),
+  }));
+  const latest = toOrbit(latestEntries(1)[0]);
+  return (
+    <section className="hero-band">
+      <div className="flex flex-col gap-5">
+        <Kicker>
+          {person.location} · designing since {person.since}
+        </Kicker>
+        <h1>{person.hero.line}</h1>
+        <p className="sub">{person.hero.sub}</p>
+        <div className="acts">
+          <a href="/work" className="btn pri">
+            See the work
+          </a>
+          <a href="#featured" className="btn">
+            What&apos;s new
+          </a>
+        </div>
+      </div>
+      <div className="w-full">
+        <OrbitalNav worlds={orbitWorlds} latest={latest} />
+      </div>
+    </section>
+  );
+}
+
+export function worldOf(slug: string) {
+  return projectBySlug(slug);
 }

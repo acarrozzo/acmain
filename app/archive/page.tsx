@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { SiteNav } from "@/components/SiteNav";
+import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
-import { ExternalMark, PageHeader, SectionLabel } from "@/components/ui";
-import { navItems } from "@/components/nav";
+import { Btn, Crumbs, Kicker, SectionHead } from "@/components/ui";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -22,39 +21,36 @@ const inside = [
 
 export default function ArchivePage() {
   return (
-    <main>
-      <SiteNav items={navItems} />
-      <PageHeader
-        eyebrow="Archive"
-        title="The original site, kept exactly as it was."
-        intro={[
-          "acarrozzo.com began in the 90s as a place for me and my friends to share hilarious Photoshop stuff. It grew into a portfolio and stayed one for twenty years. It is archived here, unedited, as a stable comparison to life before the machines came along and made us all superheroes.",
-          "Nothing gets deleted around here. It gets archived.",
-        ]}
-      >
-        <a
-          href={site.archiveUrl}
-          target="_blank"
-          rel="noopener"
-          className="mt-8 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hi"
-        >
-          {site.archiveLabel}
-          <ExternalMark />
-        </a>
-      </PageHeader>
-
-      <section className="container-page pb-16 md:pb-20">
-        <SectionLabel>What&apos;s in there</SectionLabel>
-        <dl className="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2">
-          {inside.map((it) => (
-            <div key={it.name}>
-              <dt className="text-lg font-semibold tracking-tight">{it.name}</dt>
-              <dd className="mt-2 text-sm leading-relaxed text-muted">{it.text}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+    <>
+      <Masthead />
+      <main className="container-page">
+        <Crumbs items={[{ label: "AC.", href: "/" }, { label: "Archive" }]} />
+        <div className="pagehead">
+          <Kicker>Archive · 2000 to 2025</Kicker>
+          <h1>The original site, kept exactly as it was.</h1>
+          <p className="dek">
+            acarrozzo.com began in the 90s as a place for me and my friends to share hilarious Photoshop stuff. It grew into a portfolio and stayed one for twenty years. It is archived here, unedited, as a stable comparison to life before the machines came along and made us all superheroes.
+          </p>
+          <p className="dek">Nothing gets deleted around here. It gets archived.</p>
+          <div>
+            <Btn href={site.archiveUrl} primary>
+              {site.archiveLabel}
+            </Btn>
+          </div>
+        </div>
+        <section className="sec">
+          <SectionHead kicker="What’s in there" />
+          <div className="what">
+            {inside.map((it) => (
+              <div key={it.name}>
+                <b>{it.name}</b>
+                <p>{it.text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

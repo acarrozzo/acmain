@@ -10,6 +10,8 @@ export const archimedesGames: Project = {
   hero: "/img/p/archimedes-games.webp",
   gallery: ["/img/p/archimedes-monster-party.webp", "/img/p/archimedes-house-deck.webp"],
   started: 2019,
+  tags: ["Physical", "Card games", "Kickstarter"],
+  cta: { label: "Buy on Etsy", href: "https://www.etsy.com/shop/ArchimedesCreations" },
   body: [
     "Archimedes Games is the physical side of the games world. Monster Party is a five-suit deck with fifty original monsters that plays every card game you already know. LG Tactics is a strategy-lite battle card game and a quiet introduction to the Light Gray story. The New York House Deck is a straight-up classic deck with strong, simple design and groovy illustrations.",
     "All three were funded on Kickstarter and are sold on Etsy. Archimedes keeps its own site, because it has its own customers.",

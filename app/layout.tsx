@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import { ThemeScript } from "@/components/ThemeScript";
 import { site } from "@/content/site";
 import "./globals.css";
@@ -11,10 +11,17 @@ const fraunces = Fraunces({
   axes: ["opsz"],
 });
 
-const inter = Inter({
+const instrument = Instrument_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-instrument",
   display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  display: "swap",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -40,7 +47,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${instrument.variable} ${jetbrains.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <ThemeScript />
       </head>

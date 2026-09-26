@@ -1,18 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { SiteNav } from "@/components/SiteNav";
+import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
-import { ProjectCard } from "@/components/ProjectCard";
-import { ExternalMark, PageHeader, SectionLabel } from "@/components/ui";
-import { navItems } from "@/components/nav";
+import { CapsuleGrid } from "@/components/Capsule";
+import { FilteredGrid, type Filter } from "@/components/Filters";
+import { Btn, Crumbs, ExternalMark, Kicker, SectionHead, StatusChip, Tags } from "@/components/ui";
+import { person } from "@/content/person";
 import { site } from "@/content/site";
 import {
   alsoInWorld,
-  groupByStatus,
+  latestEntryOf,
+  projectPath,
   projectsInWorld,
+  toCapsule,
   worldBySlug,
   worlds,
+  type Project,
 } from "@/lib/content";
+import { formatDate } from "@/lib/format";
 
 type Params = Promise<{ world: string }>;
 
@@ -27,6 +32,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return { title: w.label ?? w.name, description: w.headline };
 }
 
+function count(list: Project[], pred: (p: Project) => boolean) {
+  return list.filter(pred).length;
+}
+
 export default async function WorldPage({ params }: { params: Params }) {
   const { world } = await params;
   const w = worldBySlug(world);
@@ -34,107 +43,133 @@ export default async function WorldPage({ params }: { params: Params }) {
 
   const mine = projectsInWorld(w);
   const also = alsoInWorld(w);
+  const lead = mine[0];
+
+  const allFilters: Filter[] = [
+    { id: "all", label: "All" },
+    { id: "playable", label: "Playable", statuses: ["playable"] },
+    { id: "live", label: "Live", statuses: ["live"] },
+    { id: "building", label: "Building", statuses: ["prototype", "paper", "idea"] },
+    { id: "resting", label: "Resting", statuses: ["resting", "archived"] },
+  ];
+  const filters = allFilters.filter((f) => !f.statuses || mine.some((p) => f.statuses!.includes(p.status)));
 
   return (
-    <main>
-      <SiteNav items={navItems} />
-      <PageHeader eyebrow={w.name} title={w.headline} intro={w.intro} />
+    <>
+      <Masthead backdrop={w.backdrop} />
+      <main className="container-page">
+        <Crumbs items={[{ label: "AC.", href: "/" }, { label: w.label ?? w.name }]} />
 
-      {w.listing === "featured" ? (
-        <section className="container-page pb-16 md:pb-20">
-          <SectionLabel>Selected work</SectionLabel>
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {mine.map((p) => (
-              <ProjectCard key={p.slug} project={p} />
-            ))}
-            {also.map((p) => (
-              <ProjectCard key={p.slug} project={p} showWorld />
-            ))}
-          </div>
-        </section>
-      ) : (
-        <div className="container-page flex flex-col gap-14 pb-16 md:pb-20">
-          {groupByStatus(mine).map((g) => (
-            <section key={g.label}>
-              <SectionLabel>{g.label}</SectionLabel>
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {g.projects.map((p) => (
-                  <ProjectCard key={p.slug} project={p} />
-                ))}
+        {w.listing === "status" ? (
+          <>
+            <div className="pagehead">
+              <Kicker>
+                {w.name} · {w.tagline.toLowerCase()}
+              </Kicker>
+              <h1>{w.headline}</h1>
+              <p className="dek">{w.intro.join(" ")}</p>
+              <div className="stats mono">
+                <span>
+                  <b>{mine.length}</b> projects
+                </span>
+                <span>
+                  <b>{count(mine, (p) => p.status === "playable" || p.status === "live")}</b> live or playable
+                </span>
+                <span>
+                  <b>{count(mine, (p) => p.status === "prototype")}</b> building
+                </span>
+                <span>
+                  <b>{count(mine, (p) => p.status === "resting" || p.status === "archived")}</b> resting
+                </span>
               </div>
-            </section>
-          ))}
-          {also.length > 0 && (
-            <section>
-              <SectionLabel>Also lives here</SectionLabel>
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {also.map((p) => (
-                  <ProjectCard key={p.slug} project={p} showWorld />
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
-      )}
+            </div>
 
-      {w.sections?.map((s) => (
-        <section key={s.title} className="border-t border-line py-16 md:py-20">
-          <div className="container-page">
-            <SectionLabel>{s.title}</SectionLabel>
-            <dl className="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2">
-              {s.items.map((it) => (
-                <div key={it.name}>
-                  <dt className="text-lg font-semibold tracking-tight">{it.name}</dt>
-                  <dd className="mt-2 text-sm leading-relaxed text-muted">{it.text}</dd>
+            {lead && (
+              <div className="banner">
+                <div className="img">
+                  {lead.hero ? <img src={lead.hero} alt="" /> : <div className="type-tile h-full" />}
                 </div>
-              ))}
-            </dl>
-          </div>
-        </section>
-      ))}
+                <div className="b">
+                  <Kicker>
+                    Featured{lead.version ? ` · ${lead.version}` : ""}
+                    {latestEntryOf(lead) ? ` · updated ${formatDate(latestEntryOf(lead)!.date)}` : ""}
+                  </Kicker>
+                  <h2>{lead.name}</h2>
+                  <p>{lead.blurb ?? lead.line}</p>
+                  <div className="flex items-center gap-3">
+                    <StatusChip status={lead.status} />
+                  </div>
+                  <Tags items={lead.tags ?? []} world={lead.world} />
+                  <div className="mt-1 flex flex-wrap gap-2">
+                    <Btn href={projectPath(lead)} primary>
+                      See the project
+                    </Btn>
+                    {lead.cta?.href && <Btn href={lead.cta.href}>{lead.cta.label}</Btn>}
+                  </div>
+                </div>
+              </div>
+            )}
 
-      {(w.elsewhere || w.id === "design") && (
-        <section className="border-t border-line py-16 md:py-20">
-          <div className="container-page grid gap-10 md:grid-cols-2">
+            <FilteredGrid items={[...mine, ...also].map(toCapsule)} filters={filters} />
+          </>
+        ) : (
+          <>
+            <div className="pagehead">
+              <Kicker>
+                {w.name} · {w.tagline.toLowerCase()}
+              </Kicker>
+              <h1>{w.headline}</h1>
+              {w.intro.map((p, i) => (
+                <p key={i} className="dek">
+                  {p}
+                </p>
+              ))}
+              <div className="flex flex-wrap gap-2">
+                <Btn href={`mailto:${site.email}`} primary>
+                  {site.email}
+                </Btn>
+                <Btn href={person.linkedin}>LinkedIn</Btn>
+              </div>
+            </div>
+
+            <section className="flex flex-col">
+              <SectionHead kicker="Selected work" dek="Imagery first. Case studies for QuickFrame are being written." />
+              <CapsuleGrid items={[...mine, ...also].map(toCapsule)} />
+            </section>
+
+            {w.sections?.map((s) => (
+              <section key={s.title} className="sec">
+                <SectionHead kicker={s.title} />
+                <div className="what">
+                  {s.items.map((it) => (
+                    <div key={it.name}>
+                      <b>{it.name}</b>
+                      <p>{it.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+
             {w.elsewhere && (
-              <div>
-                <SectionLabel>Elsewhere</SectionLabel>
-                <ul className="mt-5 flex flex-col gap-2">
+              <section className="sec">
+                <SectionHead kicker="Elsewhere" />
+                <ul className="flex flex-col gap-2">
                   {w.elsewhere.map((l) => (
                     <li key={l.href}>
-                      <a
-                        href={l.href}
-                        target="_blank"
-                        rel="noopener"
-                        className="text-ink-soft underline-offset-4 hover:text-accent hover:underline"
-                      >
+                      <a href={l.href} target="_blank" rel="noopener" className="text-ink-soft underline-offset-4 hover:text-accent hover:underline">
                         {l.label}
                         <ExternalMark />
                       </a>
                     </li>
                   ))}
                 </ul>
-              </div>
+              </section>
             )}
-            {w.id === "design" && (
-              <div>
-                <SectionLabel>Get in touch</SectionLabel>
-                <p className="mt-5 max-w-md text-lg leading-snug tracking-tight text-ink-soft">
-                  The best way to reach me is email. I read all of it.
-                </p>
-                <a
-                  href={`mailto:${site.email}`}
-                  className="mt-5 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hi"
-                >
-                  {site.email}
-                </a>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
+          </>
+        )}
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

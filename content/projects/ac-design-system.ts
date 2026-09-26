@@ -9,6 +9,7 @@ export const acDesignSystem: Project = {
   started: 2023,
   line: "The system under this site: tokens in Figma and in code, one accent, two themes.",
   hero: "/img/p/ac-design-system.webp",
+  tags: ["Tokens", "Figma", "Two themes"],
   body: [
     "For years my CSS was my style guide. In 2023 I started building the system properly in Figma, with styles, components and variants, so new pages and ideas could be prototyped fast.",
     "The 2026 version lives in code too: a token set where one accent, in two lightnesses, tints the whole platform, and a content model with four nouns, Person, World, Project and Entry, where a new project is one record and never a new layout. This site is the reference implementation.",

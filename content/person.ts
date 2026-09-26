@@ -2,6 +2,8 @@ export const person = {
   name: "Anthony Carrozzo",
   first: "Anthony",
   role: "Senior Product Designer at MNTN",
+  /** The one word under the name in the masthead. */
+  title: "Designer",
   location: "Long Island, NY",
   since: 2004,
   portrait: "/img/p/anthony.webp",
@@ -9,8 +11,21 @@ export const person = {
 
   /** Home page hero. */
   hero: {
-    line: "Hey, I'm Anthony. I design software by day and build games, songs and worlds the rest of the time.",
+    line: "Hey. I'm Anthony. I design and build software, games and music.",
     sub: "This is where anyone can learn what I'm about: what I'm making right now, what I've made before, and where it's all going.",
+  },
+
+  /** "About the editor" box on the home page. */
+  editorBlurb:
+    "Hey, I’m Anthony. Senior Product Designer at MNTN by day. The rest of the time, all of this. Twenty-two years in, still hand-coding.",
+
+  /** Now playing. Hand-picked until AC Music has a feed. */
+  nowPlaying: {
+    title: "She Knows",
+    by: "Saint Anthony",
+    note: "hip-hop, spoken word",
+    href: "https://anthonymusic.vercel.app/",
+    art: "/img/p/ac-music.webp",
   },
 
   /** Home page about teaser. */
