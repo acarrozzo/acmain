@@ -33,11 +33,20 @@ const GLYPH: Record<Status, React.ReactNode> = {
 
 const HOT: Status[] = ["live", "playable", "prototype"];
 
+/** The bare glyph, 16 on 16, for chips and the nav flyout. Carries `data-status` so CSS can tint it. */
+export function StatusGlyph({ status }: { status: Status }) {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" data-status={status}>
+      {GLYPH[status]}
+    </svg>
+  );
+}
+
 export function StatusChip({ status, onImage = false }: { status: Status; onImage?: boolean }) {
   const cls = ["chip", onImage ? "on-image" : HOT.includes(status) ? "hot" : ""].filter(Boolean).join(" ");
   return (
     <span className={cls}>
-      <svg viewBox="0 0 16 16" aria-hidden="true">{GLYPH[status]}</svg>
+      <StatusGlyph status={status} />
       {STATUS_LABEL[status]}
     </span>
   );

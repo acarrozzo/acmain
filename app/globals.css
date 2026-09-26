@@ -191,14 +191,34 @@ a { color: inherit; }
 .iconbtn:hover { border-color: var(--line-strong); color: var(--ink); background: color-mix(in oklab, var(--surface) 80%, transparent); }
 .iconbtn svg { width: 16px; height: 16px; }
 .mast-nav { display: flex; align-items: center; justify-content: center; gap: 20px; border-bottom: 1px solid var(--line-strong); padding: 10px 0; }
-.mast-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 26px; }
-.mast-nav a { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); padding: 2px 0; border-bottom: 2px solid transparent; }
-.mast-nav a:hover, .mast-nav a.on { color: var(--ink); border-bottom-color: var(--accent); }
+.mast-nav > ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 26px; }
+.mast-nav li { position: relative; }
+.mast-nav .tab { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); padding: 2px 0; border-bottom: 2px solid transparent; }
+.mast-nav .tab:hover, .mast-nav .tab.on, .mast-nav .tab[aria-expanded="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* The flyout: a world's site tree hanging under its tab. The wrapper is
+   transparent and reaches up to the tab so the pointer never leaves the
+   item; the card carries the look. Hidden on touch and once the nav wraps. */
+.fly { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); padding-top: 14px; z-index: 40; }
+.fly-card { min-width: 236px; padding: 6px; border-radius: 8px; border: 1px solid var(--line-strong); background: color-mix(in oklab, var(--surface) 94%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 18px 40px -18px rgba(0,0,0,.5); animation: fly-in .18s var(--ease-orbit) both; }
+.fly-all { display: block; margin: 0 2px 4px; padding: 4px 6px 8px; border-bottom: 1px solid var(--line); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; transition: color .12s; }
+.fly-all:hover, .fly-all:focus-visible { color: var(--accent); outline: none; }
+.fly ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.fly li a { display: flex; align-items: center; gap: 9px; padding: 6px 8px; border-radius: 5px; font-size: 13.5px; font-weight: 500; color: var(--ink-soft); white-space: nowrap; transition: background-color .12s, color .12s; }
+.fly li a:hover, .fly li a:focus-visible { background: var(--surface-2); color: var(--ink); outline: none; }
+.fly li a.on { color: var(--accent); }
+.fly li a svg { width: 14px; height: 14px; flex: none; color: var(--muted); }
+.fly li a svg[data-status="live"], .fly li a svg[data-status="playable"], .fly li a svg[data-status="prototype"] { color: var(--accent); }
+.fly li a svg[data-status="resting"], .fly li a svg[data-status="archived"] { opacity: .55; }
+.fly li a .f { margin-left: auto; padding-left: 16px; font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.fly-sep { height: 1px; margin: 5px 8px; background: var(--line); }
+@keyframes fly-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (hover: none), (max-width: 900px) { .fly { display: none; } }
 @media (max-width: 900px) {
   .mark-icon { width: 60px; height: 60px; }
   .mast-name .n { font-size: 17px; }
   .mast-name .r { font-size: 11px; }
-  .mast-nav ul { gap: 12px 16px; flex-wrap: wrap; justify-content: center; }
+  .mast-nav > ul { gap: 12px 16px; flex-wrap: wrap; justify-content: center; }
   .search .lbl { display: none; }
 }
 

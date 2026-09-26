@@ -50,6 +50,13 @@ house, moss, a plaque. Retirement is a status, not a deletion.
 
 - **Masthead**: the name left, the A mark centered, search and
   theme toggle right, a centered section nav under a double rule. Not sticky.
+  Hover or focus a world's tab and a small flyout hangs under it with the
+  world's site tree: an "All Games" link to the world page, then every
+  project as a status glyph and a name (guests from other worlds under a
+  hairline). Escape closes it. There is
+  no flyout on touch or once the nav wraps; the tab just goes to the world.
+  The tree comes from `navItems` in `lib/nav.ts`, so a new project shows up
+  on its own.
 - **The orbit** (`OrbitalNav`): the opening band. Three world orbs drift clockwise
   around the hub, each with its projects orbiting it as tiny status-coloured moons,
   also clockwise. Hover or focus a world and everything eases to a stop while the
