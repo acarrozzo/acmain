@@ -42,6 +42,14 @@ export type Entry = {
 
 export type Fact = { label: string; value: string };
 
+/** A full-width image inside a project's story, with an optional caption. */
+export type Figure = { image: string; alt: string; caption?: string };
+
+/** One piece of a project's story: a paragraph, or a figure between paragraphs. */
+export type Block = string | Figure;
+
+export const isFigure = (b: Block): b is Figure => typeof b !== "string";
+
 export type Project = {
   slug: string;
   name: string;
@@ -53,9 +61,13 @@ export type Project = {
   short?: string;
   /** One line. Shows on cards and as the page subtitle. */
   line: string;
-  /** Paragraphs for the project page. */
-  body?: string[];
-  /** Hero image path under /public. Optional; a typographic tile stands in. */
+  /**
+   * The project page's story: paragraphs, with figures between them when the
+   * project has a case study to tell. A page whose body carries figures
+   * tells the story inline and skips the screenshot strip at the top.
+   */
+  body?: Block[];
+  /** Hero image path under /public: the card image, and the strip's first slide. Optional; a typographic tile stands in. */
   hero?: string;
   /** Extra images for the project page's screenshot strip. */
   gallery?: string[];

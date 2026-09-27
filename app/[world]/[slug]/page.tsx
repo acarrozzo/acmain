@@ -5,6 +5,8 @@ import { Footer } from "@/components/Footer";
 import { EntryList } from "@/components/Entries";
 import { CapsuleGrid } from "@/components/Capsule";
 import { HeroCarousel, type Slide } from "@/components/HeroCarousel";
+import { Fig, Story } from "@/components/Story";
+import { isFigure } from "@/content/types";
 import { Btn, Crumbs, Kicker, SectionHead, StatusChip, Tags } from "@/components/ui";
 import {
   entriesOf,
@@ -52,6 +54,15 @@ export default async function ProjectPage({ params }: { params: Params }) {
   ];
   const years = p.started && p.ended ? `${p.started}–${p.ended}` : p.started ? `${p.started}–` : null;
 
+  /**
+   * A body with figures is a case study: it tells its story inline and skips
+   * the screenshot strip. When it opens on a figure, that figure leads the page.
+   */
+  const inline = (p.body ?? []).some(isFigure);
+  const first = p.body?.[0];
+  const lead = inline && first && isFigure(first) ? first : null;
+  const blocks = lead ? p.body!.slice(1) : p.body;
+
   return (
     <>
       <Masthead backdrop={w.backdrop} />
@@ -71,16 +82,12 @@ export default async function ProjectPage({ params }: { params: Params }) {
 
         <div className="proj">
           <div className="flex flex-col">
-            {slides.length > 0 ? <HeroCarousel slides={slides} /> : <div className="type-tile hero" />}
+            {lead ? <Fig f={lead} lead /> : slides.length > 0 && !inline ? <HeroCarousel slides={slides} /> : inline ? null : <div className="type-tile hero" />}
 
-            {p.body && (
+            {blocks && blocks.length > 0 && (
               <section className="sec">
                 <SectionHead kicker={p.world === "games" ? "About this game" : "About"} />
-                <div className="copy">
-                  {p.body.map((para, i) => (
-                    <p key={i}>{para}</p>
-                  ))}
-                </div>
+                <Story blocks={blocks} />
               </section>
             )}
 

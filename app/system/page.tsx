@@ -3,6 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
 import { Btn, Crumbs, ExternalMark, Kicker, SectionHead, StatusChip, StatusGlyph, Tags, TypeTile } from "@/components/ui";
+import { Story } from "@/components/Story";
 import { Capsule, CapsuleGrid } from "@/components/Capsule";
 import { EntryList, LogList } from "@/components/Entries";
 import { Featured } from "@/components/Featured";
@@ -893,11 +894,7 @@ export default function SystemPage() {
                 </p>
               </Spec>
               <Spec name=".copy" file="app/[world]/[slug]/page.tsx · about" note="Reading measure for body paragraphs.">
-                <div className="copy">
-                  {fixture.body?.map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
-                </div>
+                <Story blocks={fixture.body ?? []} />
               </Spec>
             </Sec>
 
