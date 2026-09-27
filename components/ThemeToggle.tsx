@@ -2,13 +2,24 @@
 
 import { useEffect, useState } from "react";
 
-export function ThemeToggle() {
+/**
+ * The sun / moon switch. It can sit in more than one place (masthead and
+ * footer), so every instance reads the theme off <html> and watches it for
+ * changes rather than owning the state itself. Pass `labelled` for a wider
+ * button that says which theme is on.
+ */
+export function ThemeToggle({ labelled = false }: { labelled?: boolean }) {
   const [dark, setDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    const root = document.documentElement;
+    const sync = () => setDark(root.classList.contains("dark"));
     setMounted(true);
-    setDark(document.documentElement.classList.contains("dark"));
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
   }, []);
 
   function toggle() {
@@ -21,13 +32,20 @@ export function ThemeToggle() {
     } catch {}
   }
 
+  const isDark = mounted && dark;
+  const base =
+    "group relative border border-line text-ink-soft transition-colors hover:border-line-strong hover:text-ink";
+  const shape = labelled
+    ? "inline-flex h-9 items-center gap-2 rounded-full pl-3 pr-4"
+    : "grid h-9 w-9 place-items-center rounded-full";
+
   return (
     <button
       type="button"
       onClick={toggle}
       aria-label="Toggle color theme"
       aria-pressed={dark}
-      className="group relative grid h-9 w-9 place-items-center rounded-full border border-line text-ink-soft transition-colors hover:border-line-strong hover:text-ink"
+      className={`${base} ${shape}`}
     >
       <span className="sr-only">Toggle theme</span>
       {/* Sun / moon crossfade — stable output until mounted to avoid hydration mismatch */}
@@ -39,7 +57,7 @@ export function ThemeToggle() {
         strokeWidth="1.5"
         strokeLinecap="round"
       >
-        {mounted && dark ? (
+        {isDark ? (
           <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
         ) : (
           <>
@@ -48,6 +66,11 @@ export function ThemeToggle() {
           </>
         )}
       </svg>
+      {labelled && (
+        <span className="mono" aria-hidden="true">
+          {isDark ? "Dark" : "Light"}
+        </span>
+      )}
     </button>
   );
 }

@@ -1,6 +1,7 @@
 import { site } from "@/content/site";
 import { person } from "@/content/person";
 import { navItems } from "@/lib/nav";
+import { ThemeToggle } from "./ThemeToggle";
 
 /**
  * The log and the archive are linked from here and nowhere else in the
@@ -37,6 +38,9 @@ export function Footer() {
         <span className="mut">{footer.contactLabel}</span>{" "}
         <span className="em">{site.email}</span>
       </p>
+      <div className="foot-tools">
+        <ThemeToggle labelled />
+      </div>
       <p className="foot-small mono">
         <span>
           {site.version} · © {footer.firstYear}–{year} {site.name}. All rights reserved.

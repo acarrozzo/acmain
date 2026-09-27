@@ -65,7 +65,7 @@ export function MastheadClient({
   return (
     <header className="mast container-page">
       <div className="mast-top">
-        <a className="mast-name" href="/about">
+        <a className="mast-name" href="/">
           <span className="n">{name}</span>
           <span className="r">{role}</span>
         </a>

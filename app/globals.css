@@ -485,7 +485,9 @@ a { color: inherit; }
 .foot-contact { margin: 12px 0 0; font-size: 14px; }
 .foot-contact .mut { color: var(--muted); }
 .foot-contact .em { font-weight: 600; color: var(--accent); }
-.foot-small { margin: 36px 0 0; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted); }
+.foot-tools { margin-top: 32px; display: flex; justify-content: center; }
+.foot-tools .mono { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; }
+.foot-small { margin: 24px 0 0; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted); }
 .foot-small a { color: var(--ink); }
 .foot-small a:hover { color: var(--accent); }
 @media (max-width: 760px) { .foot { margin-top: 80px; padding-block: 36px 72px; } }
