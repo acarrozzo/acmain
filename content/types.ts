@@ -42,8 +42,12 @@ export type Entry = {
 
 export type Fact = { label: string; value: string };
 
-/** A full-width image inside a project's story, with an optional caption. */
-export type Figure = { image: string; alt: string; caption?: string };
+/**
+ * A full-width image inside a project's story, with an optional caption.
+ * A `plate` is a brand plate or artwork rather than a screenshot: it keeps
+ * the frame but drops the window bar.
+ */
+export type Figure = { image: string; alt: string; caption?: string; plate?: boolean };
 
 /** One piece of a project's story: a paragraph, or a figure between paragraphs. */
 export type Block = string | Figure;

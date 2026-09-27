@@ -419,11 +419,42 @@ a { color: inherit; }
 .copy { max-width: 66ch; font-size: 16px; line-height: 1.65; color: var(--ink-soft); }
 .copy p { margin: 0; }
 .copy p + p { margin-top: 1em; }
+/* The end of a case study: a large, faint end mark, alone */
+.fin { display: flex; justify-content: center; padding: 104px 0 16px; }
+.fin-mark { width: 104px; height: 104px; fill: color-mix(in oklab, var(--ink) 9%, transparent); flex: none; }
+/* Sections after the article leave the two-column grid: a big deliberate gap, then the heavy rule */
+.sec-after { margin-top: 88px; padding-top: 0; }
+.sec-after .sec-head.rule { padding-top: 16px; }
+@media (max-width: 760px) { .sec-after { margin-top: 64px; } .fin { padding: 64px 0 8px; } .fin-mark { width: 80px; height: 80px; } }
 /* A case study: runs of copy and column-width figures, in order */
 .story { display: grid; gap: 28px; }
-.fig { margin: 0; display: grid; gap: 10px; }
-.fig img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-3); }
+.fig { margin: 0; display: grid; gap: 12px; }
 .fig figcaption { font-size: 13px; line-height: 1.5; color: var(--muted); max-width: 66ch; text-wrap: pretty; }
+/* The stage: a panel in the page's own family with a faint blue glow behind the window */
+.stage { --glow: rgba(59, 120, 194, .16); --stage: color-mix(in oklab, var(--surface-2) 88%, #6a8fc0); padding: 24px; border-radius: 12px; border: 1px solid var(--line); background: radial-gradient(90% 70% at 50% 40%, var(--glow), transparent 70%), var(--stage); }
+.fig-lead .stage { padding: 32px; }
+.dark .stage { --glow: rgba(90, 130, 190, .22); --stage: color-mix(in oklab, var(--surface-2) 82%, #2a3a55); }
+/* The window: a hairline shell, a slim title bar, the screenshot as its body */
+.win { border-radius: 8px; overflow: hidden; border: 1px solid var(--line-strong); background: var(--surface-3); box-shadow: 0 18px 40px -24px rgba(20, 40, 70, .30); }
+.dark .win { box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 24px 48px -26px rgba(0,0,0,.75); }
+.win-bar { height: 26px; display: flex; align-items: center; gap: 6px; padding: 0 10px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.win-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); }
+.win-body { position: relative; }
+.win-body img { display: block; width: 100%; height: auto; }
+/* A figure is a button that opens the lightbox */
+.fig-btn { all: unset; display: block; cursor: zoom-in; border-radius: 8px; }
+.fig-btn:hover .win { border-color: color-mix(in oklab, var(--line-strong) 60%, var(--ink)); }
+.fig-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+/* The lightbox: the page's figures as one carousel over a scrim */
+.lb { position: fixed; inset: 0; z-index: 60; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 14px; padding: 64px 24px 28px; background: rgba(6, 8, 7, .9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); animation: lb-in .18s ease both; outline: none; }
+.lb .ctrl { top: 16px; right: 20px; }
+.lb .ctr { color: rgba(255,255,255,.8); }
+.lb img { justify-self: center; align-self: center; max-width: 100%; max-height: 100%; width: auto; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 30px 80px -30px rgba(0,0,0,.9); }
+.lb figcaption { justify-self: center; text-align: center; max-width: 66ch; font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,.72); text-wrap: pretty; }
+@keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 760px) { .lb { padding: 60px 12px 20px; } }
+@media (prefers-reduced-motion: reduce) { .lb { animation: none; } }
+@media (max-width: 760px) { .stage, .fig-lead .stage { padding: 12px; } .win-bar { height: 22px; } .win-bar i { width: 6px; height: 6px; } }
 .news { list-style: none; margin: 0; padding: 0; }
 .news li { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
 .news .v { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--surface-3); color: var(--ink-soft); margin-left: 8px; }

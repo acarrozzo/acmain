@@ -17,6 +17,11 @@ export const fixture: Project = {
   body: [
     "The first paragraph of the project page body. It sits in the .copy measure at 16px with a 1.65 line height, and wraps at 66 characters.",
     "A second paragraph, to show the paragraph spacing.",
+    {
+      image: "/img/p/light-gray-forest.webp",
+      alt: "An example figure.",
+      caption: "A figure in a story: the screenshot in a window on a themed stage. Click it to open the page's figures as a lightbox carousel.",
+    },
   ],
   hero: "/img/p/light-gray-forest.webp",
   gallery: ["/img/p/light-gray.webp"],

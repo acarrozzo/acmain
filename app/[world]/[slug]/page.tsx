@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
+import { Mark } from "@/components/Mark";
 import { EntryList } from "@/components/Entries";
 import { CapsuleGrid } from "@/components/Capsule";
 import { HeroCarousel, type Slide } from "@/components/HeroCarousel";
-import { Fig, Story } from "@/components/Story";
+import { Fig, Gallery, Story } from "@/components/Story";
 import { isFigure } from "@/content/types";
 import { Btn, Crumbs, Kicker, SectionHead, StatusChip, Tags } from "@/components/ui";
 import {
@@ -62,6 +63,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
   const first = p.body?.[0];
   const lead = inline && first && isFigure(first) ? first : null;
   const blocks = lead ? p.body!.slice(1) : p.body;
+  const figures = (p.body ?? []).filter(isFigure);
 
   return (
     <>
@@ -81,30 +83,25 @@ export default async function ProjectPage({ params }: { params: Params }) {
         </div>
 
         <div className="proj">
-          <div className="flex flex-col">
-            {lead ? <Fig f={lead} lead /> : slides.length > 0 && !inline ? <HeroCarousel slides={slides} /> : inline ? null : <div className="type-tile hero" />}
+          <Gallery figures={figures}>
+            <div className="flex flex-col">
+              {lead ? <Fig f={lead} lead /> : slides.length > 0 && !inline ? <HeroCarousel slides={slides} /> : inline ? null : <div className="type-tile hero" />}
 
-            {blocks && blocks.length > 0 && (
-              <section className="sec">
-                <SectionHead kicker={p.world === "games" ? "About this game" : "About"} />
-                <Story blocks={blocks} />
-              </section>
-            )}
+              {blocks && blocks.length > 0 && (
+                <section className="sec">
+                  <SectionHead kicker={p.world === "games" ? "About this game" : "About"} />
+                  <Story blocks={blocks} />
+                </section>
+              )}
 
-            {entries.length > 0 && (
-              <section className="sec">
-                <SectionHead kicker="Changelog" title="What changed, and when." dek="newest first" />
-                <EntryList entries={entries} />
-              </section>
-            )}
-
-            {siblings.length > 0 && (
-              <section className="sec">
-                <SectionHead kicker={`More in ${w.name}`} more={`All of ${w.name} →`} moreHref={worldPath(w)} />
-                <CapsuleGrid items={siblings} />
-              </section>
-            )}
-          </div>
+              {entries.length > 0 && (
+                <section className="sec">
+                  <SectionHead kicker="Changelog" title="What changed, and when." dek="newest first" />
+                  <EntryList entries={entries} />
+                </section>
+              )}
+            </div>
+          </Gallery>
 
           <aside className="rail">
             <p>{p.blurb ?? p.line}</p>
@@ -161,6 +158,19 @@ export default async function ProjectPage({ params }: { params: Params }) {
             )}
           </aside>
         </div>
+
+        {inline && (
+          <div className="fin" aria-hidden="true">
+            <Mark className="fin-mark" />
+          </div>
+        )}
+
+        {siblings.length > 0 && (
+          <section className="sec sec-after">
+            <SectionHead kicker={`More in ${w.name}`} more={`All of ${w.name} →`} moreHref={worldPath(w)} />
+            <CapsuleGrid items={siblings} />
+          </section>
+        )}
       </main>
       <Footer />
     </>
