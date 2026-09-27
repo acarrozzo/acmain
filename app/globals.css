@@ -642,6 +642,8 @@ a { color: inherit; }
 .hub-t { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .moon-txt[data-long="true"] { font-size: 9px; letter-spacing: -.02em; }
 .hub { transition: transform .5s var(--ease-orbit); }
+.hub-rest { color: rgba(0,0,0,.28); }
+.dark .hub-rest { color: rgba(255,255,255,.28); }
 
 /* ---------------- TEMP: headshot picker (remove with components/TempHeadshot.tsx) ---------------- */
 .hs-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }

@@ -37,8 +37,8 @@ type Props = {
  * it as tiny moons, also clockwise. Hover (or focus) a category and everything
  * eases to a stop while the camera pushes in on it: the orb grows, the moons
  * spread out and grow into labelled orbs you can click. Let go and it all
- * drifts again. The hub in the middle is empty at rest: a category fills it with
- * the newest thing there, and a moon swaps in that project.
+ * drifts again. The hub in the middle says hello at rest: a category fills it
+ * with the newest thing there, and a moon swaps in that project.
  *
  * Moon geometry is in px at the box's full width (BOX) and scales with the
  * box; the category ring is in % of the box.
@@ -372,11 +372,16 @@ export function OrbitalNav({ categories }: Props) {
           );
         })}
 
-        {/* center hub — what's new in the focused category or on the hovered moon; empty at rest */}
+        {/* center hub — what's new in the focused category or on the hovered moon; a greeting at rest */}
         <div
           className="hub pointer-events-none absolute left-1/2 top-1/2 z-[4] w-[40%] text-center"
           style={{ transform: `translate(calc(-50% - ${hubLean.x.toFixed(1)}px), calc(-50% - ${hubLean.y.toFixed(1)}px))` }}
         >
+          {!hub && (
+            <div key="rest" className="hub-in hub-rest mono text-[10px] tracking-[0.18em]">
+              what up
+            </div>
+          )}
           {hub && (
             <div key={hub.key} className="hub-in">
               <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-accent">
