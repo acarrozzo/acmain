@@ -4,7 +4,6 @@ import {
   Editor,
   FeaturedSection,
   HeroOrbit,
-  LogColumn,
   NowPlaying,
   WorkshopSection,
   WorldGrid,
@@ -25,10 +24,7 @@ export default function Home() {
             <WorkshopSection />
           </div>
           <aside className="flex flex-col">
-            <LogColumn />
-            <div className="mt-[26px]">
-              <NowPlaying />
-            </div>
+            <NowPlaying />
             <div className="mt-[26px]">
               <Editor />
             </div>

@@ -2,7 +2,6 @@ import { person } from "@/content/person";
 import { site } from "@/content/site";
 import {
   featuredItems,
-  latestEntries,
   latestEntryInWorld,
   latestEntryOf,
   projectBySlug,
@@ -17,7 +16,6 @@ import {
   type Project,
   type World,
 } from "@/lib/content";
-import { formatDate } from "@/lib/format";
 import { Featured } from "./Featured";
 import { Workshop } from "./Workshop";
 import { CapsuleGrid } from "./Capsule";
@@ -30,7 +28,7 @@ export function FeaturedSection() {
   if (items.length === 0) return null;
   return (
     <section className="featured scroll-mt-6" id="featured">
-      <SectionHead kicker="Featured & fresh" more="What’s new, in order →" moreHref="/log" rule={false} />
+      <SectionHead kicker="Featured & fresh" rule={false} />
       <Featured items={items} />
     </section>
   );
@@ -45,36 +43,6 @@ function Module({ kicker, right, children }: { kicker: string; right?: React.Rea
       </div>
       {children}
     </section>
-  );
-}
-
-function shortDate(d: string) {
-  const full = formatDate(d);
-  return full.replace(/ \d{4}$/, "");
-}
-
-export function LogColumn() {
-  const entries = latestEntries(8);
-  return (
-    <Module kicker="The log" right={<span className="mono text-muted">newest first</span>}>
-      <ol className="log-list">
-        {entries.map((e, i) => (
-          <li key={`${e.project.slug}-${e.date}-${i}`}>
-            <span className="mono">{shortDate(e.date)}</span>
-            <div>
-              <a href={`/${e.world.slug}/${e.project.slug}`} className="p">
-                {e.project.name}
-              </a>
-              <div className="t">{e.title}</div>
-              {e.note && <div className="n">{e.note}</div>}
-            </div>
-          </li>
-        ))}
-      </ol>
-      <a className="log-more" href="/log">
-        Everything, in order →
-      </a>
-    </Module>
   );
 }
 
@@ -158,8 +126,8 @@ export function WorkshopSection() {
   return <Workshop tabs={workshopTabs()} />;
 }
 
-/** The orbit's data: three worlds with their moons, and the newest entry on the site. */
-export function orbitData(): { worlds: OrbitWorld[]; latest: OrbitEntry | null } {
+/** The orbit's data: three worlds with their moons. */
+export function orbitData(): OrbitWorld[] {
   const toOrbit = (e: EntryWithProject | undefined): OrbitEntry | null =>
     e ? { date: e.date, title: e.title, project: e.project.name } : null;
   const toMoon = (p: Project): OrbitProject => {
@@ -176,7 +144,7 @@ export function orbitData(): { worlds: OrbitWorld[]; latest: OrbitEntry | null }
       latest: e ? { date: e.date, title: e.title, project: p.name } : null,
     };
   };
-  const orbitWorlds: OrbitWorld[] = worlds.map((w) => ({
+  return worlds.map((w) => ({
     slug: w.slug,
     name: w.name,
     tagline: w.tagline,
@@ -184,13 +152,11 @@ export function orbitData(): { worlds: OrbitWorld[]; latest: OrbitEntry | null }
     latest: toOrbit(latestEntryInWorld(w)),
     projects: projectsInWorld(w).map(toMoon),
   }));
-  const latest = toOrbit(latestEntries(1)[0]);
-  return { worlds: orbitWorlds, latest };
 }
 
 /** The opening band: who this is, in one line, beside the orbit of three worlds. */
 export function HeroOrbit() {
-  const { worlds: orbitWorlds, latest } = orbitData();
+  const orbitWorlds = orbitData();
   return (
     <section className="hero-band">
       <div className="flex flex-col gap-5">
@@ -209,7 +175,7 @@ export function HeroOrbit() {
         </div>
       </div>
       <div className="w-full">
-        <OrbitalNav worlds={orbitWorlds} latest={latest} />
+        <OrbitalNav worlds={orbitWorlds} />
       </div>
     </section>
   );

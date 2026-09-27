@@ -94,6 +94,7 @@ html {
 }
 
 body {
+  overflow-x: clip; /* the orbit nebula bleeds past the viewport between ~900 and 1100px */
   background-color: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -157,7 +158,7 @@ a { color: inherit; }
 /* ---------------- Buttons, chips, tags ---------------- */
 .btn { display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 13.5px; font-weight: 600; padding: 9px 16px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); cursor: pointer; transition: border-color .15s, background-color .15s; }
 .btn:hover { border-color: var(--accent); }
-.btn.pri { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.pri { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); text-shadow: none; }
 .btn.pri:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
 .btn.ghost { background: transparent; }
 .btn.sm { padding: 6px 11px; font-size: 12.5px; }
@@ -255,11 +256,12 @@ a { color: inherit; }
 .feat-main .meta { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 12.5px; color: rgba(255,255,255,.8); }
 .feat-main .acts { display: flex; gap: 8px; margin-top: 4px; }
 .feat-thumbs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-rows: repeat(4, 1fr); gap: 8px; }
-.feat-thumbs button { all: unset; cursor: pointer; display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; align-items: center; padding: 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); transition: border-color .15s, background-color .15s; color: var(--ink); }
+.feat-thumbs li { display: grid; min-width: 0; }
+.feat-thumbs button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; align-items: center; padding: 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); transition: border-color .15s, background-color .15s; color: var(--ink); }
 .feat-thumbs button:hover { border-color: var(--line-strong); background: var(--surface-2); }
 .feat-thumbs button.on { border-color: var(--accent); background: var(--surface-2); box-shadow: inset 3px 0 0 var(--accent); }
 .feat-thumbs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.feat-thumbs .th { aspect-ratio: 16/9; border-radius: 4px; overflow: hidden; background: var(--surface-3); }
+.feat-thumbs .th { align-self: stretch; width: 100%; aspect-ratio: 16/9; border-radius: 4px; overflow: hidden; background: var(--surface-3); }
 .feat-thumbs .th img { width: 100%; height: 100%; object-fit: cover; }
 .feat-thumbs .t { display: grid; gap: 2px; min-width: 0; }
 .feat-thumbs .t b { font-size: 13.5px; font-weight: 600; line-height: 1.25; }
@@ -270,6 +272,7 @@ a { color: inherit; }
   .feat-main .txt { padding: 16px; }
   .feat-main p { display: none; }
 }
+@media (max-width: 600px) { .feat-thumbs { grid-template-columns: minmax(0, 1fr); } }
 
 /* Carousel chrome: play/pause, counter, per-item progress */
 .pp { position: absolute; top: 12px; right: 12px; z-index: 4; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(0,0,0,.45); color: #fff; display: grid; place-items: center; cursor: pointer; padding: 0; backdrop-filter: blur(6px); }
@@ -315,7 +318,6 @@ a { color: inherit; }
 .log-list .p { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
 .log-list .t { font-size: 14px; font-weight: 600; line-height: 1.3; }
 .log-list .n { font-size: 12.5px; color: var(--muted); }
-.log-more { display: block; padding-top: 10px; font-size: 13px; font-weight: 600; color: var(--accent); }
 .playing { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 12px; align-items: center; }
 .playing img { width: 64px; height: 64px; border-radius: 6px; object-fit: cover; }
 .playing b { font-size: 14px; }

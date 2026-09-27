@@ -29,8 +29,6 @@ export type OrbitWorld = {
 
 type Props = {
   worlds: OrbitWorld[];
-  /** The newest entry anywhere on the site: what the hub shows at rest. */
-  latest: OrbitEntry | null;
 };
 
 /*
@@ -39,9 +37,8 @@ type Props = {
  * it as tiny moons, also clockwise. Hover (or focus) a world and everything
  * eases to a stop while the camera pushes in on it: the orb grows, the moons
  * spread out and grow into labelled orbs you can click. Let go and it all
- * drifts again. The hub in the middle is never empty: at rest it shows the
- * newest thing on the site, a world swaps in the newest thing there, and a
- * moon swaps in that project.
+ * drifts again. The hub in the middle is empty at rest: a world fills it with
+ * the newest thing there, and a moon swaps in that project.
  *
  * Moon geometry is in px at the box's full width (BOX) and scales with the
  * box; the world ring is in % of the box.
@@ -65,7 +62,7 @@ const LEAVE_GRACE = 110;
 const TAU = 2 * Math.PI;
 type Sim = { theta: number; omega: number; r: number };
 
-export function OrbitalNav({ worlds, latest }: Props) {
+export function OrbitalNav({ worlds }: Props) {
   const [active, setActive] = useState<number | null>(null);
   const [moon, setMoon] = useState<OrbitProject | null>(null);
   const box = useRef<HTMLDivElement>(null);
@@ -223,7 +220,7 @@ export function OrbitalNav({ worlds, latest }: Props) {
   };
 
   // What the hub says: the moon under the pointer, else the focused world,
-  // else the newest thing on the site. It leans away from the active world.
+  // else nothing. It leans away from the active world.
   const focused = active !== null ? worlds[active] : null;
   const leanAng = active !== null ? ((ANGLES[active] ?? 0) * Math.PI) / 180 + phiRef.current : 0;
   const hubLean = active !== null ? { x: Math.cos(leanAng) * 30, y: Math.sin(leanAng) * 30 } : { x: 0, y: 0 };
@@ -243,13 +240,7 @@ export function OrbitalNav({ worlds, latest }: Props) {
           title: focused.latest?.title ?? "",
           fallback: focused.tagline,
         }
-      : {
-          key: "now",
-          label: "Now",
-          meta: latest?.project ?? "",
-          title: latest?.title ?? "",
-          fallback: "Always building.",
-        };
+      : null;
 
   return (
     <div className="relative w-full">
@@ -381,26 +372,28 @@ export function OrbitalNav({ worlds, latest }: Props) {
           );
         })}
 
-        {/* center hub — what's new: here, in the focused world, or on the hovered moon */}
+        {/* center hub — what's new in the focused world or on the hovered moon; empty at rest */}
         <div
           className="hub pointer-events-none absolute left-1/2 top-1/2 z-[4] w-[40%] text-center"
           style={{ transform: `translate(calc(-50% - ${hubLean.x.toFixed(1)}px), calc(-50% - ${hubLean.y.toFixed(1)}px))` }}
         >
-          <div key={hub.key} className="hub-in">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-accent">
-              {hub.label}
+          {hub && (
+            <div key={hub.key} className="hub-in">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-accent">
+                {hub.label}
+              </div>
+              {hub.title ? (
+                <>
+                  {hub.meta && <div className="mono mt-2 text-[11px] text-muted">{hub.meta}</div>}
+                  <div className="hub-t mt-1 text-[15px] font-semibold leading-snug tracking-tight text-ink">
+                    {hub.title}
+                  </div>
+                </>
+              ) : (
+                <div className="mt-2 text-sm text-muted">{hub.fallback}</div>
+              )}
             </div>
-            {hub.title ? (
-              <>
-                {hub.meta && <div className="mono mt-2 text-[11px] text-muted">{hub.meta}</div>}
-                <div className="hub-t mt-1 text-[15px] font-semibold leading-snug tracking-tight text-ink">
-                  {hub.title}
-                </div>
-              </>
-            ) : (
-              <div className="mt-2 text-sm text-muted">{hub.fallback}</div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 

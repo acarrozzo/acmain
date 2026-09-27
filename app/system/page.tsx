@@ -12,7 +12,7 @@ import { Workshop } from "@/components/Workshop";
 import { OrbitalNav } from "@/components/OrbitalNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Mark } from "@/components/Mark";
-import { Editor, LogColumn, NowPlaying, WorldsTiles, orbitData } from "@/components/Home";
+import { Editor, NowPlaying, WorldsTiles, orbitData } from "@/components/Home";
 import { SystemIndex } from "@/components/system/SystemIndex";
 import { Playground } from "@/components/system/Playground";
 import { Cell, Spec, Stat, Sub, UsedOn, Yes } from "@/components/system/Spec";
@@ -180,7 +180,7 @@ export default function SystemPage() {
   const componentCount = components.reduce((n, f) => n + f.exports.filter((e) => e.kind === "component").length, 0);
   const routesList = [
     { file: "app/layout.tsx", what: "Root layout: the three fonts via next/font, the metadata template, ThemeScript before paint, globals.css." },
-    { file: "app/page.tsx", what: "The front page: HeroOrbit, Featured & fresh, the workshop beside the log column, world tiles, three capsule grids." },
+    { file: "app/page.tsx", what: "The front page: HeroOrbit, Featured & fresh, the workshop beside now playing and the editor, world tiles, three capsule grids." },
     { file: "app/[world]/page.tsx", what: "A world's door. listing: \"status\" (games, music) gets stats, a banner and filters; listing: \"featured\" (work) gets selected work, what I do and elsewhere.", params: worlds.map(worldPath) },
     { file: "app/[world]/[slug]/page.tsx", what: "A project: hero carousel, about, changelog, siblings, and the sticky side rail.", params: projects.map(projectPath) },
     { file: "app/log/page.tsx", what: "Every entry, newest first, grouped by month." },
@@ -642,7 +642,7 @@ export default function SystemPage() {
                 <Workshop tabs={workshopTabs()} />
               </Spec>
               <Spec name="OrbitalNav" file="components/OrbitalNav.tsx" usedOn={usedOn("components/OrbitalNav.tsx")} note="Three worlds drift around the hub with their projects as moons. One requestAnimationFrame loop, asleep off-screen and under reduced motion. Geometry constants sit at the top of the file: BOX 560, RING 33%, moon radius 78 → 106, periods 150s / 58s 46s 64s. Below md it is three cards.">
-                <OrbitalNav worlds={orbit.worlds} latest={orbit.latest} />
+                <OrbitalNav worlds={orbit} />
               </Spec>
               <Spec name="Masthead · MastheadClient" file="components/Masthead.tsx" usedOn={usedOn("components/Masthead.tsx")} note="At the top of this page. Server wrapper builds navItems and paletteItems; the client half owns the flyouts (hover or focus a world tab; Escape closes; none on touch or once the nav wraps) and the active tab. A static flyout row is in the playground.">
                 <p className="ds-note">
@@ -744,9 +744,6 @@ export default function SystemPage() {
                   </Spec>
                 </div>
                 <aside className="flex flex-col">
-                  <Spec name="LogColumn" file="components/Home.tsx" usedOn={usedOn("components/Home.tsx", "LogColumn")} note="latestEntries(8) in the right column.">
-                    <LogColumn />
-                  </Spec>
                   <Spec name="NowPlaying" file="components/Home.tsx" usedOn={usedOn("components/Home.tsx", "NowPlaying")} note="Hand-picked in person.nowPlaying until AC Music has a feed.">
                     <NowPlaying />
                   </Spec>
@@ -1022,7 +1019,7 @@ export default function SystemPage() {
                     <td>Entry</td>
                     <td>{entries.length}</td>
                     <td className="ds-mono">on its project: entries: []</td>
-                    <td className="dim">the log column, the hub caption, changelogs, /log, workshop tabs, sitemap lastModified</td>
+                    <td className="dim">the hub caption, changelogs, /log, workshop tabs, sitemap lastModified</td>
                   </tr>
                   <tr>
                     <td>Featured</td>

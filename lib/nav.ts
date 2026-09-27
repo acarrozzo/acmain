@@ -47,9 +47,7 @@ export const navItems: NavItem[] = [
       })),
     ],
   })),
-  { label: "Log", href: "/log" },
   { label: "About", href: "/about" },
-  { label: "Archive", href: "/archive" },
   /** Temporary: the design-system workbench. Remove when it has done its job. */
   { label: "System", href: "/system" },
 ];
@@ -57,5 +55,8 @@ export const navItems: NavItem[] = [
 /** Everything the command palette can jump to. */
 export const paletteItems: PaletteItem[] = [
   ...navItems.map((n) => ({ label: n.label, href: n.href, group: "Pages" })),
+  /** Linked only from the footer, but still worth a jump. */
+  { label: "Log", href: "/log", group: "Pages" },
+  { label: "Archive", href: "/archive", group: "Pages" },
   ...projects.map((p) => ({ label: p.name, href: projectPath(p), group: worldById(p.world).name })),
 ];
