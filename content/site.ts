@@ -6,15 +6,18 @@ export const site = {
   url: "https://acarrozzo.com",
   title: "Anthony Carrozzo",
   tagline: "Design, games, music.",
-  /** Footer version line. Bump it when the site changes shape. */
-  version: "v.26",
-  since: "since the 90s",
   /**
    * The photo ghosted behind the top of every page: the forest in dark,
    * the daylight sky in light. A category can override it with its own
    * `backdrop` in `content/categories.ts`.
    */
-  backdrop: { dark: "/img/forest-dark.webp", light: "/img/sky-light.webp" },
+  backdrop: { dark: "/img/bg/forest-dark.webp", light: "/img/bg/sky-light.webp" },
+  /**
+   * The photo that rises up behind the bottom of every page and the
+   * footer: the night sky in dark, the grass in light. Site-wide only;
+   * categories don't override this one.
+   */
+  backdropBottom: { dark: "/img/bg/space-dark.webp", light: "/img/bg/beach.webp" },
   description:
     "Anthony Carrozzo is a product designer from Long Island who has been designing for over twenty years and making games for longer. This is where anyone can learn what he's about: software, games, music, and what's being built right now.",
   email: "acarrozzo@gmail.com",

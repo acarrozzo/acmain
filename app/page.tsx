@@ -25,7 +25,7 @@ export default function Home() {
           </div>
           <aside className="flex flex-col">
             <NowPlaying />
-            <div className="mt-[26px]">
+            <div className="mt-[36px]">
               <Editor />
             </div>
           </aside>

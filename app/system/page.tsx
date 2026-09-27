@@ -301,7 +301,7 @@ export default function SystemPage() {
                 <dl className="ds-kv">
                   <dt>--bd-dark / --bd-light</dt>
                   <dd>
-                    The backdrop photo pair, set inline by <code className="ds-mono">Backdrop</code> from <code className="ds-mono">site.backdrop</code> or a category&apos;s own <code className="ds-mono">backdrop</code>.
+                    The backdrop photo pair, set inline by <code className="ds-mono">Backdrop</code> from <code className="ds-mono">site.backdrop</code> or a category&apos;s own <code className="ds-mono">backdrop</code>; <code className="ds-mono">BackdropBottom</code> sets the same pair from <code className="ds-mono">site.backdropBottom</code> inside the footer.
                   </dd>
                   <dt>--lx --ly --shx --shy</dt>
                   <dd>Per-orb light direction and shadow offset, written every frame by the orbit loop so each category stays lit from the hub.</dd>
@@ -537,7 +537,7 @@ export default function SystemPage() {
                   </Cell>
                 </div>
               </Spec>
-              <Spec name="SectionHead" file="components/ui.tsx" usedOn={usedOn("components/ui.tsx", "SectionHead")} note="Kicker, optional headline, and a link or a note on the right. rule=true draws the 2px ink rule on top.">
+              <Spec name="SectionHead" file="components/ui.tsx" usedOn={usedOn("components/ui.tsx", "SectionHead")} note="Kicker, optional headline, and a link or a note on the right. rule=true draws the 1px --rule hairline on top.">
                 <SectionHead kicker="With a title and a link" title="Playable, on paper, on the table." more="All games →" moreHref="#primitives" />
                 <SectionHead kicker="With a dek instead" title="What changed, and when." dek="newest first" />
                 <SectionHead kicker="Kicker only, no rule" rule={false} />
@@ -681,7 +681,7 @@ export default function SystemPage() {
                   </Cell>
                 </div>
               </Spec>
-              <Spec name="Backdrop" file="components/Backdrop.tsx" usedOn={usedOn("components/Backdrop.tsx")} note="The photo ghosted behind the top of every page and dissolved before the fold (.page-photo: 1100px tall, 16% opacity light, 24% dark, masked to transparent). A category can bring its own pair.">
+              <Spec name="Backdrop" file="components/Backdrop.tsx" usedOn={usedOn("components/Backdrop.tsx")} note="Two photos per page. The top one is ghosted behind the masthead and dissolved before the fold (.page-photo: 1100px tall, 16% opacity light, 24% dark, masked to transparent); a category can bring its own pair. The bottom one (BackdropBottom, .page-photo-bottom) hangs from the footer, rises 1100px and dissolves upward, at 30% light and 45% dark; site-wide only.">
                 <div className="ds-thumbs">
                   <div className="ds-thumb">
                     <img src={site.backdrop.light} alt="" loading="lazy" />
@@ -695,6 +695,20 @@ export default function SystemPage() {
                     <div>
                       <b>site.backdrop.dark</b>
                       {site.backdrop.dark}
+                    </div>
+                  </div>
+                  <div className="ds-thumb">
+                    <img src={site.backdropBottom.light} alt="" loading="lazy" />
+                    <div>
+                      <b>site.backdropBottom.light</b>
+                      {site.backdropBottom.light}
+                    </div>
+                  </div>
+                  <div className="ds-thumb">
+                    <img src={site.backdropBottom.dark} alt="" loading="lazy" />
+                    <div>
+                      <b>site.backdropBottom.dark</b>
+                      {site.backdropBottom.dark}
                     </div>
                   </div>
                   {categories.filter((w) => w.backdrop).map((w) => (
@@ -856,7 +870,7 @@ export default function SystemPage() {
                   ))}
                 </div>
               </Spec>
-              <Spec name=".module + .mod-head + .tabs" file="components/Home.tsx · Workshop.tsx" note="A broadsheet module: 2px ink rule, a kicker head with something on the right, then content. Tabs are the pill row.">
+              <Spec name=".module + .mod-head + .tabs" file="components/Home.tsx · Workshop.tsx" note="A broadsheet module: 1px --rule hairline, a kicker head with something on the right, then content. Tabs are the pill row.">
                 <section className="module">
                   <div className="mod-head">
                     <Kicker>In the workshop</Kicker>
@@ -1152,10 +1166,6 @@ export default function SystemPage() {
                   </dd>
                   <dt>site.url</dt>
                   <dd className="ds-mono">{site.url}</dd>
-                  <dt>site.version · since</dt>
-                  <dd className="ds-mono">
-                    {site.version} · {site.since}
-                  </dd>
                   <dt>site.backdrop</dt>
                   <dd className="ds-mono">
                     {site.backdrop.dark} · {site.backdrop.light}

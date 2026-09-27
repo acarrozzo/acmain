@@ -100,7 +100,10 @@ Old prototype routes redirect in `next.config.mjs`.
   versions), via `next/font`.
 - **The mark**: `public/img/ac-mark.svg`, inlined through `components/Mark.tsx`.
 - **Backdrops**: every page has a photo ghosted behind its top (`site.backdrop`:
-  the forest in dark, the sky in light). Give a category its own by setting
+  the forest in dark, the sky in light) and another rising up behind its footer
+  (`site.backdropBottom`: the night sky in dark, the grass in light; site-wide,
+  no category override). All of them live in `public/img/bg/`. Give a category
+  its own top photo by setting
   `backdrop: { dark, light }` in `content/categories.ts`; its door and its project
   pages pick it up.
 - **Components**: `Capsule`, `StatusChip`, `Tags`, `Featured`, `Workshop`,

@@ -2,6 +2,7 @@ import { site } from "@/content/site";
 import { person } from "@/content/person";
 import { navItems } from "@/lib/nav";
 import { ThemeToggle } from "./ThemeToggle";
+import { BackdropBottom } from "./Backdrop";
 
 /**
  * The log and the archive are linked from here and nowhere else in the
@@ -17,6 +18,7 @@ export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="foot container-page">
+      <BackdropBottom />
       <h2 className="foot-h">{footer.heading}</h2>
       <p className="foot-sub">{footer.sub}</p>
       <ul>
@@ -43,7 +45,7 @@ export function Footer() {
       </div>
       <p className="foot-small mono">
         <span>
-          {site.version} · © {footer.firstYear}–{year} {site.name}. All rights reserved.
+          © {footer.firstYear}–{year} {site.name}. All rights reserved.
         </span>
         <a href="/">{footer.homeLabel}</a>
       </p>
