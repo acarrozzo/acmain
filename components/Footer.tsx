@@ -2,28 +2,30 @@ import { site } from "@/content/site";
 import { person } from "@/content/person";
 import { navItems } from "@/lib/nav";
 
-/** The log and the archive are linked from here and nowhere else in the chrome. */
-const LOG = { label: "Log", href: "/log" };
-const ARCHIVE = { label: "Archive", href: "/archive" };
-
 /**
- * The footer, composed like the original acarrozzo.com footer: a centered
- * stack that ends every page the same way. Copy lives in `site.footer`.
+ * The log and the archive are linked from here and nowhere else in the
+ * chrome, so they sit after the primary nav behind a hairline divider.
  */
+const EXTRA = [
+  { label: "Log", href: "/log" },
+  { label: "Archive", href: "/archive" },
+];
+
 export function Footer() {
   const { footer } = site;
   const year = new Date().getFullYear();
-  const about = navItems.findIndex((n) => n.href === "/about");
-  const links =
-    about < 0
-      ? [...navItems, LOG, ARCHIVE]
-      : [...navItems.slice(0, about), LOG, navItems[about], ARCHIVE, ...navItems.slice(about + 1)];
   return (
     <footer className="foot container-page">
       <h2 className="foot-h">{footer.heading}</h2>
       <p className="foot-sub">{footer.sub}</p>
       <ul>
-        {links.map((n) => (
+        {navItems.map((n) => (
+          <li key={n.href}>
+            <a href={n.href}>{n.label}</a>
+          </li>
+        ))}
+        <li className="foot-sep" aria-hidden="true" />
+        {EXTRA.map((n) => (
           <li key={n.href}>
             <a href={n.href}>{n.label}</a>
           </li>

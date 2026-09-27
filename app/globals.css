@@ -280,6 +280,16 @@ a { color: inherit; }
 .ctr { position: absolute; top: 20px; right: 56px; z-index: 4; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.7); }
 .prog { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.18); z-index: 4; }
 .prog i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+/* Control cluster: counter · prev · play/pause · next, in flow inside one corner box */
+.ctrl { position: absolute; top: 12px; right: 12px; z-index: 4; display: flex; align-items: center; gap: 6px; }
+.ctrl .pp, .ctrl .ctr { position: static; }
+.ctrl .ctr { margin-right: 6px; }
+.nx { width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); background: rgba(0,0,0,.35); color: rgba(255,255,255,.85); display: grid; place-items: center; cursor: pointer; padding: 0; backdrop-filter: blur(6px); transition: border-color .15s, color .15s; }
+.nx:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+.nx svg { width: 11px; height: 11px; }
+.nx:focus-visible, .pp:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Featured runs its progress along the top edge */
+.feat-main .prog { top: 0; bottom: auto; }
 
 /* ---------------- Broadsheet band ---------------- */
 .band { padding-top: 34px; }
@@ -433,6 +443,7 @@ a { color: inherit; }
 .foot-sub { margin: 6px 0 0; font-family: var(--font-display); font-size: 19px; font-weight: 500; letter-spacing: -0.01em; color: var(--accent); }
 .foot ul { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 20px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 11.5px; }
 .foot ul a:hover { color: var(--ink); }
+.foot-sep { align-self: center; width: 1px; height: 12px; background: var(--line-strong); }
 .foot-story { margin: 28px 0 0; max-width: 62ch; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
 .foot-face { margin-top: 26px; width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line-strong); background: var(--surface-2); }
 .foot-contact { margin: 12px 0 0; font-size: 14px; }

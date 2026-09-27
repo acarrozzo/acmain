@@ -65,9 +65,22 @@ export function useCarousel(count: number, duration: number) {
     };
   }, [wantPlay, count, duration]);
 
+  /** Move by a delta from wherever we are now, so rapid clicks all land. */
+  const step = useCallback(
+    (d: number) => {
+      setIndex((i) => (((i + d) % count) + count) % count);
+      elapsed.current = 0;
+      start.current = performance.now();
+      setProgress(0);
+    },
+    [count],
+  );
+  const prev = useCallback(() => step(-1), [step]);
+  const next = useCallback(() => step(1), [step]);
+
   const toggle = useCallback(() => setWantPlay((v) => !v), []);
 
-  return { index, show, playing: wantPlay, toggle, progress };
+  return { index, show, prev, next, playing: wantPlay, toggle, progress };
 }
 
 export function PlayPause({ playing, onToggle }: { playing: boolean; onToggle: () => void }) {
@@ -83,5 +96,44 @@ export function PlayPause({ playing, onToggle }: { playing: boolean; onToggle: (
         </svg>
       )}
     </button>
+  );
+}
+
+/**
+ * The full control cluster for a carousel corner: counter, previous, play or
+ * pause, next. Positioned by `.ctrl`; the buttons inside sit in flow.
+ */
+export function CarouselControls({
+  index,
+  count,
+  playing,
+  onToggle,
+  onPrev,
+  onNext,
+}: {
+  index: number;
+  count: number;
+  playing: boolean;
+  onToggle: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
+  return (
+    <div className="ctrl">
+      <span className="ctr mono">
+        {index + 1} / {count}
+      </span>
+      <button type="button" className="nx" aria-label="Previous" onClick={onPrev}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M15 5l-7 7 7 7" />
+        </svg>
+      </button>
+      <PlayPause playing={playing} onToggle={onToggle} />
+      <button type="button" className="nx" aria-label="Next" onClick={onNext}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
   );
 }

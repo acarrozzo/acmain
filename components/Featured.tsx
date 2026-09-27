@@ -3,11 +3,11 @@
 import type { FeaturedItem } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 import { Btn, Kicker, StatusChip } from "./ui";
-import { PlayPause, useCarousel } from "./useCarousel";
+import { CarouselControls, useCarousel } from "./useCarousel";
 
 /** Featured & fresh: the big capsule with side thumbnails, auto-advancing. */
 export function Featured({ items, duration = 6000 }: { items: FeaturedItem[]; duration?: number }) {
-  const { index, show, playing, toggle, progress } = useCarousel(items.length, duration);
+  const { index, show, prev, next, playing, toggle, progress } = useCarousel(items.length, duration);
   const f = items[index];
   if (!f) return null;
   return (
@@ -15,10 +15,16 @@ export function Featured({ items, duration = 6000 }: { items: FeaturedItem[]; du
       <article className="feat-main">
         <img key={f.image} src={f.image} alt="" />
         <div className="ov" />
-        <span className="ctr mono">
-          {index + 1} / {items.length}
-        </span>
-        {items.length > 1 && <PlayPause playing={playing} onToggle={toggle} />}
+        {items.length > 1 && (
+          <CarouselControls
+            index={index}
+            count={items.length}
+            playing={playing}
+            onToggle={toggle}
+            onPrev={prev}
+            onNext={next}
+          />
+        )}
         <div className="txt">
           <Kicker>{f.kicker}</Kicker>
           <h2>{f.title}</h2>
