@@ -62,7 +62,9 @@ export function Workshop({ tabs }: { tabs: Tab[] }) {
         </ol>
         {pv && (
           <div className="preview" aria-live="polite">
-            <div className="th">{pv.hero ? <img src={pv.hero} alt="" style={pv.pos ? { objectPosition: pv.pos } : undefined} /> : pv.mark}</div>
+            <div className={pv.hero ? "th" : "th type-tile"}>
+              {pv.hero ? <img src={pv.hero} alt="" style={pv.pos ? { objectPosition: pv.pos } : undefined} /> : <span>{pv.mark}</span>}
+            </div>
             <div className="b">
               <div className="row">
                 <Kicker muted>
