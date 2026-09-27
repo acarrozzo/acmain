@@ -708,7 +708,7 @@ export default function SystemPage() {
                 </div>
                 {worlds.every((w) => !w.backdrop) && <p className="ds-note">No world overrides the site backdrop yet.</p>}
               </Spec>
-              <Spec name="Footer" file="components/Footer.tsx" usedOn={usedOn("components/Footer.tsx")} note="At the bottom of this page. Wordmark, version line from site.version and site.since, every nav item but Home, the email.">
+              <Spec name="Footer" file="components/Footer.tsx" usedOn={usedOn("components/Footer.tsx")} note="At the bottom of this page. Composed like the original site's footer: headline, subhead, the nav, the site story, the portrait, the contact line, the small print. Copy is site.footer; the portrait is person.portrait.">
                 <p className="ds-note">
                   Reads <code>navItems</code>, so the System tab is down there too until it is removed.
                 </p>

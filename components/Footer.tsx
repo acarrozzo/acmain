@@ -1,36 +1,37 @@
 import { site } from "@/content/site";
+import { person } from "@/content/person";
 import { navItems } from "@/lib/nav";
-import { Mark } from "./Mark";
 
+/**
+ * The footer, composed like the original acarrozzo.com footer: a centered
+ * stack that ends every page the same way. Copy lives in `site.footer`.
+ */
 export function Footer() {
+  const { footer } = site;
+  const year = new Date().getFullYear();
   return (
     <footer className="foot container-page">
-      <div className="flex flex-col gap-1">
-        <a href="/" className="word" aria-label="AC, home">
-          <Mark className="" />
-          <span>
-            AC<span>.</span>
-          </span>
-        </a>
-        <span className="mono">
-          {site.version} · {site.since}
+      <h2 className="foot-h">{footer.heading}</h2>
+      <p className="foot-sub">{footer.sub}</p>
+      <ul>
+        {navItems.map((n) => (
+          <li key={n.href}>
+            <a href={n.href}>{n.label}</a>
+          </li>
+        ))}
+      </ul>
+      <p className="foot-story">{footer.story}</p>
+      <img src={person.portrait} alt={person.name} width={80} height={80} loading="lazy" className="foot-face" />
+      <p className="foot-contact">
+        <span className="mut">{footer.contactLabel}</span>{" "}
+        <span className="em">{site.email}</span>
+      </p>
+      <p className="foot-small mono">
+        <span>
+          {site.version} · © {footer.firstYear}–{year} {site.name}. All rights reserved.
         </span>
-      </div>
-      <div>
-        Made on Long Island. Nothing here gets deleted; it gets archived.
-        <ul>
-          {navItems
-            .filter((n) => n.href !== "/")
-            .map((n) => (
-              <li key={n.href}>
-                <a href={n.href}>{n.label}</a>
-              </li>
-            ))}
-        </ul>
-      </div>
-      <a href={`mailto:${site.email}`} className="font-semibold text-accent">
-        {site.email}
-      </a>
+        <a href="/">{footer.homeLabel}</a>
+      </p>
     </footer>
   );
 }

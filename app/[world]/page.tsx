@@ -125,9 +125,7 @@ export default async function WorldPage({ params }: { params: Params }) {
                 </p>
               ))}
               <div className="flex flex-wrap gap-2">
-                <Btn href={`mailto:${site.email}`} primary>
-                  {site.email}
-                </Btn>
+                <span className="self-center font-semibold text-accent">{site.email}</span>
                 <Btn href={person.linkedin}>LinkedIn</Btn>
               </div>
             </div>

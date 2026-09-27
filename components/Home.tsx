@@ -109,7 +109,7 @@ export function Editor() {
           <p>{person.editorBlurb}</p>
           <div className="links">
             <a href="/about">The long version →</a>
-            <a href={`mailto:${site.email}`}>{site.email}</a>
+            <span>{site.email}</span>
           </div>
         </div>
       </div>

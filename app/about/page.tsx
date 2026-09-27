@@ -34,9 +34,7 @@ export default function AboutPage() {
               <div className="text-muted">{person.location}</div>
             </div>
             <div className="flex flex-col gap-1.5 text-sm">
-              <a href={`mailto:${site.email}`} className="text-accent hover:underline">
-                {site.email}
-              </a>
+              <span className="text-accent">{site.email}</span>
               <a href={person.linkedin} target="_blank" rel="noopener" className="text-ink-soft hover:text-accent">
                 LinkedIn
                 <ExternalMark />
