@@ -7,7 +7,6 @@ import {
   NowPlaying,
   WorkshopSection,
   CategoryGrid,
-  CategoriesTiles,
 } from "@/components/Home";
 import { categoryById } from "@/lib/content";
 
@@ -31,7 +30,6 @@ export default function Home() {
           </aside>
         </section>
 
-        <CategoriesTiles />
         <CategoryGrid category={categoryById("games")} count={6} title="Playable, on paper, on the table." more="All games →" />
         <CategoryGrid category={categoryById("design")} count={3} title="Selected work." more="The professional door →" />
         <CategoryGrid category={categoryById("music")} count={3} title="Nine personas, three albums, one band." more="Listen →" />

@@ -1,5 +1,6 @@
 import { person } from "@/content/person";
 import { site } from "@/content/site";
+import { TempHeadshot } from "./TempHeadshot";
 import {
   featuredItems,
   latestEntryInCategory,
@@ -70,9 +71,10 @@ export function NowPlaying() {
 
 export function Editor() {
   return (
-    <Module kicker="About the editor">
+    <Module kicker="About Anthony">
       <div className="editor">
-        <img src={person.portrait} alt={person.name} loading="lazy" />
+        {/* TEMP: headshot picker; was <img src={person.portrait} alt={person.name} loading="lazy" /> */}
+        <TempHeadshot size={64} strip="none" />
         <div>
           <p>{person.editorBlurb}</p>
           <div className="links">
@@ -160,9 +162,7 @@ export function HeroOrbit() {
   return (
     <section className="hero-band">
       <div className="flex flex-col gap-5">
-        <Kicker>
-          {person.location} · designing since {person.since}
-        </Kicker>
+        <Kicker>{person.role}</Kicker>
         <h1>{person.hero.line}</h1>
         <p className="sub">{person.hero.sub}</p>
         <div className="acts">

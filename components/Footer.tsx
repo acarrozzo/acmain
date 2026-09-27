@@ -3,6 +3,7 @@ import { person } from "@/content/person";
 import { navItems } from "@/lib/nav";
 import { ThemeToggle } from "./ThemeToggle";
 import { BackdropBottom } from "./Backdrop";
+import { TempHeadshot } from "./TempHeadshot";
 
 /**
  * The log and the archive are linked from here and nowhere else in the
@@ -35,7 +36,8 @@ export function Footer() {
         ))}
       </ul>
       <p className="foot-story">{footer.story}</p>
-      <img src={person.portrait} alt={person.name} width={80} height={80} loading="lazy" className="foot-face" />
+      {/* TEMP: headshot picker; was <img src={person.portrait} ... className="foot-face" /> */}
+      <TempHeadshot size={80} className="foot-face" />
       <p className="foot-contact">
         <span className="mut">{footer.contactLabel}</span>{" "}
         <span className="em">{site.email}</span>

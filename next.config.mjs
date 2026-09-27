@@ -17,6 +17,8 @@ const nextConfig = {
       { source: "/music-lab", destination: "/music", permanent: true },
       { source: "/design-archive", destination: "/archive", permanent: true },
       { source: "/updates", destination: "/log", permanent: true },
+      // Renamed 27 Sep 2026.
+      { source: "/work/newsday-special-projects", destination: "/work/newsday-interactives", permanent: true },
     ];
   },
 };

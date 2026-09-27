@@ -34,12 +34,12 @@ export const featured: Featured[] = [
     secondary: { label: "All music", href: "/music" },
   },
   {
-    project: "newsday-special-projects",
+    project: "newsday-interactives",
     kicker: "Design · Newsday · editorial",
     title: "The one that won an Emmy",
     dek: "The Fighter & The Father: a dual-video documentary you can swap mid-scene. Plus Pathway to Power, and a pizza smackdown, because sometimes the news is pizza.",
     date: "2017",
-    primary: { label: "See the project", href: "/work/newsday-special-projects" },
+    primary: { label: "See the project", href: "/work/newsday-interactives" },
     secondary: { label: "See the work", href: "/work" },
   },
 ];

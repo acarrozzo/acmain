@@ -27,3 +27,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# raw photo sources (multi-MB originals; cropped webps live in public/img)
+/assets/headshots-src
+/assets/video-src

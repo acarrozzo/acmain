@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { isFigure, type Block, type Figure } from "@/content/types";
+import { isAside, isFigure, isVideo, type Aside, type Block, type Figure, type Video } from "@/content/types";
+import { ExternalMark } from "./ui";
 
 type GalleryApi = { figures: Figure[]; open: (i: number) => void };
 const GalleryCtx = createContext<GalleryApi | null>(null);
@@ -54,37 +55,87 @@ export function Fig({ f, lead }: { f: Figure; lead?: boolean }) {
     ) : (
       art
     );
-  const cls = ["fig", lead && "fig-lead", f.plate && "fig-plate"].filter(Boolean).join(" ");
+  const cls = ["fig", lead && "fig-lead", f.plate && "fig-plate", f.half && "fig-half"].filter(Boolean).join(" ");
   return (
     <figure className={cls}>
-      <div className="stage">{clickable}</div>
+      <div className={f.note ? "stage stage-row" : "stage"}>
+        {clickable}
+        {f.note && (
+          <div className="fig-note">
+            <p>{f.note}</p>
+            {f.links && f.links.length > 0 && (
+              <div className="acts">
+                {f.links.map((l, i) => (
+                  <a key={l.href} href={l.href} target="_blank" rel="noopener" className={i === 0 ? "btn pri" : "btn"}>
+                    {l.label}
+                    <ExternalMark />
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
       {f.caption && <figcaption>{f.caption}</figcaption>}
     </figure>
   );
 }
 
+/** A clip on the same stage as a figure, with the browser's own controls. Nothing loads until it is played. */
+export function Vid({ v }: { v: Video }) {
+  return (
+    <figure className="fig fig-plate">
+      <div className="stage">
+        <div className="win win-bare">
+          <div className="win-body">
+            <video src={v.video} poster={v.poster} controls preload="metadata" playsInline className={v.square ? "sq" : undefined} />
+          </div>
+        </div>
+      </div>
+      {v.caption && <figcaption>{v.caption}</figcaption>}
+    </figure>
+  );
+}
+
+type Run = { paras: string[] } | { vids: Video[] } | Figure | Aside;
+
 /**
  * A project's story. Runs of paragraphs share one `.copy` measure so the
- * paragraph spacing holds; each figure breaks the run at column width.
+ * paragraph spacing holds; each figure breaks the run at column width, and
+ * consecutive videos sit side by side.
  */
 export function Story({ blocks }: { blocks: Block[] }) {
-  const groups: Array<string[] | Figure> = [];
+  const groups: Run[] = [];
   for (const b of blocks) {
-    if (isFigure(b)) groups.push(b);
-    else {
-      const last = groups[groups.length - 1];
-      if (Array.isArray(last)) last.push(b);
-      else groups.push([b]);
+    const last = groups[groups.length - 1];
+    if (isFigure(b) || isAside(b)) groups.push(b);
+    else if (isVideo(b)) {
+      if (last && "vids" in last) last.vids.push(b);
+      else groups.push({ vids: [b] });
+    } else {
+      if (last && "paras" in last) last.paras.push(b);
+      else groups.push({ paras: [b] });
     }
   }
   return (
     <Gallery figures={blocks.filter(isFigure)}>
       <div className="story">
         {groups.map((g, i) =>
-          Array.isArray(g) ? (
+          "paras" in g ? (
             <div className="copy" key={i}>
-              {g.map((para, j) => (
+              {g.paras.map((para, j) => (
                 <p key={j}>{para}</p>
+              ))}
+            </div>
+          ) : "aside" in g ? (
+            <aside className="aside-box" key={i}>
+              {g.label && <span className="mono">{g.label}</span>}
+              <p>{g.aside}</p>
+            </aside>
+          ) : "vids" in g ? (
+            <div className={g.vids.length > 1 ? "vid-row" : undefined} key={i}>
+              {g.vids.map((v) => (
+                <Vid key={v.video} v={v} />
               ))}
             </div>
           ) : (

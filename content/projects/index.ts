@@ -3,7 +3,8 @@ import type { Project } from "../types";
 import { quickframeAi } from "./quickframe-ai";
 import { quickframeMarketplace } from "./quickframe-marketplace";
 import { newsdayCom } from "./newsday-com";
-import { newsdaySpecialProjects } from "./newsday-special-projects";
+import { newsdayInteractives } from "./newsday-interactives";
+import { productBuildersPodcast } from "./product-builders-podcast";
 
 import { lightGray } from "./light-gray";
 import { coinAndCastle } from "./coin-and-castle";
@@ -25,7 +26,8 @@ export const projects: Project[] = [
   quickframeAi,
   quickframeMarketplace,
   newsdayCom,
-  newsdaySpecialProjects,
+  newsdayInteractives,
+  productBuildersPodcast,
   // Games
   lightGray,
   coinAndCastle,

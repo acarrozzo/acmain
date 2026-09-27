@@ -207,7 +207,8 @@ a { color: inherit; }
 /* ---------------- Masthead ---------------- */
 .mast { padding-top: 48px; }
 .mast-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; padding-bottom: 42px; }
-.mast-name { display: flex; flex-direction: column; gap: 3px; justify-self: start; min-width: 0; }
+.mast-left { display: flex; align-items: center; gap: 12px; justify-self: start; min-width: 0; }
+.mast-name { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .mast-name .n { font-family: var(--font-display); font-size: 24px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.05; color: var(--ink); }
 .mast-name .r { font-size: 12.5px; color: var(--muted); }
 .mast-name:hover .n { color: var(--accent); }
@@ -220,7 +221,7 @@ a { color: inherit; }
 .iconbtn { width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--line); background: color-mix(in oklab, var(--surface) 55%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: var(--muted); display: grid; place-items: center; cursor: pointer; padding: 0; transition: border-color .2s, color .2s, background-color .2s; }
 .iconbtn:hover { border-color: var(--line-strong); color: var(--ink); background: color-mix(in oklab, var(--surface) 80%, transparent); }
 .iconbtn svg { width: 16px; height: 16px; }
-.mast-nav { display: flex; align-items: center; justify-content: center; gap: 20px; border-bottom: 1px solid var(--line-strong); padding: 10px 0; }
+.mast-nav { display: flex; align-items: center; justify-content: center; gap: 20px; border-top: 1px solid var(--line-strong); padding: 10px 0; }
 .mast-nav > ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 26px; }
 .mast-nav li { position: relative; }
 .mast-nav .tab { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); padding: 2px 0; border-bottom: 2px solid transparent; }
@@ -233,14 +234,14 @@ a { color: inherit; }
 .fly-card { min-width: 236px; padding: 6px; border-radius: 8px; border: 1px solid var(--line-strong); background: color-mix(in oklab, var(--surface) 94%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 18px 40px -18px rgba(0,0,0,.5); animation: fly-in .18s var(--ease-orbit) both; }
 .fly-all { display: block; margin: 0 2px 4px; padding: 4px 6px 8px; border-bottom: 1px solid var(--line); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; transition: color .12s; }
 .fly-all:hover, .fly-all:focus-visible { color: var(--accent); outline: none; }
-.fly ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-.fly li a { display: flex; align-items: center; gap: 9px; padding: 6px 8px; border-radius: 5px; font-size: 13.5px; font-weight: 500; color: var(--ink-soft); white-space: nowrap; transition: background-color .12s, color .12s; }
-.fly li a:hover, .fly li a:focus-visible { background: var(--surface-2); color: var(--ink); outline: none; }
-.fly li a.on { color: var(--accent); }
-.fly li a svg { width: 14px; height: 14px; flex: none; color: var(--muted); }
-.fly li a svg[data-status="live"], .fly li a svg[data-status="playable"], .fly li a svg[data-status="prototype"] { color: var(--accent); }
-.fly li a svg[data-status="resting"], .fly li a svg[data-status="archived"] { opacity: .55; }
-.fly li a .f { margin-left: auto; padding-left: 16px; font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.tree { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.tree li a { display: flex; align-items: center; gap: 9px; padding: 6px 8px; border-radius: 5px; font-size: 13.5px; font-weight: 500; color: var(--ink-soft); white-space: nowrap; transition: background-color .12s, color .12s; }
+.tree li a:hover, .tree li a:focus-visible { background: var(--surface-2); color: var(--ink); outline: none; }
+.tree li a.on { color: var(--accent); }
+.tree li a svg { width: 14px; height: 14px; flex: none; color: var(--muted); }
+.tree li a svg[data-status="live"], .tree li a svg[data-status="playable"], .tree li a svg[data-status="prototype"] { color: var(--accent); }
+.tree li a svg[data-status="resting"], .tree li a svg[data-status="archived"] { opacity: .55; }
+.tree li a .f { margin-left: auto; padding-left: 16px; font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .fly-sep { height: 1px; margin: 5px 8px; background: var(--line); }
 @keyframes fly-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 @media (hover: none), (max-width: 900px) { .fly { display: none; } }
@@ -248,9 +249,47 @@ a { color: inherit; }
   .mark-icon { width: 60px; height: 60px; }
   .mast-name .n { font-size: 17px; }
   .mast-name .r { font-size: 11px; }
-  .mast-nav > ul { gap: 12px 16px; flex-wrap: wrap; justify-content: center; }
+  .mast-nav > ul { gap: 12px 16px; }
   .search .lbl { display: none; }
 }
+
+/* Compact masthead: the tabs fold into a menu button once six of them
+   no longer fit on one line. The top row takes over the rule the nav
+   row drew, and the sheet drops in under it, pushing the page down. */
+.mast-menu { display: none; }
+@media (max-width: 520px) {
+  .mast-top { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; padding-bottom: 20px; border-bottom: 1px solid var(--line-strong); }
+  .mast-nav { display: none; }
+  /* A bare glyph, not a pill: a 40px hit area around a 22px icon, pulled
+     left so the lines sit flush with the gutter. */
+  .mast-menu { display: grid; place-items: center; flex: none; width: 40px; height: 40px; margin-left: -9px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--ink); cursor: pointer; transition: color .2s; }
+  .mast-menu svg { width: 22px; height: 22px; }
+  .mast-menu:hover, .mast-menu:focus-visible { color: var(--accent); outline: none; }
+  .mast-menu:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+  .mast-left { gap: 6px; }
+  .mast-name .n { font-size: 15px; }
+  .mast-name .r { display: none; }
+  .mast-right { gap: 6px; }
+  /* No keyboard on a phone, so the search pill becomes a plain round icon button. */
+  .search { width: 34px; height: 34px; padding: 0; justify-content: center; box-sizing: border-box; }
+  .search kbd { display: none; }
+}
+@media (max-width: 360px) { .mast-name { display: none; } }
+.mast-sheet { margin-top: 12px; padding: 8px; border-radius: 10px; border: 1px solid var(--line-strong); background: color-mix(in oklab, var(--surface) 94%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 18px 40px -18px rgba(0,0,0,.5); animation: fly-in .18s var(--ease-orbit) both; }
+.sheet-cats { list-style: none; margin: 0; padding: 0 0 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; border-bottom: 1px solid var(--line); }
+.sheet-cat { display: block; padding: 12px 4px; border-radius: 6px; text-align: center; font-size: 12.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); background: var(--surface-2); transition: color .12s, background-color .12s; }
+.sheet-cat:hover, .sheet-cat:focus-visible { background: var(--surface-3); outline: none; }
+.sheet-cat.on { color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }
+.sheet-tree { padding: 8px 0 4px; }
+.sheet-tree + .sheet-tree { border-top: 1px solid var(--line); }
+.mast-sheet .fly-all { margin: 0 2px 2px; padding: 6px 6px 8px; border-bottom: 0; }
+.sheet-pages { list-style: none; margin: 6px 0 0; padding: 6px 0 0; border-top: 1px solid var(--line); }
+.sheet-tab { display: block; padding: 11px 8px; border-radius: 5px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); transition: color .12s, background-color .12s; }
+.sheet-tab:hover, .sheet-tab:focus-visible { color: var(--ink); background: var(--surface-2); outline: none; }
+.sheet-tab.on { color: var(--accent); }
+.mast-sheet .tree { padding-bottom: 6px; }
+.mast-sheet .tree li a { padding: 9px 8px 9px 16px; font-size: 14px; }
+.mast-sheet .fly-sep { margin-left: 16px; }
 
 /* ---------------- Command palette ---------------- */
 .pal-back { position: fixed; inset: 0; z-index: 80; background: rgba(0,0,0,.5); display: flex; align-items: flex-start; justify-content: center; padding: 12vh 16px 16px; }
@@ -449,6 +488,13 @@ a { color: inherit; }
 .copy { max-width: 66ch; font-size: 16px; line-height: 1.65; color: var(--ink-soft); }
 .copy p { margin: 0; }
 .copy p + p { margin-top: 1em; }
+/* The about portrait on narrow screens: a small circle floated into the first paragraph, text wrapping round it, as the original site did it. */
+/* No display rule here: Tailwind's md:hidden lives in a layer and an unlayered display would beat it. */
+.about-float { float: right; width: 150px; margin: 6px 0 10px 22px; }
+.about-float .about-card { margin-top: 14px; font-size: 12.5px; line-height: 1.4; gap: 10px; }
+.about-float .about-card .text-sm { font-size: 12.5px; }
+.about-card { display: flex; flex-direction: column; gap: 20px; }
+.about-face { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line-strong); }
 /* The end of a story: a large, faint end mark, alone */
 .fin { display: flex; justify-content: center; padding: 104px 0 16px; }
 .fin-mark { width: 104px; height: 104px; fill: color-mix(in oklab, var(--ink) 9%, transparent); flex: none; }
@@ -463,6 +509,18 @@ a { color: inherit; }
 /* The stage: a panel in the page's own family with a faint blue glow behind the window */
 .stage { --glow: rgba(59, 120, 194, .16); --stage: color-mix(in oklab, var(--surface-2) 88%, #6a8fc0); padding: 24px; border-radius: 12px; border: 1px solid var(--line); background: radial-gradient(90% 70% at 50% 40%, var(--glow), transparent 70%), var(--stage); }
 .fig-lead .stage { padding: 32px; }
+.fig-half { width: 50%; }
+/* An aside in a story: a later note that should not read as the original text. Accent-tinted, hairline left edge. */
+.aside-box { max-width: 66ch; padding: 14px 18px 16px; border-radius: 8px; border-left: 2px solid var(--accent); background: var(--accent-soft); display: flex; flex-direction: column; gap: 6px; }
+.aside-box .mono { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.aside-box p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
+/* Artwork with a note beside it: image on the left half, text and buttons on the right. */
+.stage-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: center; }
+.fig-note { display: flex; flex-direction: column; gap: 16px; }
+.fig-note p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
+.fig-note .acts { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 700px) { .stage-row { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 700px) { .fig-half { width: 100%; } }
 .dark .stage { --glow: rgba(90, 130, 190, .22); --stage: color-mix(in oklab, var(--surface-2) 82%, #2a3a55); }
 /* The window: a hairline shell, a slim title bar, the screenshot as its body */
 .win { border-radius: 8px; overflow: hidden; border: 1px solid var(--line-strong); background: var(--surface-3); box-shadow: 0 18px 40px -24px rgba(20, 40, 70, .30); }
@@ -471,6 +529,12 @@ a { color: inherit; }
 .win-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); }
 .win-body { position: relative; }
 .win-body img { display: block; width: 100%; height: auto; }
+.win-body video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #000; }
+.win-body video.sq { aspect-ratio: 1; }
+/* Two clips from the same session share a row. */
+.vid-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.vid-row .stage { padding: 14px; }
+@media (max-width: 700px) { .vid-row { grid-template-columns: minmax(0, 1fr); } }
 /* A figure is a button that opens the lightbox */
 .fig-btn { all: unset; display: block; cursor: zoom-in; border-radius: 8px; }
 .fig-btn:hover .win { border-color: color-mix(in oklab, var(--line-strong) 60%, var(--ink)); }
@@ -578,6 +642,19 @@ a { color: inherit; }
 .hub-t { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .moon-txt[data-long="true"] { font-size: 9px; letter-spacing: -.02em; }
 .hub { transition: transform .5s var(--ease-orbit); }
+
+/* ---------------- TEMP: headshot picker (remove with components/TempHeadshot.tsx) ---------------- */
+.hs-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.hs-wrap img { cursor: pointer; }
+/* The cutouts have no background, so the container carries a translucent
+   fill that reads in both modes: a whisper of ink, warmed by the accent
+   from below. Beats .foot-face's opaque surface by specificity. */
+.hs-wrap .hs-img { border-radius: 50%; background: radial-gradient(90% 70% at 50% 100%, var(--accent-soft), transparent 70%), color-mix(in oklab, var(--ink) 8%, transparent); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.editor .hs-wrap { display: contents; }
+.hs-strip { display: inline-flex; align-items: center; gap: 8px; padding: 3px 4px; border: 1px dashed var(--line-strong); border-radius: 999px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+.hs-strip button { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); font-size: 16px; line-height: 1; cursor: pointer; }
+.hs-strip button:hover { border-color: var(--accent); color: var(--accent); }
+.foot .hs-wrap { align-items: center; }
 
 /* ---------------- Motion preferences ---------------- */
 @media (prefers-reduced-motion: reduce) {

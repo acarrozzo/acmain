@@ -13,15 +13,16 @@ export const categories: Category[] = [
     headline: "Product design, design systems, and the front-end to make them real.",
     intro: [
       "I'm a Senior Product Designer at MNTN, working on QuickFrame AI. Before that, twelve years at Newsday, where I went from lead UI designer to Director of UX & Design and shipped three redesigns of one of the biggest regional news sites in the country.",
-      "I hand-coded front-ends before it was called engineering, and I still do. These days that means Figma and React in the same week, PRs alongside the engineers, and a multiplayer game on the side to keep the range honest.",
+      "I hand-coded front-ends before it was called engineering. These days that means Figma and React in the same week, PRs alongside the engineers, and a multiplayer game on the side to keep the range honest.",
     ],
     listing: "featured",
-    hero: "/img/p/newsday-special-projects.webp",
+    hero: "/img/p/newsday-interactives.webp",
     featured: [
       "quickframe-ai",
       "quickframe-marketplace",
       "newsday-com",
-      "newsday-special-projects",
+      "newsday-interactives",
+      "product-builders-podcast",
     ],
     also: ["light-gray"],
     sections: [
@@ -47,13 +48,7 @@ export const categories: Category[] = [
         ],
       },
     ],
-    elsewhere: [
-      { label: "LinkedIn", href: "https://www.linkedin.com/in/acarrozzo/" },
-      {
-        label: "Product Builders podcast: print to digital design",
-        href: "https://open.spotify.com/episode/4sd2dWdnoW0n8angi8bJb5",
-      },
-    ],
+    elsewhere: [{ label: "LinkedIn", href: "https://www.linkedin.com/in/acarrozzo/" }],
   },
   {
     id: "games",

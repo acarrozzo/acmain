@@ -25,7 +25,7 @@ export default function LogPage() {
     <>
       <Masthead />
       <main className="container-page">
-        <Crumbs items={[{ label: "AC.", href: "/" }, { label: "Log" }]} />
+        <Crumbs items={[{ label: "Home", href: "/" }, { label: "Log" }]} />
         <div className="pagehead">
           <Kicker>The log · everything, in order</Kicker>
           <h1>Everything, in order.</h1>

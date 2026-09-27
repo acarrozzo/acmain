@@ -6,8 +6,8 @@ import { Mark } from "@/components/Mark";
 import { EntryList } from "@/components/Entries";
 import { CapsuleGrid } from "@/components/Capsule";
 import { HeroCarousel, type Slide } from "@/components/HeroCarousel";
-import { Fig, Gallery, Story } from "@/components/Story";
-import { isFigure } from "@/content/types";
+import { Fig, Gallery, Story, Vid } from "@/components/Story";
+import { isFigure, isVideo, type Video } from "@/content/types";
 import { Btn, Crumbs, Kicker, SectionHead, StatusChip, Tags } from "@/components/ui";
 import {
   entriesOf,
@@ -56,20 +56,24 @@ export default async function ProjectPage({ params }: { params: Params }) {
   const years = p.started && p.ended ? `${p.started}–${p.ended}` : p.started ? `${p.started}–` : null;
 
   /**
-   * A body with figures is a story: it tells its story inline and skips
-   * the screenshot strip. When it opens on a figure, that figure leads the page.
+   * A body with figures or clips is a story: it tells its story inline and
+   * skips the screenshot strip. When it opens on a figure, that figure leads
+   * the page; when it opens on clips, they lead as a row.
    */
-  const inline = (p.body ?? []).some(isFigure);
-  const first = p.body?.[0];
+  const body = p.body ?? [];
+  const inline = body.some((b) => isFigure(b) || isVideo(b));
+  const first = body[0];
   const lead = inline && first && isFigure(first) ? first : null;
-  const blocks = lead ? p.body!.slice(1) : p.body;
-  const figures = (p.body ?? []).filter(isFigure);
+  const leadVids: Video[] = [];
+  if (inline && !lead) for (const b of body) { if (isVideo(b)) leadVids.push(b); else break; }
+  const blocks = lead ? body.slice(1) : body.slice(leadVids.length);
+  const figures = body.filter(isFigure);
 
   return (
     <>
       <Masthead backdrop={w.backdrop} />
       <main className="container-page">
-        <Crumbs items={[{ label: "AC.", href: "/" }, { label: w.label ?? w.name, href: categoryPath(w) }, { label: p.name }]} />
+        <Crumbs items={[{ label: "Home", href: "/" }, { label: w.label ?? w.name, href: categoryPath(w) }, { label: p.name }]} />
         <div className="pagehead">
           <div className="flex flex-wrap items-center gap-3">
             <Kicker>{p.kind}</Kicker>
@@ -85,7 +89,19 @@ export default async function ProjectPage({ params }: { params: Params }) {
         <div className="proj">
           <Gallery figures={figures}>
             <div className="flex flex-col">
-              {lead ? <Fig f={lead} lead /> : slides.length > 0 && !inline ? <HeroCarousel slides={slides} /> : inline ? null : <div className="type-tile hero" />}
+              {lead ? (
+                <Fig f={lead} lead />
+              ) : leadVids.length > 0 ? (
+                <div className={leadVids.length > 1 ? "vid-row" : undefined}>
+                  {leadVids.map((v) => (
+                    <Vid key={v.video} v={v} />
+                  ))}
+                </div>
+              ) : slides.length > 0 && !inline ? (
+                <HeroCarousel slides={slides} />
+              ) : inline ? null : (
+                <div className="type-tile hero" />
+              )}
 
               {blocks && blocks.length > 0 && (
                 <section className="sec">

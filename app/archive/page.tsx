@@ -24,7 +24,7 @@ export default function ArchivePage() {
     <>
       <Masthead />
       <main className="container-page">
-        <Crumbs items={[{ label: "AC.", href: "/" }, { label: "Archive" }]} />
+        <Crumbs items={[{ label: "Home", href: "/" }, { label: "Archive" }]} />
         <div className="pagehead">
           <Kicker>Archive · 2000 to 2025</Kicker>
           <h1>The original site, kept exactly as it was.</h1>

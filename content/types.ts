@@ -47,12 +47,31 @@ export type Fact = { label: string; value: string };
  * A `plate` is a brand plate or artwork rather than a screenshot: it keeps
  * the frame but drops the window bar.
  */
-export type Figure = { image: string; alt: string; caption?: string; plate?: boolean };
+export type Figure = {
+  image: string;
+  alt: string;
+  caption?: string;
+  plate?: boolean;
+  /** Half the column, for artwork that needs no room. */
+  half?: boolean;
+  /** Text beside the image, on the same stage; the image takes the left half. */
+  note?: string;
+  /** Buttons under the note. */
+  links?: Link[];
+};
 
-/** One piece of a project's story: a paragraph, or a figure between paragraphs. */
-export type Block = string | Figure;
+/** A self-hosted or hotlinked clip inside a story, with the same stage as a figure. */
+export type Video = { video: string; caption?: string; poster?: string; /** 1:1 clip (a social cut) rather than 16:9. */ square?: boolean };
 
-export const isFigure = (b: Block): b is Figure => typeof b !== "string";
+/** A quietly highlighted paragraph that stands apart from the story, e.g. a later update. */
+export type Aside = { aside: string; /** Small label above it, e.g. "Update, 2026". */ label?: string };
+
+/** One piece of a project's story: a paragraph, a figure, a video or an aside between paragraphs. */
+export type Block = string | Figure | Video | Aside;
+
+export const isFigure = (b: Block): b is Figure => typeof b !== "string" && "image" in b;
+export const isVideo = (b: Block): b is Video => typeof b !== "string" && "video" in b;
+export const isAside = (b: Block): b is Aside => typeof b !== "string" && "aside" in b;
 
 export type Project = {
   slug: string;

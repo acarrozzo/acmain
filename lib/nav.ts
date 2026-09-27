@@ -1,5 +1,4 @@
 import {
-  alsoInCategory,
   projects,
   projectPath,
   projectsInCategory,
@@ -29,23 +28,16 @@ export type PaletteItem = { label: string; href: string; group: string };
 
 /**
  * Primary navigation: Home, the categories, then the pages that always exist.
- * Each category carries its projects (its own first, then guests from other
- * categories) so the masthead can hang a site-tree flyout under its tab.
+ * Each category carries its own projects so the masthead can hang a site-tree
+ * flyout under its tab. Guests from other categories (a category's `also`)
+ * appear on the category page but not in its menu.
  */
 export const navItems: NavItem[] = [
   { label: "Home", href: "/" },
   ...categories.map((w) => ({
     label: w.label ?? w.name,
     href: categoryPath(w),
-    children: [
-      ...projectsInCategory(w).map((p) => ({ label: p.name, href: projectPath(p), status: p.status })),
-      ...alsoInCategory(w).map((p) => ({
-        label: p.name,
-        href: projectPath(p),
-        status: p.status,
-        from: categoryById(p.category).name,
-      })),
-    ],
+    children: projectsInCategory(w).map((p) => ({ label: p.name, href: projectPath(p), status: p.status })),
   })),
   { label: "About", href: "/about" },
   /** Temporary: the design-system workbench. Remove when it has done its job. */

@@ -197,7 +197,7 @@ export default function SystemPage() {
     <>
       <Masthead />
       <main className="container-page">
-        <Crumbs items={[{ label: "AC.", href: "/" }, { label: "System" }]} />
+        <Crumbs items={[{ label: "Home", href: "/" }, { label: "System" }]} />
         <div className="pagehead">
           <Kicker>System · temporary · not indexed</Kicker>
           <h1>The building blocks.</h1>
@@ -459,7 +459,7 @@ export default function SystemPage() {
                   <div className="k">
                     <b>.crumbs</b>12.5px · muted
                   </div>
-                  <Crumbs items={[{ label: "AC.", href: "/" }, { label: "Games", href: "/games" }, { label: "Light Gray RPG" }]} />
+                  <Crumbs items={[{ label: "Home", href: "/" }, { label: "Games", href: "/games" }, { label: "Light Gray RPG" }]} />
                 </div>
                 <div>
                   <div className="k">
@@ -543,7 +543,7 @@ export default function SystemPage() {
                 <SectionHead kicker="Kicker only, no rule" rule={false} />
               </Spec>
               <Spec name="Crumbs" file="components/ui.tsx" usedOn={usedOn("components/ui.tsx", "Crumbs")}>
-                <Crumbs items={[{ label: "AC.", href: "/" }, { label: "Games", href: "/games" }, { label: "Light Gray RPG" }]} />
+                <Crumbs items={[{ label: "Home", href: "/" }, { label: "Games", href: "/games" }, { label: "Light Gray RPG" }]} />
               </Spec>
               <Spec name="Btn" file="components/ui.tsx" usedOn={usedOn("components/ui.tsx", "Btn")} note="A link styled as a button. No href or disabled renders a span. External hrefs open in a new tab and get the ExternalMark.">
                 <div className="ds-row">
@@ -647,7 +647,7 @@ export default function SystemPage() {
               </Spec>
               <Spec name="Masthead · MastheadClient" file="components/Masthead.tsx" usedOn={usedOn("components/Masthead.tsx")} note="At the top of this page. Server wrapper builds navItems and paletteItems; the client half owns the flyouts (hover or focus a category tab; Escape closes; none on touch or once the nav wraps) and the active tab. A static flyout row is in the playground.">
                 <p className="ds-note">
-                  Flyouts need <code>(hover: hover) and (min-width: 901px)</code>. Open delay 70ms, close delay 140ms. The tree comes from <code>navItems</code>, own projects first, guests from other categories under a hairline.
+                  Flyouts need <code>(hover: hover) and (min-width: 901px)</code>. Open delay 70ms, close delay 140ms. The tree comes from <code>navItems</code>: a category&apos;s own projects only; guests from other categories stay on the category page.
                 </p>
               </Spec>
               <Spec name="CommandPalette" file="components/CommandPalette.tsx" usedOn={usedOn("components/CommandPalette.tsx")} note="⌘K or the search pill. Filters paletteItems by label or group; arrows move, Enter goes, Escape closes. External hrefs open in a new tab.">
@@ -754,7 +754,7 @@ export default function SystemPage() {
                   </Spec>
                   <Spec name="HeroOrbit · FeaturedSection · WorkshopSection" file="components/Home.tsx" usedOn={usedOn("components/Home.tsx", "HeroOrbit")} note="Thin wrappers: HeroOrbit is the person's line beside OrbitalNav(orbitData()); FeaturedSection is a SectionHead over Featured(featuredItems()); WorkshopSection is Workshop(workshopTabs()). All three are shown above as their components.">
                     <p className="ds-note">
-                      Hero copy comes from <code>person.hero</code>; the kicker is <code>person.location</code> and <code>person.since</code>.
+                      Hero copy comes from <code>person.hero</code>; the kicker is <code>person.role</code>.
                     </p>
                   </Spec>
                 </div>

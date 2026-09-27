@@ -11,6 +11,9 @@ import { StatusGlyph } from "./ui";
 
 /** Flyouts need a pointer that can hover and a nav that has not wrapped. */
 const FLY_MEDIA = "(hover: hover) and (min-width: 901px)";
+/** Below this the six tabs no longer fit on one line, so they fold into the menu sheet. */
+const COMPACT_MEDIA = "(max-width: 520px)";
+const SHEET_ID = "mast-sheet";
 /** Crossing the nav should not flash every panel open; leaving should forgive a wobble. */
 const OPEN_DELAY = 70;
 const CLOSE_DELAY = 140;
@@ -38,6 +41,9 @@ export function MastheadClient({
   const pathname = usePathname() ?? "/";
   const [open, setOpen] = useState<string | null>(null);
   const [canFly, setCanFly] = useState(false);
+  const [compact, setCompact] = useState(false);
+  const [sheet, setSheet] = useState(false);
+  const menuBtn = useRef<HTMLButtonElement>(null);
   const timer = useRef<number | undefined>(undefined);
   /** The tab Escape just closed: its next focus event should not reopen it. */
   const dismissed = useRef<string | null>(null);
@@ -53,6 +59,33 @@ export function MastheadClient({
     };
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia(COMPACT_MEDIA);
+    const sync = () => setCompact(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  /* The sheet only exists in the compact layout, and a new page starts closed. */
+  useEffect(() => {
+    if (!compact) setSheet(false);
+  }, [compact]);
+  useEffect(() => setSheet(false), [pathname]);
+
+  useEffect(() => {
+    if (!sheet) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setSheet(false);
+      menuBtn.current?.focus();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [sheet]);
+
+  const showSheet = compact && sheet;
+
   const later = (next: string | null, delay: number) => {
     window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => setOpen(next), delay);
@@ -65,10 +98,25 @@ export function MastheadClient({
   return (
     <header className="mast container-page">
       <div className="mast-top">
-        <a className="mast-name" href="/">
-          <span className="n">{name}</span>
-          <span className="r">{role}</span>
-        </a>
+        <div className="mast-left">
+          <button
+            ref={menuBtn}
+            type="button"
+            className="mast-menu"
+            onClick={() => setSheet((v) => !v)}
+            aria-label={showSheet ? "Close menu" : "Menu"}
+            aria-expanded={showSheet}
+            aria-controls={SHEET_ID}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+              {showSheet ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+            </svg>
+          </button>
+          <a className="mast-name" href="/">
+            <span className="n">{name}</span>
+            <span className="r">{role}</span>
+          </a>
+        </div>
         <a className="mast-mark" href="/" aria-label="Home">
           <Mark />
         </a>
@@ -77,6 +125,7 @@ export function MastheadClient({
           <ThemeToggle />
         </div>
       </div>
+      {showSheet && <Sheet id={SHEET_ID} nav={nav} pathname={pathname} />}
       <nav className="mast-nav" aria-label="Sections">
         <ul>
           {nav.map((item) => {
@@ -153,7 +202,7 @@ function Flyout({ id, item, pathname }: { id: string; item: NavItem; pathname: s
         <a className="fly-all" href={item.href}>
           All {item.label}
         </a>
-        <ul>
+        <ul className="tree">
           {own.map((c) => (
             <FlyRow key={c.href} c={c} on={pathname === c.href} />
           ))}
@@ -164,6 +213,64 @@ function Flyout({ id, item, pathname }: { id: string; item: NavItem; pathname: s
         </ul>
       </div>
     </div>
+  );
+}
+
+/**
+ * The compact-layout menu. The three categories lead as a row of tabs, then
+ * each category's site tree (touch has no flyouts, so this is where the
+ * projects live), then the standalone pages. Sits under the masthead rule
+ * and pushes the page down rather than covering it.
+ */
+function Sheet({ id, nav, pathname }: { id: string; nav: NavItem[]; pathname: string }) {
+  const cats = nav.filter((n) => (n.children?.length ?? 0) > 0);
+  const pages = nav.filter((n) => !(n.children?.length ?? 0));
+  return (
+    <nav className="mast-sheet" id={id} aria-label="Sections">
+      <ul className="sheet-cats">
+        {cats.map((c) => (
+          <li key={c.href}>
+            <a href={c.href} className={isActive(pathname, c.href) ? "sheet-cat on" : "sheet-cat"}>
+              {c.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      {cats.map((c) => {
+        const children = c.children ?? [];
+        const own = children.filter((x) => !x.from);
+        const guests = children.filter((x) => x.from);
+        return (
+          <section className="sheet-tree" key={c.href} aria-label={c.label}>
+            <a className="fly-all" href={c.href} aria-current={pathname === c.href ? "page" : undefined}>
+              All {c.label}
+            </a>
+            <ul className="tree">
+              {own.map((x) => (
+                <FlyRow key={x.href} c={x} on={pathname === x.href} />
+              ))}
+              {guests.length > 0 && <li className="fly-sep" aria-hidden="true" />}
+              {guests.map((x) => (
+                <FlyRow key={x.href} c={x} on={pathname === x.href} />
+              ))}
+            </ul>
+          </section>
+        );
+      })}
+      <ul className="sheet-pages">
+        {pages.map((p) => (
+          <li key={p.href}>
+            <a
+              href={p.href}
+              className={isActive(pathname, p.href) ? "sheet-tab on" : "sheet-tab"}
+              aria-current={pathname === p.href ? "page" : undefined}
+            >
+              {p.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 

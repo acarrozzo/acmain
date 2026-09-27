@@ -58,7 +58,7 @@ export default async function CategoryPage({ params }: { params: Params }) {
     <>
       <Masthead backdrop={w.backdrop} />
       <main className="container-page">
-        <Crumbs items={[{ label: "AC.", href: "/" }, { label: w.label ?? w.name }]} />
+        <Crumbs items={[{ label: "Home", href: "/" }, { label: w.label ?? w.name }]} />
 
         {w.listing === "status" ? (
           <>
