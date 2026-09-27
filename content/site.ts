@@ -11,8 +11,8 @@ export const site = {
   since: "since the 90s",
   /**
    * The photo ghosted behind the top of every page: the forest in dark,
-   * the daylight sky in light. A world can override it with its own
-   * `backdrop` in `content/worlds.ts`.
+   * the daylight sky in light. A category can override it with its own
+   * `backdrop` in `content/categories.ts`.
    */
   backdrop: { dark: "/img/forest-dark.webp", light: "/img/sky-light.webp" },
   description:

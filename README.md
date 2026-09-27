@@ -1,6 +1,6 @@
 # AC Main
 
-The hub for everything Anthony Carrozzo makes. One person, three worlds, unlimited
+The hub for everything Anthony Carrozzo makes. One person, three categories, unlimited
 projects, one living log. Built so that adding the next thing is one file and never
 a redesign.
 
@@ -15,8 +15,8 @@ npm run build    # static pages for every route
 | Noun | How many | Lives in | Renders |
 |------|----------|----------|---------|
 | **Person** | one | `content/person.ts` | masthead name, editor box, about page |
-| **World** | three (Design, Games, Music) | `content/worlds.ts` | nav, world tiles, `/work` `/games` `/music` |
-| **Project** | many | `content/projects/<slug>.ts` | capsules, `/<world>/<slug>` |
+| **Category** | three (Design, Games, Music) | `content/categories.ts` | nav, category tiles, `/work` `/games` `/music` |
+| **Project** | many | `content/projects/<slug>.ts` | capsules, `/<category>/<slug>` |
 | **Entry** | endless | on its project (`entries: []`) | the log column, the workshop, `/log`, changelogs |
 
 Plus one editorial list: `content/featured.ts`, the four stories in the home page
@@ -29,7 +29,7 @@ carousel.
    (two letters) for the typographic tile. If the name is long, add a `short`
    (two words) for its moon on the home page orbit.
 2. Import it in `content/projects/index.ts`.
-3. Optionally add the slug to its world's `featured` list in `content/worlds.ts`.
+3. Optionally add the slug to its category's `featured` list in `content/categories.ts`.
 4. Drop a hero image in `public/img/p/<slug>.webp` and set `hero`. Albums set
    `square: true` and a `bar` color.
 
@@ -50,19 +50,19 @@ house, moss, a plaque. Retirement is a status, not a deletion.
 
 - **Masthead**: the name left, the A mark centered, search and
   theme toggle right, a centered section nav under a double rule. Not sticky.
-  Hover or focus a world's tab and a small flyout hangs under it with the
-  world's site tree: an "All Games" link to the world page, then every
-  project as a status glyph and a name (guests from other worlds under a
+  Hover or focus a category's tab and a small flyout hangs under it with the
+  category's site tree: an "All Games" link to the category page, then every
+  project as a status glyph and a name (guests from other categories under a
   hairline). Escape closes it. There is
-  no flyout on touch or once the nav wraps; the tab just goes to the world.
+  no flyout on touch or once the nav wraps; the tab just goes to the category.
   The tree comes from `navItems` in `lib/nav.ts`, so a new project shows up
   on its own.
-- **The orbit** (`OrbitalNav`): the opening band. Three world orbs drift clockwise
+- **The orbit** (`OrbitalNav`): the opening band. Three category orbs drift clockwise
   around the hub, each with its projects orbiting it as tiny status-coloured moons,
-  also clockwise. Hover or focus a world and everything eases to a stop while the
+  also clockwise. Hover or focus a category and everything eases to a stop while the
   camera pushes in: the orb grows, the moons spread out and become labelled links
   to the project pages. The hub in the middle shows
-  the newest entry on the site, in the hovered world, or on the hovered moon.
+  the newest entry on the site, in the hovered category, or on the hovered moon.
   Geometry constants sit at the top of the component; the orbit itself is one
   `requestAnimationFrame` loop that sleeps off-screen and under reduced motion.
   Below `md` it is three cards.
@@ -72,7 +72,7 @@ house, moss, a plaque. Retirement is a status, not a deletion.
   preview, derived from records.
 - **Right column**: the log (eight newest entries), now playing (hand-picked in
   `person.nowPlaying`), about the editor.
-- **Worlds, then capsule grids** for Games, Design and Music.
+- **Categories, then capsule grids** for Games, Design and Music.
 
 ⌘K (or the search pill) opens a command palette that jumps to any page or project.
 
@@ -82,8 +82,8 @@ house, moss, a plaque. Retirement is a status, not a deletion.
 |-------|------|
 | `/` | The front page |
 | `/work` | Design: the professional door. Selected work, what I do, elsewhere, contact. |
-| `/games`, `/music` | World pages: headline, stats, a featured banner, filter chips, capsules |
-| `/<world>/<slug>` | Project page: hero carousel, side rail, about, changelog, more in the world |
+| `/games`, `/music` | Category pages: headline, stats, a featured banner, filter chips, capsules |
+| `/<category>/<slug>` | Project page: hero carousel, side rail, about, changelog, more in the category |
 | `/log` | Every entry, newest first, grouped by month |
 | `/about` | The person, the timeline, the site's origin story |
 | `/archive` | Points at the original acarrozzo.com, kept unedited |
@@ -100,8 +100,8 @@ Old prototype routes redirect in `next.config.mjs`.
   versions), via `next/font`.
 - **The mark**: `public/img/ac-mark.svg`, inlined through `components/Mark.tsx`.
 - **Backdrops**: every page has a photo ghosted behind its top (`site.backdrop`:
-  the forest in dark, the sky in light). Give a world its own by setting
-  `backdrop: { dark, light }` in `content/worlds.ts`; its door and its project
+  the forest in dark, the sky in light). Give a category its own by setting
+  `backdrop: { dark, light }` in `content/categories.ts`; its door and its project
   pages pick it up.
 - **Components**: `Capsule`, `StatusChip`, `Tags`, `Featured`, `Workshop`,
   `HeroCarousel`, `FilteredGrid`, `CommandPalette`, `Masthead`, `Footer`.

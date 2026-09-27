@@ -52,10 +52,10 @@ export function StatusChip({ status, onImage = false }: { status: Status; onImag
   );
 }
 
-export function Tags({ items, world }: { items: string[]; world: string }) {
+export function Tags({ items, category }: { items: string[]; category: string }) {
   if (items.length === 0) return null;
   return (
-    <div className={`tags t-${world}`}>
+    <div className={`tags t-${category}`}>
       {items.map((t) => (
         <span key={t}>{t}</span>
       ))}

@@ -1,16 +1,16 @@
 /**
  * The four nouns. Everything on the site is one of these.
  *
- *   Person  — one. Anthony. See `content/person.ts`.
- *   World   — a few. A practice you'll still have in twenty years. See `content/worlds.ts`.
- *   Project — many. A thing with a name and a status. One file each in `content/projects/`.
- *   Entry   — endless. A dated thing that happened to a project. Lives on its project.
+ *   Person   — one. Anthony. See `content/person.ts`.
+ *   Category — a few. A practice you'll still have in twenty years. See `content/categories.ts`.
+ *   Project  — many. A thing with a name and a status. One file each in `content/projects/`.
+ *   Entry    — endless. A dated thing that happened to a project. Lives on its project.
  *
- * The home page, world pages, project pages and the log are all rendered
+ * The home page, category pages, project pages and the log are all rendered
  * from these records. Adding a project never touches a layout.
  */
 
-export type WorldId = "design" | "games" | "music";
+export type CategoryId = "design" | "games" | "music";
 
 /** Where a project is in its life. Retirement is a status, not a deletion. */
 export type Status =
@@ -57,8 +57,8 @@ export const isFigure = (b: Block): b is Figure => typeof b !== "string";
 export type Project = {
   slug: string;
   name: string;
-  world: WorldId;
-  /** Short noun shown above the name: "Game", "Case study", "Albums"… */
+  category: CategoryId;
+  /** Short noun shown above the name: "Game", "Product", "Albums"… */
   kind: string;
   status: Status;
   /** Two or three short words for the moon on the home page orbit. Defaults to `name`. */
@@ -67,7 +67,7 @@ export type Project = {
   line: string;
   /**
    * The project page's story: paragraphs, with figures between them when the
-   * project has a case study to tell. A page whose body carries figures
+   * project has a story to tell. A page whose body carries figures
    * tells the story inline and skips the screenshot strip at the top.
    */
   body?: Block[];
@@ -99,37 +99,37 @@ export type Project = {
   facts?: Fact[];
 };
 
-export type WorldSection = {
+export type CategorySection = {
   title: string;
   items: { name: string; text: string }[];
 };
 
-export type World = {
-  id: WorldId;
+export type Category = {
+  id: CategoryId;
   /** URL segment: /work, /games, /music */
   slug: string;
   name: string;
   /** Nav label, when it differs from the name. */
   label?: string;
   tagline: string;
-  /** Headline on the world page. */
+  /** Headline on the category page. */
   headline: string;
   intro: string[];
   /**
-   * How the world page lists its projects: "featured" is a flat grid in
+   * How the category page lists its projects: "featured" is a flat grid in
    * `featured` order (a portfolio); "status" groups them by where they are
    * in their life (a workshop), with filters and a featured banner.
    */
   listing: "featured" | "status";
   /** Ordered project slugs to show first. Anything not listed follows. */
   featured?: string[];
-  /** Projects from other worlds that also belong on this page. */
+  /** Projects from other categories that also belong on this page. */
   also?: string[];
-  /** Image for the world's tile on the home page. */
+  /** Image for the category's tile on the home page. */
   hero?: string;
-  /** This world's own backdrop, on its door and its project pages. Defaults to the site's. */
+  /** This category's own backdrop, on its door and its project pages. Defaults to the site's. */
   backdrop?: Backdrop;
-  sections?: WorldSection[];
+  sections?: CategorySection[];
   elsewhere?: Link[];
 };
 

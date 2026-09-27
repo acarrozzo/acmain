@@ -4,7 +4,7 @@ export const lightGray: Project = {
   slug: "light-gray",
   name: "Light Gray RPG",
   short: "Light Gray",
-  world: "games",
+  category: "games",
   kind: "Game",
   status: "playable",
   line: "A turn-based browser RPG I've been building for over a decade, now multiplayer.",

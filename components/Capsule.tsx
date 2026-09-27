@@ -20,7 +20,7 @@ export function Capsule({ p }: { p: CapsuleData }) {
         </div>
         <h3>{p.name}</h3>
         <p>{p.line}</p>
-        <Tags items={p.tags} world={p.world} />
+        <Tags items={p.tags} category={p.category} />
         {p.bar && <div className="bar" style={{ background: p.bar }} />}
       </div>
     </a>

@@ -4,7 +4,7 @@ export const ss4st: Project = {
   slug: "ss4st",
   name: "Strange Sounds for Strange Times",
   short: "Strange Sounds",
-  world: "music",
+  category: "music",
   kind: "Albums",
   status: "live",
   line: "Three instrumental albums, forty-some tunes, on all the usual services.",

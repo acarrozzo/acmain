@@ -3,7 +3,7 @@ import type { Project } from "../types";
 export const coinAndCastle: Project = {
   slug: "coin-and-castle",
   name: "Coin & Castle",
-  world: "games",
+  category: "games",
   kind: "Game",
   status: "prototype",
   line: "An idle game about finding one coin and ending up with a kingdom.",

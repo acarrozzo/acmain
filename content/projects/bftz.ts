@@ -4,7 +4,7 @@ export const bftz: Project = {
   slug: "bftz",
   name: "Banned from the Zoo",
   short: "BFTZ",
-  world: "music",
+  category: "music",
   kind: "Band",
   status: "archived",
   started: 2010,

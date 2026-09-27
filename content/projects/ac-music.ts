@@ -3,7 +3,7 @@ import type { Project } from "../types";
 export const acMusic: Project = {
   slug: "ac-music",
   name: "AC Music",
-  world: "music",
+  category: "music",
   kind: "Archive app",
   status: "live",
   line: "Thirty years of songs, finally heard the way I always imagined them.",

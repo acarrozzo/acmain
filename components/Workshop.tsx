@@ -68,13 +68,13 @@ export function Workshop({ tabs }: { tabs: Tab[] }) {
             <div className="b">
               <div className="row">
                 <Kicker muted>
-                  {pv.worldName} · {pv.kind}
+                  {pv.categoryName} · {pv.kind}
                 </Kicker>
                 <StatusChip status={pv.status} />
               </div>
               <h3>{pv.name}</h3>
               <p>{pv.line}</p>
-              <Tags items={pv.tags} world={pv.world} />
+              <Tags items={pv.tags} category={pv.category} />
               <div className="row">
                 <span className="mono">{pv.date ? `${formatDate(pv.date)} · ${pv.latest}` : ""}</span>
                 <Btn href={pv.href} small>

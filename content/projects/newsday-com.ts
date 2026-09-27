@@ -3,8 +3,8 @@ import type { Project } from "../types";
 export const newsdayCom: Project = {
   slug: "newsday-com",
   name: "Newsday.com",
-  world: "design",
-  kind: "Case study",
+  category: "design",
+  kind: "News site",
   status: "live",
   started: 2011,
   line: "Three redesigns of one of the biggest regional news sites in the country, and the module system behind the last one.",

@@ -8,26 +8,26 @@ import { Btn, Crumbs, ExternalMark, Kicker, SectionHead, StatusChip, Tags } from
 import { person } from "@/content/person";
 import { site } from "@/content/site";
 import {
-  alsoInWorld,
+  alsoInCategory,
   latestEntryOf,
   projectPath,
-  projectsInWorld,
+  projectsInCategory,
   toCapsule,
-  worldBySlug,
-  worlds,
+  categoryBySlug,
+  categories,
   type Project,
 } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 
-type Params = Promise<{ world: string }>;
+type Params = Promise<{ category: string }>;
 
 export function generateStaticParams() {
-  return worlds.map((w) => ({ world: w.slug }));
+  return categories.map((w) => ({ category: w.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { world } = await params;
-  const w = worldBySlug(world);
+  const { category } = await params;
+  const w = categoryBySlug(category);
   if (!w) return {};
   return { title: w.label ?? w.name, description: w.headline };
 }
@@ -36,13 +36,13 @@ function count(list: Project[], pred: (p: Project) => boolean) {
   return list.filter(pred).length;
 }
 
-export default async function WorldPage({ params }: { params: Params }) {
-  const { world } = await params;
-  const w = worldBySlug(world);
+export default async function CategoryPage({ params }: { params: Params }) {
+  const { category } = await params;
+  const w = categoryBySlug(category);
   if (!w) notFound();
 
-  const mine = projectsInWorld(w);
-  const also = alsoInWorld(w);
+  const mine = projectsInCategory(w);
+  const also = alsoInCategory(w);
   const lead = mine[0];
 
   const allFilters: Filter[] = [
@@ -99,7 +99,7 @@ export default async function WorldPage({ params }: { params: Params }) {
                   <div className="flex items-center gap-3">
                     <StatusChip status={lead.status} />
                   </div>
-                  <Tags items={lead.tags ?? []} world={lead.world} />
+                  <Tags items={lead.tags ?? []} category={lead.category} />
                   <div className="mt-1 flex flex-wrap gap-2">
                     <Btn href={projectPath(lead)} primary>
                       See the project
@@ -131,7 +131,7 @@ export default async function WorldPage({ params }: { params: Params }) {
             </div>
 
             <section className="flex flex-col">
-              <SectionHead kicker="Selected work" dek="Imagery first. Case studies for QuickFrame are being written." />
+              <SectionHead kicker="Selected work" dek="Imagery first. The QuickFrame write-ups are on the way." />
               <CapsuleGrid items={[...mine, ...also].map(toCapsule)} />
             </section>
 

@@ -4,7 +4,7 @@ export const archimedesGames: Project = {
   slug: "archimedes-games",
   name: "Archimedes Games",
   short: "Archimedes",
-  world: "games",
+  category: "games",
   kind: "Card games",
   status: "live",
   line: "Three original card games, designed, illustrated and produced independently.",

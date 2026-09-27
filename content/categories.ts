@@ -1,10 +1,10 @@
-import type { World } from "./types";
+import type { Category } from "./types";
 
 /**
- * A world is a practice, not a project. Three is deliberate. If a fourth
+ * A category is a practice, not a project. Three is deliberate. If a fourth
  * appears it should feel like a life change, not a new side project.
  */
-export const worlds: World[] = [
+export const categories: Category[] = [
   {
     id: "design",
     slug: "work",

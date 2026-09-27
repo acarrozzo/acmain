@@ -1,4 +1,4 @@
-/** "app/[world]/[slug]/page.tsx" → "/{world}/{slug}". Pure; safe in client bundles. */
+/** "app/[category]/[slug]/page.tsx" → "/{category}/{slug}". Pure; safe in client bundles. */
 export function routeLabel(file: string): string {
   if (!file.startsWith("app/")) return file;
   const rest = file.slice(4);

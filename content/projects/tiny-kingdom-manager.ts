@@ -4,7 +4,7 @@ export const tinyKingdomManager: Project = {
   slug: "tiny-kingdom-manager",
   name: "Tiny Kingdom Manager",
   short: "Tiny Kingdom",
-  world: "games",
+  category: "games",
   kind: "Game",
   status: "prototype",
   line: "A peaceful isometric kingdom you can leave running on a second monitor.",

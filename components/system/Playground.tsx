@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { STATUS_LABEL, type CapsuleData, type Status, type WorldId } from "@/lib/content";
+import { STATUS_LABEL, type CapsuleData, type Status, type CategoryId } from "@/lib/content";
 import { Capsule } from "@/components/Capsule";
 import { Btn, Kicker, StatusChip, StatusGlyph, Tags } from "@/components/ui";
 import { PlayPause } from "@/components/useCarousel";
@@ -10,7 +10,7 @@ import { Cell } from "./Spec";
 const STATUSES: Status[] = ["idea", "paper", "prototype", "playable", "live", "resting", "archived"];
 /** Mirrors HOT in components/ui.tsx. */
 const HOT: Status[] = ["live", "playable", "prototype"];
-const WORLDS: { id: WorldId; name: string }[] = [
+const CATEGORIES: { id: CategoryId; name: string }[] = [
   { id: "design", name: "Design" },
   { id: "games", name: "Games" },
   { id: "music", name: "Music" },
@@ -23,12 +23,12 @@ const BARS: [string, string][] = [
 ];
 
 /**
- * Flip status, world, artwork and text and watch every primitive and the
+ * Flip status, category, artwork and text and watch every primitive and the
  * capsule re-render. Nothing here touches the records.
  */
 export function Playground({ art }: { art: { label: string; src: string }[] }) {
   const [status, setStatus] = useState<Status>("playable");
-  const [world, setWorld] = useState<WorldId>("games");
+  const [category, setCategory] = useState<CategoryId>("games");
   const [hero, setHero] = useState<string>(art[0]?.src ?? "");
   const [square, setSquare] = useState(false);
   const [bar, setBar] = useState("");
@@ -38,13 +38,13 @@ export function Playground({ art }: { art: { label: string; src: string }[] }) {
   const [label, setLabel] = useState("Enter →");
   const [playing, setPlaying] = useState(true);
 
-  const worldName = WORLDS.find((w) => w.id === world)?.name ?? world;
+  const categoryName = CATEGORIES.find((w) => w.id === category)?.name ?? category;
   const tagList = tags.split(",").map((t) => t.trim()).filter(Boolean);
   const cap: CapsuleData = {
     slug: "example",
     name,
-    world,
-    worldName,
+    category,
+    categoryName,
     kind: "Game",
     status,
     line: "One line that shows on cards and as the page subtitle.",
@@ -72,9 +72,9 @@ export function Playground({ art }: { art: { label: string; src: string }[] }) {
           </select>
         </label>
         <label>
-          World
-          <select value={world} onChange={(e) => setWorld(e.target.value as WorldId)}>
-            {WORLDS.map((w) => (
+          Category
+          <select value={category} onChange={(e) => setCategory(e.target.value as CategoryId)}>
+            {CATEGORIES.map((w) => (
               <option key={w.id} value={w.id}>
                 {w.name}
               </option>
@@ -136,15 +136,15 @@ export function Playground({ art }: { art: { label: string; src: string }[] }) {
             <StatusChip status={status} onImage />
           </div>
         </Cell>
-        <Cell label={`Tags · .t-${world}`}>
-          <Tags items={tagList} world={world} />
+        <Cell label={`Tags · .t-${category}`}>
+          <Tags items={tagList} category={category} />
         </Cell>
         <Cell label="Kicker · muted">
           <Kicker>
-            {worldName} · {STATUS_LABEL[status]}
+            {categoryName} · {STATUS_LABEL[status]}
           </Kicker>
           <Kicker muted>
-            {worldName} · {STATUS_LABEL[status]}
+            {categoryName} · {STATUS_LABEL[status]}
           </Kicker>
         </Cell>
         <Cell label="Moon · at rest, zoomed">
@@ -157,7 +157,7 @@ export function Playground({ art }: { art: { label: string; src: string }[] }) {
           <div className="fly ds-fly">
             <div className="fly-card">
               <a className="fly-all" href="#playground">
-                All {worldName}
+                All {categoryName}
               </a>
               <ul>
                 <li>

@@ -3,7 +3,7 @@ import type { Project } from "../types";
 export const towerTest: Project = {
   slug: "tower-test",
   name: "Tower Test",
-  world: "games",
+  category: "games",
   kind: "Game",
   status: "resting",
   line: "A tower defense experiment, built fast to see what would happen.",

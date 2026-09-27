@@ -2,25 +2,25 @@ import { person } from "@/content/person";
 import { site } from "@/content/site";
 import {
   featuredItems,
-  latestEntryInWorld,
+  latestEntryInCategory,
   latestEntryOf,
   projectBySlug,
   projectPath,
-  projectsInWorld,
+  projectsInCategory,
   STATUS_LABEL,
   toCapsule,
   workshopTabs,
-  worldPath,
-  worlds,
+  categoryPath,
+  categories,
   type EntryWithProject,
   type Project,
-  type World,
+  type Category,
 } from "@/lib/content";
 import { Featured } from "./Featured";
 import { Workshop } from "./Workshop";
 import { CapsuleGrid } from "./Capsule";
 import { Kicker, SectionHead } from "./ui";
-import { OrbitalNav, type OrbitEntry, type OrbitProject, type OrbitWorld } from "./OrbitalNav";
+import { OrbitalNav, type OrbitEntry, type OrbitProject, type OrbitCategory } from "./OrbitalNav";
 
 /** Featured & fresh. */
 export function FeaturedSection() {
@@ -85,15 +85,15 @@ export function Editor() {
   );
 }
 
-export function WorldsTiles() {
+export function CategoriesTiles() {
   return (
     <section className="sec">
-      <SectionHead kicker="Three worlds" title="Everything I make lives in one of these." />
-      <div className="worlds">
-        {worlds.map((w) => {
-          const list = projectsInWorld(w);
+      <SectionHead kicker="Three categories" title="Everything I make lives in one of these." />
+      <div className="categories">
+        {categories.map((w) => {
+          const list = projectsInCategory(w);
           return (
-            <a key={w.id} href={worldPath(w)} className="world">
+            <a key={w.id} href={categoryPath(w)} className="category">
               {w.hero && <img src={w.hero} alt="" loading="lazy" />}
               <div className="ov" />
               <div className="txt">
@@ -112,11 +112,11 @@ export function WorldsTiles() {
   );
 }
 
-export function WorldGrid({ world, count, title, more }: { world: World; count: number; title: string; more: string }) {
-  const items = projectsInWorld(world).slice(0, count).map(toCapsule);
+export function CategoryGrid({ category, count, title, more }: { category: Category; count: number; title: string; more: string }) {
+  const items = projectsInCategory(category).slice(0, count).map(toCapsule);
   return (
     <section className="sec">
-      <SectionHead kicker={world.name} title={title} more={more} moreHref={worldPath(world)} />
+      <SectionHead kicker={category.name} title={title} more={more} moreHref={categoryPath(category)} />
       <CapsuleGrid items={items} />
     </section>
   );
@@ -126,8 +126,8 @@ export function WorkshopSection() {
   return <Workshop tabs={workshopTabs()} />;
 }
 
-/** The orbit's data: three worlds with their moons. */
-export function orbitData(): OrbitWorld[] {
+/** The orbit's data: three categories with their moons. */
+export function orbitData(): OrbitCategory[] {
   const toOrbit = (e: EntryWithProject | undefined): OrbitEntry | null =>
     e ? { date: e.date, title: e.title, project: e.project.name } : null;
   const toMoon = (p: Project): OrbitProject => {
@@ -144,19 +144,19 @@ export function orbitData(): OrbitWorld[] {
       latest: e ? { date: e.date, title: e.title, project: p.name } : null,
     };
   };
-  return worlds.map((w) => ({
+  return categories.map((w) => ({
     slug: w.slug,
     name: w.name,
     tagline: w.tagline,
-    count: projectsInWorld(w).length,
-    latest: toOrbit(latestEntryInWorld(w)),
-    projects: projectsInWorld(w).map(toMoon),
+    count: projectsInCategory(w).length,
+    latest: toOrbit(latestEntryInCategory(w)),
+    projects: projectsInCategory(w).map(toMoon),
   }));
 }
 
-/** The opening band: who this is, in one line, beside the orbit of three worlds. */
+/** The opening band: who this is, in one line, beside the orbit of three categories. */
 export function HeroOrbit() {
-  const orbitWorlds = orbitData();
+  const orbitCategories = orbitData();
   return (
     <section className="hero-band">
       <div className="flex flex-col gap-5">
@@ -175,12 +175,12 @@ export function HeroOrbit() {
         </div>
       </div>
       <div className="w-full">
-        <OrbitalNav worlds={orbitWorlds} />
+        <OrbitalNav categories={orbitCategories} />
       </div>
     </section>
   );
 }
 
-export function worldOf(slug: string) {
+export function categoryOf(slug: string) {
   return projectBySlug(slug);
 }

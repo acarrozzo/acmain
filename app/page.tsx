@@ -6,10 +6,10 @@ import {
   HeroOrbit,
   NowPlaying,
   WorkshopSection,
-  WorldGrid,
-  WorldsTiles,
+  CategoryGrid,
+  CategoriesTiles,
 } from "@/components/Home";
-import { worldById } from "@/lib/content";
+import { categoryById } from "@/lib/content";
 
 export default function Home() {
   return (
@@ -31,10 +31,10 @@ export default function Home() {
           </aside>
         </section>
 
-        <WorldsTiles />
-        <WorldGrid world={worldById("games")} count={6} title="Playable, on paper, on the table." more="All games →" />
-        <WorldGrid world={worldById("design")} count={3} title="Selected work." more="The professional door →" />
-        <WorldGrid world={worldById("music")} count={3} title="Nine personas, three albums, one band." more="Listen →" />
+        <CategoriesTiles />
+        <CategoryGrid category={categoryById("games")} count={6} title="Playable, on paper, on the table." more="All games →" />
+        <CategoryGrid category={categoryById("design")} count={3} title="Selected work." more="The professional door →" />
+        <CategoryGrid category={categoryById("music")} count={3} title="Nine personas, three albums, one band." more="Listen →" />
       </main>
       <Footer />
     </>

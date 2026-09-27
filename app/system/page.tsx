@@ -13,7 +13,7 @@ import { Workshop } from "@/components/Workshop";
 import { OrbitalNav } from "@/components/OrbitalNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Mark } from "@/components/Mark";
-import { Editor, NowPlaying, WorldsTiles, orbitData } from "@/components/Home";
+import { Editor, NowPlaying, CategoriesTiles, orbitData } from "@/components/Home";
 import { SystemIndex } from "@/components/system/SystemIndex";
 import { Playground } from "@/components/system/Playground";
 import { Cell, Spec, Stat, Sub, UsedOn, Yes } from "@/components/system/Spec";
@@ -26,7 +26,7 @@ import { person } from "@/content/person";
 import { featured } from "@/content/featured";
 import {
   allEntries,
-  alsoInWorld,
+  alsoInCategory,
   building,
   entriesOf,
   featuredItems,
@@ -34,18 +34,18 @@ import {
   initials,
   latestActivity,
   latestEntries,
-  latestEntryInWorld,
+  latestEntryInCategory,
   latestEntryOf,
   lastShipped,
   projectPath,
   projects,
-  projectsInWorld,
+  projectsInCategory,
   STATUS_LABEL,
   toCapsule,
   workshopTabs,
-  worldById,
-  worldPath,
-  worlds,
+  categoryById,
+  categoryPath,
+  categories,
   type Status,
 } from "@/lib/content";
 import { formatDate, formatMonth, monthKey } from "@/lib/format";
@@ -91,7 +91,7 @@ const STATUS_FACTS: Record<Status, { glyph: string; filter: string; fly: string;
 
 function tokenGroup(t: CssToken): string {
   const n = t.name;
-  if (n.startsWith("--tint-")) return "World tints";
+  if (n.startsWith("--tint-")) return "Category tints";
   if (/^--(paper|surface)/.test(n)) return "Surfaces";
   if (/^--(ink|muted)/.test(n)) return "Ink";
   if (n.startsWith("--line") || n === "--accent-line") return "Lines";
@@ -149,8 +149,8 @@ export default function SystemPage() {
   };
 
   const entries = allEntries();
-  const games = worldById("games");
-  const design = worldById("design");
+  const games = categoryById("games");
+  const design = categoryById("design");
   const gameFilters: Filter[] = [
     { id: "all", label: "All" },
     { id: "playable", label: "Playable", statuses: ["playable"] },
@@ -181,15 +181,15 @@ export default function SystemPage() {
   const componentCount = components.reduce((n, f) => n + f.exports.filter((e) => e.kind === "component").length, 0);
   const routesList = [
     { file: "app/layout.tsx", what: "Root layout: the three fonts via next/font, the metadata template, ThemeScript before paint, globals.css." },
-    { file: "app/page.tsx", what: "The front page: HeroOrbit, Featured & fresh, the workshop beside now playing and the editor, world tiles, three capsule grids." },
-    { file: "app/[world]/page.tsx", what: "A world's door. listing: \"status\" (games, music) gets stats, a banner and filters; listing: \"featured\" (work) gets selected work, what I do and elsewhere.", params: worlds.map(worldPath) },
-    { file: "app/[world]/[slug]/page.tsx", what: "A project: hero carousel, about, changelog, siblings, and the sticky side rail.", params: projects.map(projectPath) },
+    { file: "app/page.tsx", what: "The front page: HeroOrbit, Featured & fresh, the workshop beside now playing and the editor, category tiles, three capsule grids." },
+    { file: "app/[category]/page.tsx", what: "A category's door. listing: \"status\" (games, music) gets stats, a banner and filters; listing: \"featured\" (work) gets selected work, what I do and elsewhere.", params: categories.map(categoryPath) },
+    { file: "app/[category]/[slug]/page.tsx", what: "A project: hero carousel, about, changelog, siblings, and the sticky side rail.", params: projects.map(projectPath) },
     { file: "app/log/page.tsx", what: "Every entry, newest first, grouped by month." },
     { file: "app/about/page.tsx", what: "The person, skills, the timeline, the site's story." },
     { file: "app/archive/page.tsx", what: "Points at the original acarrozzo.com." },
     { file: "app/system/page.tsx", what: "This page. Temporary, noindex, not in the sitemap." },
     { file: "app/not-found.tsx", what: "Nothing lives at this address." },
-    { file: "app/sitemap.ts", what: `${sitemapRows.length} URLs computed from worlds and projects; lastModified from each project's newest day-precise entry.` },
+    { file: "app/sitemap.ts", what: `${sitemapRows.length} URLs computed from categories and projects; lastModified from each project's newest day-precise entry.` },
     { file: "app/robots.ts", what: "Allow everything, point at the sitemap." },
   ];
 
@@ -213,7 +213,7 @@ export default function SystemPage() {
             <Stat n={data.css.totalRules} label="css rules" />
             <Stat n={componentCount} label="components" />
             <Stat n={contentLib?.exports.filter((e) => e.kind === "function").length ?? 0} label="queries" />
-            <Stat n={worlds.length} label="worlds" />
+            <Stat n={categories.length} label="categories" />
             <Stat n={projects.length} label="projects" />
             <Stat n={entries.length} label="entries" />
             <Stat n={sitemapRows.length} label="urls" />
@@ -234,7 +234,7 @@ export default function SystemPage() {
                   <b>Records</b>
                   <span className="ds-mono">content/</span>
                   <p>
-                    One person, {worlds.length} worlds, {projects.length} projects, {entries.length} entries, {featured.length} featured stories. Typed by <code className="ds-mono">types.ts</code>.
+                    One person, {categories.length} categories, {projects.length} projects, {entries.length} entries, {featured.length} featured stories. Typed by <code className="ds-mono">types.ts</code>.
                   </p>
                 </div>
                 <div>
@@ -301,10 +301,10 @@ export default function SystemPage() {
                 <dl className="ds-kv">
                   <dt>--bd-dark / --bd-light</dt>
                   <dd>
-                    The backdrop photo pair, set inline by <code className="ds-mono">Backdrop</code> from <code className="ds-mono">site.backdrop</code> or a world&apos;s own <code className="ds-mono">backdrop</code>.
+                    The backdrop photo pair, set inline by <code className="ds-mono">Backdrop</code> from <code className="ds-mono">site.backdrop</code> or a category&apos;s own <code className="ds-mono">backdrop</code>.
                   </dd>
                   <dt>--lx --ly --shx --shy</dt>
-                  <dd>Per-orb light direction and shadow offset, written every frame by the orbit loop so each world stays lit from the hub.</dd>
+                  <dd>Per-orb light direction and shadow offset, written every frame by the orbit loop so each category stays lit from the hub.</dd>
                   <dt>--l / --d</dt>
                   <dd>Only on this page: the two halves of a swatch.</dd>
                 </dl>
@@ -356,7 +356,7 @@ export default function SystemPage() {
                 </div>
                 <div>
                   <div className="k">
-                    <b>.banner h2</b>32px · world page featured banner
+                    <b>.banner h2</b>32px · category page featured banner
                   </div>
                   <div className="banner" style={{ display: "block", border: 0, margin: 0, background: "none" }}>
                     <h2>Light Gray RPG</h2>
@@ -502,11 +502,11 @@ export default function SystemPage() {
                   </div>
                 </div>
               </Spec>
-              <Spec name="Tags" file="components/ui.tsx" usedOn={usedOn("components/ui.tsx", "Tags")} note="Two to four short words. The world sets the tint: .t-games, .t-music, .t-design.">
+              <Spec name="Tags" file="components/ui.tsx" usedOn={usedOn("components/ui.tsx", "Tags")} note="Two to four short words. The category sets the tint: .t-games, .t-music, .t-design.">
                 <div className="ds-row">
-                  {worlds.map((w) => (
+                  {categories.map((w) => (
                     <Cell key={w.id} label={`.tags.t-${w.id}`}>
-                      <Tags items={projectsInWorld(w)[0]?.tags ?? ["Tag", "Tag"]} world={w.id} />
+                      <Tags items={projectsInCategory(w)[0]?.tags ?? ["Tag", "Tag"]} category={w.id} />
                     </Cell>
                   ))}
                 </div>
@@ -625,14 +625,14 @@ export default function SystemPage() {
               <Spec name="EntryList" file="components/Entries.tsx" usedOn={usedOn("components/Entries.tsx", "EntryList")} note="A project's changelog. Fixture entries: full precision with note, link and version; month precision with an internal link; year precision alone.">
                 <EntryList entries={entriesOf(fixture)} />
               </Spec>
-              <Spec name="LogList" file="components/Entries.tsx" usedOn={usedOn("components/Entries.tsx", "LogList")} note="Entries across projects, with the project and world as kickers. The four newest on the site:">
+              <Spec name="LogList" file="components/Entries.tsx" usedOn={usedOn("components/Entries.tsx", "LogList")} note="Entries across projects, with the project and category as kickers. The four newest on the site:">
                 <LogList entries={latestEntries(4)} />
               </Spec>
               <Spec name="Featured" file="components/Featured.tsx" usedOn={usedOn("components/Featured.tsx")} note="Featured & fresh. Auto-advances every six seconds with play/pause, a counter and a progress bar; pauses in a hidden tab, starts paused under reduced motion. First item is the fixture, then the real four.">
                 <Featured items={featuredWithFixture} />
               </Spec>
-              <Spec name="FilteredGrid" file="components/Filters.tsx" usedOn={usedOn("components/Filters.tsx")} note="Filter chips over a capsule grid. A filter is a set of statuses or kinds; the world page drops filters that would be empty. Games, with every filter:">
-                <FilteredGrid items={[...projectsInWorld(games), ...alsoInWorld(games)].map(toCapsule)} filters={gameFilters} />
+              <Spec name="FilteredGrid" file="components/Filters.tsx" usedOn={usedOn("components/Filters.tsx")} note="Filter chips over a capsule grid. A filter is a set of statuses or kinds; the category page drops filters that would be empty. Games, with every filter:">
+                <FilteredGrid items={[...projectsInCategory(games), ...alsoInCategory(games)].map(toCapsule)} filters={gameFilters} />
               </Spec>
               <Spec name="HeroCarousel" file="components/HeroCarousel.tsx" usedOn={usedOn("components/HeroCarousel.tsx")} note="A project's hero with its screenshot strip. Slides are images or pending tiles (galleryPending). The fixture: hero, one gallery image, two pending.">
                 <div style={{ maxWidth: 720 }}>
@@ -642,17 +642,17 @@ export default function SystemPage() {
               <Spec name="Workshop" file="components/Workshop.tsx" usedOn={usedOn("components/Workshop.tsx")} note="In the workshop: tabs from workshopTabs() with a hover preview. Real data.">
                 <Workshop tabs={workshopTabs()} />
               </Spec>
-              <Spec name="OrbitalNav" file="components/OrbitalNav.tsx" usedOn={usedOn("components/OrbitalNav.tsx")} note="Three worlds drift around the hub with their projects as moons. One requestAnimationFrame loop, asleep off-screen and under reduced motion. Geometry constants sit at the top of the file: BOX 560, RING 33%, moon radius 78 → 106, periods 150s / 58s 46s 64s. Below md it is three cards.">
-                <OrbitalNav worlds={orbit} />
+              <Spec name="OrbitalNav" file="components/OrbitalNav.tsx" usedOn={usedOn("components/OrbitalNav.tsx")} note="Three categories drift around the hub with their projects as moons. One requestAnimationFrame loop, asleep off-screen and under reduced motion. Geometry constants sit at the top of the file: BOX 560, RING 33%, moon radius 78 → 106, periods 150s / 58s 46s 64s. Below md it is three cards.">
+                <OrbitalNav categories={orbit} />
               </Spec>
-              <Spec name="Masthead · MastheadClient" file="components/Masthead.tsx" usedOn={usedOn("components/Masthead.tsx")} note="At the top of this page. Server wrapper builds navItems and paletteItems; the client half owns the flyouts (hover or focus a world tab; Escape closes; none on touch or once the nav wraps) and the active tab. A static flyout row is in the playground.">
+              <Spec name="Masthead · MastheadClient" file="components/Masthead.tsx" usedOn={usedOn("components/Masthead.tsx")} note="At the top of this page. Server wrapper builds navItems and paletteItems; the client half owns the flyouts (hover or focus a category tab; Escape closes; none on touch or once the nav wraps) and the active tab. A static flyout row is in the playground.">
                 <p className="ds-note">
-                  Flyouts need <code>(hover: hover) and (min-width: 901px)</code>. Open delay 70ms, close delay 140ms. The tree comes from <code>navItems</code>, own projects first, guests from other worlds under a hairline.
+                  Flyouts need <code>(hover: hover) and (min-width: 901px)</code>. Open delay 70ms, close delay 140ms. The tree comes from <code>navItems</code>, own projects first, guests from other categories under a hairline.
                 </p>
               </Spec>
               <Spec name="CommandPalette" file="components/CommandPalette.tsx" usedOn={usedOn("components/CommandPalette.tsx")} note="⌘K or the search pill. Filters paletteItems by label or group; arrows move, Enter goes, Escape closes. External hrefs open in a new tab.">
                 <p className="ds-note">
-                  {paletteItems.length} items: {navItems.length} pages and {projects.length} projects grouped by world. Try it from the masthead above.
+                  {paletteItems.length} items: {navItems.length} pages and {projects.length} projects grouped by category. Try it from the masthead above.
                 </p>
               </Spec>
               <Spec name="ThemeToggle · ThemeScript" file="components/ThemeToggle.tsx" usedOn={usedOn("components/ThemeToggle.tsx")} note="Flips .dark on <html>, sets data-theme, saves ac-theme. ThemeScript runs inline in <head> before paint so there is no flash. This instance is live:">
@@ -681,7 +681,7 @@ export default function SystemPage() {
                   </Cell>
                 </div>
               </Spec>
-              <Spec name="Backdrop" file="components/Backdrop.tsx" usedOn={usedOn("components/Backdrop.tsx")} note="The photo ghosted behind the top of every page and dissolved before the fold (.page-photo: 1100px tall, 16% opacity light, 24% dark, masked to transparent). A world can bring its own pair.">
+              <Spec name="Backdrop" file="components/Backdrop.tsx" usedOn={usedOn("components/Backdrop.tsx")} note="The photo ghosted behind the top of every page and dissolved before the fold (.page-photo: 1100px tall, 16% opacity light, 24% dark, masked to transparent). A category can bring its own pair.">
                 <div className="ds-thumbs">
                   <div className="ds-thumb">
                     <img src={site.backdrop.light} alt="" loading="lazy" />
@@ -697,7 +697,7 @@ export default function SystemPage() {
                       {site.backdrop.dark}
                     </div>
                   </div>
-                  {worlds.filter((w) => w.backdrop).map((w) => (
+                  {categories.filter((w) => w.backdrop).map((w) => (
                     <div key={w.id} className="ds-thumb">
                       <img src={w.backdrop!.dark} alt="" loading="lazy" />
                       <div>
@@ -707,7 +707,7 @@ export default function SystemPage() {
                     </div>
                   ))}
                 </div>
-                {worlds.every((w) => !w.backdrop) && <p className="ds-note">No world overrides the site backdrop yet.</p>}
+                {categories.every((w) => !w.backdrop) && <p className="ds-note">No category overrides the site backdrop yet.</p>}
               </Spec>
               <Spec name="Footer" file="components/Footer.tsx" usedOn={usedOn("components/Footer.tsx")} note="At the bottom of this page. Composed like the original site's footer: headline, subhead, the nav, the site story, the portrait, the contact line, the small print. Copy is site.footer; the portrait is person.portrait.">
                 <p className="ds-note">
@@ -723,14 +723,14 @@ export default function SystemPage() {
             <Sec id="sections" kicker="Home sections" title="The front page's modules, each a function of the records." dek="components/Home.tsx">
               <div className="cols" style={{ marginTop: 14 }}>
                 <div>
-                  <Spec name="WorldsTiles" file="components/Home.tsx" usedOn={usedOn("components/Home.tsx", "WorldsTiles")} note="Three worlds: image, project count, tagline, first three names." bare>
+                  <Spec name="CategoriesTiles" file="components/Home.tsx" usedOn={usedOn("components/Home.tsx", "CategoriesTiles")} note="Three categories: image, project count, tagline, first three names." bare>
                     <div style={{ padding: 14 }}>
-                      <WorldsTiles />
+                      <CategoriesTiles />
                     </div>
                   </Spec>
-                  <Spec name="WorldGrid" file="components/Home.tsx" usedOn={usedOn("components/Home.tsx", "WorldGrid")} note="SectionHead plus the first n capsules of a world in featured order. The home page calls it three times: games 6, design 3, music 3.">
+                  <Spec name="CategoryGrid" file="components/Home.tsx" usedOn={usedOn("components/Home.tsx", "CategoryGrid")} note="SectionHead plus the first n capsules of a category in featured order. The home page calls it three times: games 6, design 3, music 3.">
                     <div className="grid3">
-                      {projectsInWorld(design)
+                      {projectsInCategory(design)
                         .slice(0, 3)
                         .map(toCapsule)
                         .map((c) => (
@@ -758,25 +758,25 @@ export default function SystemPage() {
             {/* ------------------------------------------------ Patterns */}
             <Sec id="patterns" kicker="Patterns" title="Compositions that are only markup and a class." dek="globals.css · used inline in pages">
               <p className="ds-note">These have no component of their own. A page writes the markup and globals.css does the rest. Rendered here with the fixture.</p>
-              <Spec name=".pagehead + .stats" file="app/[world]/page.tsx" note="Kicker, h1, dek, then the mono stat line on status-listing worlds.">
+              <Spec name=".pagehead + .stats" file="app/[category]/page.tsx" note="Kicker, h1, dek, then the mono stat line on status-listing categories.">
                 <div className="pagehead" style={{ padding: 0 }}>
                   <Kicker>Games · in the browser, on paper, on the table</Kicker>
                   <h1>{games.headline}</h1>
                   <p className="dek">{games.intro.join(" ")}</p>
                   <div className="stats mono">
                     <span>
-                      <b>{projectsInWorld(games).length}</b> projects
+                      <b>{projectsInCategory(games).length}</b> projects
                     </span>
                     <span>
-                      <b>{projectsInWorld(games).filter((p) => p.status === "playable" || p.status === "live").length}</b> live or playable
+                      <b>{projectsInCategory(games).filter((p) => p.status === "playable" || p.status === "live").length}</b> live or playable
                     </span>
                     <span>
-                      <b>{projectsInWorld(games).filter((p) => p.status === "prototype").length}</b> building
+                      <b>{projectsInCategory(games).filter((p) => p.status === "prototype").length}</b> building
                     </span>
                   </div>
                 </div>
               </Spec>
-              <Spec name=".banner" file="app/[world]/page.tsx" note="The featured project on a status-listing world: the first slug in the world's featured order." bare>
+              <Spec name=".banner" file="app/[category]/page.tsx" note="The featured project on a status-listing category: the first slug in the category's featured order." bare>
                 <div style={{ padding: 14 }}>
                   <div className="banner" style={{ marginBottom: 0 }}>
                     <div className="img">
@@ -791,7 +791,7 @@ export default function SystemPage() {
                       <div className="flex items-center gap-3">
                         <StatusChip status={fixture.status} />
                       </div>
-                      <Tags items={fixture.tags ?? []} world={fixture.world} />
+                      <Tags items={fixture.tags ?? []} category={fixture.category} />
                       <div className="mt-1 flex flex-wrap gap-2">
                         <Btn href="#patterns" primary>
                           See the project
@@ -804,7 +804,7 @@ export default function SystemPage() {
                   </div>
                 </div>
               </Spec>
-              <Spec name=".rail" file="app/[world]/[slug]/page.tsx" note="The project page's sticky side column: blurb, a dl of status, version, last tended, years, world and any facts; tags; the cta and links.">
+              <Spec name=".rail" file="app/[category]/[slug]/page.tsx" note="The project page's sticky side column: blurb, a dl of status, version, last tended, years, category and any facts; tags; the cta and links.">
                 <div style={{ maxWidth: 340 }}>
                   <aside className="rail" style={{ position: "static" }}>
                     <p>{fixture.blurb}</p>
@@ -819,7 +819,7 @@ export default function SystemPage() {
                       <dd className="mono">{formatDate(latestEntryOf(fixture)!.date)}</dd>
                       <dt>Years</dt>
                       <dd className="mono">{fixture.started}–</dd>
-                      <dt>World</dt>
+                      <dt>Category</dt>
                       <dd>
                         <a href="/games" className="text-accent">
                           Games
@@ -832,7 +832,7 @@ export default function SystemPage() {
                         </span>
                       ))}
                     </dl>
-                    <Tags items={fixture.tags ?? []} world={fixture.world} />
+                    <Tags items={fixture.tags ?? []} category={fixture.category} />
                     <div className="acts">
                       <Btn primary disabled>
                         {fixture.cta?.label}
@@ -846,7 +846,7 @@ export default function SystemPage() {
                   </aside>
                 </div>
               </Spec>
-              <Spec name=".what" file="app/[world]/page.tsx · about · archive" note="Two-column definition grid: a bold name over a muted line. World sections, skills, what's in the archive.">
+              <Spec name=".what" file="app/[category]/page.tsx · about · archive" note="Two-column definition grid: a bold name over a muted line. Category sections, skills, what's in the archive.">
                 <div className="what">
                   {design.sections?.[0]?.items.slice(0, 2).map((it) => (
                     <div key={it.name}>
@@ -893,7 +893,7 @@ export default function SystemPage() {
                   See EntryList and LogList in Components.
                 </p>
               </Spec>
-              <Spec name=".copy" file="app/[world]/[slug]/page.tsx · about" note="Reading measure for body paragraphs.">
+              <Spec name=".copy" file="app/[category]/[slug]/page.tsx · about" note="Reading measure for body paragraphs.">
                 <Story blocks={fixture.body ?? []} />
               </Spec>
             </Sec>
@@ -1001,10 +1001,10 @@ export default function SystemPage() {
                     <td className="dim">masthead name, hero line, editor box, now playing, about page</td>
                   </tr>
                   <tr>
-                    <td>World</td>
-                    <td>{worlds.length}</td>
-                    <td className="ds-mono">content/worlds.ts</td>
-                    <td className="dim">nav tabs and flyouts, orbs, world tiles, the three doors</td>
+                    <td>Category</td>
+                    <td>{categories.length}</td>
+                    <td className="ds-mono">content/categories.ts</td>
+                    <td className="dim">nav tabs and flyouts, orbs, category tiles, the three doors</td>
                   </tr>
                   <tr>
                     <td>Project</td>
@@ -1036,9 +1036,9 @@ export default function SystemPage() {
 
             {/* ------------------------------------------------ Records */}
             <Sec id="records" kicker="Records" title="Everything on the site, as data.">
-              <Sub kicker={`Worlds · ${worlds.length}`}>
+              <Sub kicker={`Categories · ${categories.length}`}>
                 <Table head={["id", "slug", "name · label", "listing", "featured order", "also", "hero", "backdrop", "sections", "elsewhere"]}>
-                  {worlds.map((w) => (
+                  {categories.map((w) => (
                     <tr key={w.id}>
                       <td className="ds-mono">{w.id}</td>
                       <td className="ds-mono">/{w.slug}</td>
@@ -1058,7 +1058,7 @@ export default function SystemPage() {
                 </Table>
               </Sub>
               <Sub kicker={`Projects · ${projects.length}`}>
-                <Table head={["Project", "world", "kind", "status", "version", "art", "gallery", "pending", "tags", "entries", "latest", "years", "cta", "links", "facts", "bar", "sq"]}>
+                <Table head={["Project", "category", "kind", "status", "version", "art", "gallery", "pending", "tags", "entries", "latest", "years", "cta", "links", "facts", "bar", "sq"]}>
                   {projects.map((p) => {
                     const latest = latestEntryOf(p);
                     return (
@@ -1069,7 +1069,7 @@ export default function SystemPage() {
                           </a>
                           <div className="ds-mono dim">{p.slug}</div>
                         </td>
-                        <td className="ds-mono">{p.world}</td>
+                        <td className="ds-mono">{p.category}</td>
                         <td className="dim">{p.kind}</td>
                         <td>
                           <StatusChip status={p.status} />
@@ -1095,12 +1095,12 @@ export default function SystemPage() {
                 </Table>
               </Sub>
               <Sub kicker={`Entries · ${entries.length} · newest first`}>
-                <Table head={["date", "project", "world", "title", "version", "link", "note"]}>
+                <Table head={["date", "project", "category", "title", "version", "link", "note"]}>
                   {entries.map((e, i) => (
                     <tr key={`${e.project.slug}-${e.date}-${i}`}>
                       <td className="ds-mono">{e.date}</td>
                       <td>{e.project.name}</td>
-                      <td className="dim">{e.world.name}</td>
+                      <td className="dim">{e.category.name}</td>
                       <td>{e.title}</td>
                       <td className="ds-mono dim">{e.version ?? "–"}</td>
                       <td className="ds-mono dim">{e.href ? (e.href.startsWith("http") ? "external" : e.href) : "–"}</td>
@@ -1172,9 +1172,9 @@ export default function SystemPage() {
             <Sec id="logic" kicker="Logic" title="The functions between the records and the pages." dek="lib/content.ts · lib/nav.ts · lib/format.ts">
               <Sub kicker="Status: one word, seven consequences">
                 <p className="ds-note">
-                  A project&apos;s status decides its glyph, whether its chip is hot, whether it counts as building, which group and filter it lands in on a world page, which workshop tabs hold it, and how the flyout and the orbit colour it. The sets live in four places: HOT in ui.tsx, BUILDING and groupByStatus in content.ts, the filters in the world page, and data-status rules in globals.css.
+                  A project&apos;s status decides its glyph, whether its chip is hot, whether it counts as building, which group and filter it lands in on a category page, which workshop tabs hold it, and how the flyout and the orbit colour it. The sets live in four places: HOT in ui.tsx, BUILDING and groupByStatus in content.ts, the filters in the category page, and data-status rules in globals.css.
                 </p>
-                <Table head={["status", "label", "glyph", "chip hot", "building()", "groupByStatus", "world filter", "workshop tabs", "flyout glyph", "moon face"]}>
+                <Table head={["status", "label", "glyph", "chip hot", "building()", "groupByStatus", "category filter", "workshop tabs", "flyout glyph", "moon face"]}>
                   {STATUSES.map((s) => {
                     const tabs = ["Fresh commits", BUILDING.includes(s) ? "Building" : "", s === "live" ? "Live" : "", s === "resting" || s === "archived" ? "Resting" : ""].filter(Boolean);
                     if (s === "archived") tabs.shift();
@@ -1244,28 +1244,28 @@ export default function SystemPage() {
                     <td className="ds-mono">featuredItems()</td>
                     <td className="dim">{featuredItems().map((f) => f.title).join(" — ")}</td>
                   </tr>
-                  {worlds.map((w) => (
+                  {categories.map((w) => (
                     <tr key={`in-${w.id}`}>
-                      <td className="ds-mono">projectsInWorld({w.id})</td>
-                      <td className="ds-mono dim">{projectsInWorld(w).map((p) => p.slug).join(", ")}</td>
+                      <td className="ds-mono">projectsInCategory({w.id})</td>
+                      <td className="ds-mono dim">{projectsInCategory(w).map((p) => p.slug).join(", ")}</td>
                     </tr>
                   ))}
-                  {worlds.map((w) => (
+                  {categories.map((w) => (
                     <tr key={`also-${w.id}`}>
-                      <td className="ds-mono">alsoInWorld({w.id})</td>
-                      <td className="ds-mono dim">{alsoInWorld(w).map((p) => p.slug).join(", ") || "–"}</td>
+                      <td className="ds-mono">alsoInCategory({w.id})</td>
+                      <td className="ds-mono dim">{alsoInCategory(w).map((p) => p.slug).join(", ") || "–"}</td>
                     </tr>
                   ))}
-                  {worlds.map((w) => (
+                  {categories.map((w) => (
                     <tr key={`latest-${w.id}`}>
-                      <td className="ds-mono">latestEntryInWorld({w.id})</td>
-                      <td className="dim">{(() => { const e = latestEntryInWorld(w); return e ? `${e.date} · ${e.project.name}: ${e.title}` : "–"; })()}</td>
+                      <td className="ds-mono">latestEntryInCategory({w.id})</td>
+                      <td className="dim">{(() => { const e = latestEntryInCategory(w); return e ? `${e.date} · ${e.project.name}: ${e.title}` : "–"; })()}</td>
                     </tr>
                   ))}
-                  {worlds.map((w) => (
+                  {categories.map((w) => (
                     <tr key={`group-${w.id}`}>
-                      <td className="ds-mono">groupByStatus(projectsInWorld({w.id}))</td>
-                      <td className="ds-mono dim">{groupByStatus(projectsInWorld(w)).map((g) => `${g.label} [${g.projects.map((p) => p.slug).join(", ")}]`).join(" · ")}</td>
+                      <td className="ds-mono">groupByStatus(projectsInCategory({w.id}))</td>
+                      <td className="ds-mono dim">{groupByStatus(projectsInCategory(w)).map((g) => `${g.label} [${g.projects.map((p) => p.slug).join(", ")}]`).join(" · ")}</td>
                     </tr>
                   ))}
                   <tr>
@@ -1408,7 +1408,7 @@ export default function SystemPage() {
                 ))}
               </div>
               <Sub kicker="Artwork coverage per project">
-                <Table head={["Project", "hero", "square", "gallery", "pending tiles", "in featured", "world hero"]}>
+                <Table head={["Project", "hero", "square", "gallery", "pending tiles", "in featured", "category hero"]}>
                   {projects.map((p) => (
                     <tr key={p.slug}>
                       <td>{p.name}</td>
@@ -1421,7 +1421,7 @@ export default function SystemPage() {
                       <td>
                         <Yes on={featured.some((f) => f.project === p.slug)} />
                       </td>
-                      <td className="ds-mono dim">{worlds.find((w) => w.hero === p.hero && p.hero)?.name ?? ""}</td>
+                      <td className="ds-mono dim">{categories.find((w) => w.hero === p.hero && p.hero)?.name ?? ""}</td>
                     </tr>
                   ))}
                 </Table>

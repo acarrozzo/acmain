@@ -18,7 +18,7 @@ export type OrbitProject = {
   latest: OrbitEntry | null;
 };
 
-export type OrbitWorld = {
+export type OrbitCategory = {
   slug: string;
   name: string;
   tagline: string;
@@ -28,30 +28,30 @@ export type OrbitWorld = {
 };
 
 type Props = {
-  worlds: OrbitWorld[];
+  categories: OrbitCategory[];
 };
 
 /*
- * Three worlds drift clockwise around the hub, one revolution every couple of
- * minutes. Each world is a small system: the orb, and its projects orbiting
- * it as tiny moons, also clockwise. Hover (or focus) a world and everything
+ * Three categories drift clockwise around the hub, one revolution every couple of
+ * minutes. Each category is a small system: the orb, and its projects orbiting
+ * it as tiny moons, also clockwise. Hover (or focus) a category and everything
  * eases to a stop while the camera pushes in on it: the orb grows, the moons
  * spread out and grow into labelled orbs you can click. Let go and it all
- * drifts again. The hub in the middle is empty at rest: a world fills it with
+ * drifts again. The hub in the middle is empty at rest: a category fills it with
  * the newest thing there, and a moon swaps in that project.
  *
  * Moon geometry is in px at the box's full width (BOX) and scales with the
- * box; the world ring is in % of the box.
+ * box; the category ring is in % of the box.
  */
 const BOX = 560;
-const RING = 33; // world ring radius, % of the box
-const ANGLES = [-90, 30, 150]; // where the worlds start, degrees
-const WORLD_PERIOD = 150; // seconds per revolution of the worlds
-const MOON_R_REST = 78; // moon orbit radius, from the world's centre
+const RING = 33; // category ring radius, % of the box
+const ANGLES = [-90, 30, 150]; // where the categories start, degrees
+const CATEGORY_PERIOD = 150; // seconds per revolution of the categories
+const MOON_R_REST = 78; // moon orbit radius, from the category's centre
 const MOON_R_ZOOM = 106;
 const MOON = 60; // a zoomed moon's diameter
 const SYS = 2 * (MOON_R_ZOOM + MOON / 2); // the hit circle: the zoomed system
-// Seconds per revolution of each world's moons. No two alike, so they never
+// Seconds per revolution of each category's moons. No two alike, so they never
 // line up. Positive is clockwise; keep it that way.
 const PERIODS = [58, 46, 64];
 const SEEDS = [-1.2, 0.5, 2.3];
@@ -62,7 +62,7 @@ const LEAVE_GRACE = 110;
 const TAU = 2 * Math.PI;
 type Sim = { theta: number; omega: number; r: number };
 
-export function OrbitalNav({ worlds }: Props) {
+export function OrbitalNav({ categories }: Props) {
   const [active, setActive] = useState<number | null>(null);
   const [moon, setMoon] = useState<OrbitProject | null>(null);
   const box = useRef<HTMLDivElement>(null);
@@ -72,23 +72,23 @@ export function OrbitalNav({ worlds }: Props) {
   const moonEls = useRef<(HTMLDivElement | null)[][]>([]);
   const ringEls = useRef<(HTMLDivElement | null)[]>([]);
   const activeRef = useRef<number | null>(null);
-  const worldsRef = useRef(worlds);
-  /** How far the world ring has turned, radians. Read at render for the hub's lean. */
+  const categoriesRef = useRef(categories);
+  /** How far the category ring has turned, radians. Read at render for the hub's lean. */
   const phiRef = useRef(0);
   const kick = useRef<() => void>(() => {});
   const leaveTimer = useRef<number | undefined>(undefined);
   activeRef.current = active;
-  worldsRef.current = worlds;
+  categoriesRef.current = categories;
 
-  // The orbit loop. One frame moves the worlds and every moon; it stops
+  // The orbit loop. One frame moves the categories and every moon; it stops
   // while the box is off-screen, and under reduced motion it settles in a
   // single pass.
   useEffect(() => {
     const el = box.current;
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const ring = { omega: TAU / WORLD_PERIOD };
-    const sims: Sim[] = worldsRef.current.map((_, i) => ({
+    const ring = { omega: TAU / CATEGORY_PERIOD };
+    const sims: Sim[] = categoriesRef.current.map((_, i) => ({
       theta: 0,
       omega: TAU / (PERIODS[i] ?? 60),
       r: MOON_R_REST,
@@ -105,12 +105,12 @@ export function OrbitalNav({ worlds }: Props) {
       const still = reduce.matches;
       const anyActive = activeRef.current !== null;
 
-      // The worlds: drift, unless one is held.
-      const ringT = anyActive || still ? 0 : TAU / WORLD_PERIOD;
+      // The categories: drift, unless one is held.
+      const ringT = anyActive || still ? 0 : TAU / CATEGORY_PERIOD;
       ring.omega = still ? 0 : ring.omega + (ringT - ring.omega) * (1 - Math.exp(-dt * 5));
       phiRef.current += ring.omega * dt;
 
-      worldsRef.current.forEach((w, i) => {
+      categoriesRef.current.forEach((w, i) => {
         const a = ((ANGLES[i] ?? 0) * Math.PI) / 180 + phiRef.current;
         const cos = Math.cos(a);
         const sin = Math.sin(a);
@@ -128,7 +128,7 @@ export function OrbitalNav({ worlds }: Props) {
           orb.style.setProperty("--shy", `${(sin * 9 + 6).toFixed(1)}px`);
         }
 
-        // The moons: drift, unless this world is held.
+        // The moons: drift, unless this category is held.
         const s = sims[i];
         const on = activeRef.current === i;
         const omegaT = on || still ? 0 : TAU / (PERIODS[i] ?? 60);
@@ -219,9 +219,9 @@ export function OrbitalNav({ worlds }: Props) {
     if (parallax.current) parallax.current.style.transform = "";
   };
 
-  // What the hub says: the moon under the pointer, else the focused world,
-  // else nothing. It leans away from the active world.
-  const focused = active !== null ? worlds[active] : null;
+  // What the hub says: the moon under the pointer, else the focused category,
+  // else nothing. It leans away from the active category.
+  const focused = active !== null ? categories[active] : null;
   const leanAng = active !== null ? ((ANGLES[active] ?? 0) * Math.PI) / 180 + phiRef.current : 0;
   const hubLean = active !== null ? { x: Math.cos(leanAng) * 30, y: Math.sin(leanAng) * 30 } : { x: 0, y: 0 };
   const hub = moon
@@ -269,7 +269,7 @@ export function OrbitalNav({ worlds }: Props) {
 
         <div className="orbit-sun pointer-events-none absolute left-1/2 top-1/2 z-[3] -translate-x-1/2 -translate-y-1/2" />
 
-        {worlds.map((w, i) => {
+        {categories.map((w, i) => {
           // The starting pose, so the server render is right; the loop moves it.
           const ang = ((ANGLES[i] ?? 0) * Math.PI) / 180;
           const cos = Math.cos(ang);
@@ -372,7 +372,7 @@ export function OrbitalNav({ worlds }: Props) {
           );
         })}
 
-        {/* center hub — what's new in the focused world or on the hovered moon; empty at rest */}
+        {/* center hub — what's new in the focused category or on the hovered moon; empty at rest */}
         <div
           className="hub pointer-events-none absolute left-1/2 top-1/2 z-[4] w-[40%] text-center"
           style={{ transform: `translate(calc(-50% - ${hubLean.x.toFixed(1)}px), calc(-50% - ${hubLean.y.toFixed(1)}px))` }}
@@ -399,7 +399,7 @@ export function OrbitalNav({ worlds }: Props) {
 
       {/* ---------- Mobile: three cards ---------- */}
       <div className="flex flex-col gap-3 md:hidden">
-        {worlds.map((w) => (
+        {categories.map((w) => (
           <a
             key={w.slug}
             href={`/${w.slug}`}

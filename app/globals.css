@@ -32,7 +32,7 @@
   --sun-soft: color-mix(in oklab, var(--accent) 10%, transparent);
   --accent-line: color-mix(in oklab, var(--accent) 40%, var(--line));
 
-  /* World tints, used on tags. */
+  /* Category tints, used on tags. */
   --tint-games: rgba(120, 180, 100, 0.22);
   --tint-music: rgba(192, 38, 211, 0.20);
   --tint-design: rgba(110, 170, 215, 0.22);
@@ -107,7 +107,7 @@ body {
 /* ---------------------------------------------------------------
    The backdrop: a photo ghosted behind the top of every page and
    dissolved to nothing before the fold. The images come in as
-   --bd-light / --bd-dark from the Backdrop component, so a world can
+   --bd-light / --bd-dark from the Backdrop component, so a category can
    bring its own. Site default: daylight sky in light, forest in dark.
    --------------------------------------------------------------- */
 .page-photo {
@@ -199,7 +199,7 @@ a { color: inherit; }
 .mast-nav .tab { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); padding: 2px 0; border-bottom: 2px solid transparent; }
 .mast-nav .tab:hover, .mast-nav .tab.on, .mast-nav .tab[aria-expanded="true"] { color: var(--ink); border-bottom-color: var(--accent); }
 
-/* The flyout: a world's site tree hanging under its tab. The wrapper is
+/* The flyout: a category's site tree hanging under its tab. The wrapper is
    transparent and reaches up to the tab so the pointer never leaves the
    item; the card carries the look. Hidden on touch and once the nav wraps. */
 .fly { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); padding-top: 14px; z-index: 40; }
@@ -341,18 +341,18 @@ a { color: inherit; }
 .editor p { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
 .editor .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; font-size: 13px; font-weight: 600; color: var(--accent); }
 
-/* ---------------- Worlds ---------------- */
-.worlds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-@media (max-width: 760px) { .worlds { grid-template-columns: minmax(0, 1fr); } }
-.world { position: relative; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: var(--surface-2); display: block; }
-.world img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
-.world:hover img { transform: scale(1.04); }
-.world .ov { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.6) 40%, rgba(0,0,0,.15) 75%, transparent 100%); }
-.world .txt { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px; color: #fff; display: grid; gap: 4px; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
-.world .txt .kicker { color: var(--accent-hi); }
-.world h3 { color: #fff; font-size: 30px; margin: 0; }
-.world .txt p { margin: 0; font-size: 13px; color: rgba(255,255,255,.85); }
-.world .txt .who { font-size: 12px; color: rgba(255,255,255,.7); }
+/* ---------------- Categories ---------------- */
+.categories { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .categories { grid-template-columns: minmax(0, 1fr); } }
+.category { position: relative; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: var(--surface-2); display: block; }
+.category img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.category:hover img { transform: scale(1.04); }
+.category .ov { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.6) 40%, rgba(0,0,0,.15) 75%, transparent 100%); }
+.category .txt { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px; color: #fff; display: grid; gap: 4px; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+.category .txt .kicker { color: var(--accent-hi); }
+.category h3 { color: #fff; font-size: 30px; margin: 0; }
+.category .txt p { margin: 0; font-size: 13px; color: rgba(255,255,255,.85); }
+.category .txt .who { font-size: 12px; color: rgba(255,255,255,.7); }
 
 /* ---------------- Capsules ---------------- */
 .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
@@ -419,14 +419,14 @@ a { color: inherit; }
 .copy { max-width: 66ch; font-size: 16px; line-height: 1.65; color: var(--ink-soft); }
 .copy p { margin: 0; }
 .copy p + p { margin-top: 1em; }
-/* The end of a case study: a large, faint end mark, alone */
+/* The end of a story: a large, faint end mark, alone */
 .fin { display: flex; justify-content: center; padding: 104px 0 16px; }
 .fin-mark { width: 104px; height: 104px; fill: color-mix(in oklab, var(--ink) 9%, transparent); flex: none; }
 /* Sections after the article leave the two-column grid: a big deliberate gap, then the heavy rule */
 .sec-after { margin-top: 88px; padding-top: 0; }
 .sec-after .sec-head.rule { padding-top: 16px; }
 @media (max-width: 760px) { .sec-after { margin-top: 64px; } .fin { padding: 64px 0 8px; } .fin-mark { width: 80px; height: 80px; } }
-/* A case study: runs of copy and column-width figures, in order */
+/* A story: runs of copy and column-width figures, in order */
 .story { display: grid; gap: 28px; }
 .fig { margin: 0; display: grid; gap: 12px; }
 .fig figcaption { font-size: 13px; line-height: 1.5; color: var(--muted); max-width: 66ch; text-wrap: pretty; }
@@ -492,7 +492,7 @@ a { color: inherit; }
 
 /* ---------------------------------------------------------------
    The opening band: the one-line identity on the left, the orbit of
-   three worlds on the right.
+   three categories on the right.
    --------------------------------------------------------------- */
 .hero-band { padding-top: 28px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 32px; align-items: center; }
 .hero-band h1 { font-size: clamp(30px, 3.6vw, 46px); margin: 0; max-width: 20ch; }
@@ -508,7 +508,7 @@ a { color: inherit; }
 .orbit-ring-spin { border: 1px solid transparent; background: conic-gradient(from 0deg, transparent 0 74%, var(--accent-line) 86%, transparent 100%) border-box; -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px)); mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px)); animation: orbit-spin 50s linear infinite; }
 .orbit-box { margin-top: 18px; }
 .orbit-float { animation: float-y 7s ease-in-out infinite; }
-/* A world and its moons. The box is the hit circle of the zoomed system: inert at rest so only the orb and the dots take the pointer, live once active so the pointer can travel out to a moon without collapsing it. */
+/* A category and its moons. The box is the hit circle of the zoomed system: inert at rest so only the orb and the dots take the pointer, live once active so the pointer can travel out to a moon without collapsing it. */
 .sys { position: absolute; z-index: 5; translate: -50% -50%; border-radius: 50%; pointer-events: none; }
 .sys[data-active="true"] { pointer-events: auto; z-index: 7; }
 .sys-body { position: absolute; inset: 0; }

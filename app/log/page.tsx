@@ -30,7 +30,7 @@ export default function LogPage() {
           <Kicker>The log · everything, in order</Kicker>
           <h1>Everything, in order.</h1>
           <p className="dek">
-            Every dated thing that has happened to a project, newest first. This page writes itself: an entry lives on its project, and the project lives in its world.
+            Every dated thing that has happened to a project, newest first. This page writes itself: an entry lives on its project, and the project lives in its category.
           </p>
         </div>
         <div className="flex flex-col gap-10 pb-4">

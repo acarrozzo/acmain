@@ -3,7 +3,7 @@ import type { Project } from "../types";
 export const starterBox: Project = {
   slug: "starter-box",
   name: "Starter Box",
-  world: "games",
+  category: "games",
   kind: "Tool",
   status: "resting",
   line: "A world builder for making games the way I make games.",

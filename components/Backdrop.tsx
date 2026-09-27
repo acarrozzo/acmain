@@ -3,7 +3,7 @@ import { site } from "@/content/site";
 
 /**
  * The photo ghosted behind the top of a page. Every page gets the site's
- * forest and sky unless a world brings its own.
+ * forest and sky unless a category brings its own.
  */
 export function Backdrop({ images }: { images?: BackdropImages }) {
   const b = images ?? site.backdrop;

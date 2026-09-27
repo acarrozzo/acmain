@@ -35,11 +35,11 @@ export const featured: Featured[] = [
   },
   {
     project: "newsday-special-projects",
-    kicker: "Design · Newsday · case study",
+    kicker: "Design · Newsday · editorial",
     title: "The one that won an Emmy",
     dek: "The Fighter & The Father: a dual-video documentary you can swap mid-scene. Plus Pathway to Power, and a pizza smackdown, because sometimes the news is pizza.",
     date: "2017",
-    primary: { label: "Read the case study", href: "/work/newsday-special-projects" },
+    primary: { label: "See the project", href: "/work/newsday-special-projects" },
     secondary: { label: "See the work", href: "/work" },
   },
 ];

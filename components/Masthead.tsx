@@ -6,7 +6,7 @@ import { MastheadClient } from "./MastheadClient";
 
 /**
  * The broadsheet masthead, with the page's backdrop behind it. Server
- * wrapper: builds the nav and palette data. Pass a world's `backdrop`
+ * wrapper: builds the nav and palette data. Pass a category's `backdrop`
  * to give its pages their own photo.
  */
 export function Masthead({ backdrop }: { backdrop?: BackdropImages } = {}) {

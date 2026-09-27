@@ -50,7 +50,7 @@ export function LogList({ entries }: { entries: EntryWithProject[] }) {
                 {e.project.name}
               </a>
               <span className="kicker mut" style={{ letterSpacing: "0.1em" }}>
-                {e.world.name}
+                {e.category.name}
               </span>
             </div>
             <span className="flex flex-wrap items-center">

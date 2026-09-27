@@ -10,7 +10,7 @@ export const fixture: Project = {
   slug: "example",
   name: "Example Project With A Long Name",
   short: "Example",
-  world: "games",
+  category: "games",
   kind: "Game",
   status: "prototype",
   line: "One line that shows on cards and as the page subtitle.",
@@ -58,7 +58,7 @@ export const fixture: Project = {
 export const fixtureBare: Project = {
   slug: "bare",
   name: "Bare Minimum",
-  world: "music",
+  category: "music",
   kind: "Sketch",
   status: "idea",
   line: "Required fields only: the type tile stands in, no date, no tags.",

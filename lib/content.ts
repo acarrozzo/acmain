@@ -1,12 +1,12 @@
 import { projects } from "@/content/projects";
-import { worlds } from "@/content/worlds";
+import { categories } from "@/content/categories";
 import { featured } from "@/content/featured";
-import type { Entry, Featured, Project, Status, World, WorldId } from "@/content/types";
+import type { Entry, Featured, Project, Status, Category, CategoryId } from "@/content/types";
 
-export type { Entry, Featured, Project, Status, World, WorldId };
-export { projects, worlds, featured };
+export type { Entry, Featured, Project, Status, Category, CategoryId };
+export { projects, categories, featured };
 
-export type EntryWithProject = Entry & { project: Project; world: World };
+export type EntryWithProject = Entry & { project: Project; category: Category };
 
 export const STATUS_LABEL: Record<Status, string> = {
   idea: "Idea",
@@ -21,28 +21,28 @@ export const STATUS_LABEL: Record<Status, string> = {
 /** Statuses that count as "currently building". */
 const BUILDING: Status[] = ["prototype", "playable", "paper", "idea"];
 
-export function worldById(id: WorldId): World {
-  const w = worlds.find((w) => w.id === id);
-  if (!w) throw new Error(`Unknown world: ${id}`);
+export function categoryById(id: CategoryId): Category {
+  const w = categories.find((w) => w.id === id);
+  if (!w) throw new Error(`Unknown category: ${id}`);
   return w;
 }
 
-export function worldBySlug(slug: string): World | undefined {
-  return worlds.find((w) => w.slug === slug);
+export function categoryBySlug(slug: string): Category | undefined {
+  return categories.find((w) => w.slug === slug);
 }
 
-export function worldPath(world: World): string {
-  return `/${world.slug}`;
+export function categoryPath(category: Category): string {
+  return `/${category.slug}`;
 }
 
 export function projectPath(p: Project): string {
-  return `/${worldById(p.world).slug}/${p.slug}`;
+  return `/${categoryById(p.category).slug}/${p.slug}`;
 }
 
-export function getProject(worldSlug: string, slug: string): Project | undefined {
-  const w = worldBySlug(worldSlug);
+export function getProject(categorySlug: string, slug: string): Project | undefined {
+  const w = categoryBySlug(categorySlug);
   if (!w) return undefined;
-  return projects.find((p) => p.world === w.id && p.slug === slug);
+  return projects.find((p) => p.category === w.id && p.slug === slug);
 }
 
 export function projectBySlug(slug: string): Project | undefined {
@@ -60,16 +60,16 @@ function bySlugOrder(order: string[] | undefined) {
   };
 }
 
-/** Projects that belong to a world, in the world's featured order, then the rest. */
-export function projectsInWorld(world: World): Project[] {
+/** Projects that belong to a category, in the category's featured order, then the rest. */
+export function projectsInCategory(category: Category): Project[] {
   return projects
-    .filter((p) => p.world === world.id)
-    .sort(bySlugOrder(world.featured));
+    .filter((p) => p.category === category.id)
+    .sort(bySlugOrder(category.featured));
 }
 
-/** Projects from other worlds that a world page also shows. */
-export function alsoInWorld(world: World): Project[] {
-  return (world.also ?? [])
+/** Projects from other categories that a category page also shows. */
+export function alsoInCategory(category: Category): Project[] {
+  return (category.also ?? [])
     .map((slug) => projectBySlug(slug))
     .filter((p): p is Project => Boolean(p));
 }
@@ -86,8 +86,8 @@ export function latestEntryOf(p: Project): Entry | undefined {
 export function allEntries(): EntryWithProject[] {
   const out: EntryWithProject[] = [];
   for (const project of projects) {
-    const world = worldById(project.world);
-    for (const e of project.entries ?? []) out.push({ ...e, project, world });
+    const category = categoryById(project.category);
+    for (const e of project.entries ?? []) out.push({ ...e, project, category });
   }
   return out.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 }
@@ -96,8 +96,8 @@ export function latestEntries(n: number): EntryWithProject[] {
   return allEntries().slice(0, n);
 }
 
-export function latestEntryInWorld(world: World): EntryWithProject | undefined {
-  return allEntries().find((e) => e.world.id === world.id);
+export function latestEntryInCategory(category: Category): EntryWithProject | undefined {
+  return allEntries().find((e) => e.category.id === category.id);
 }
 
 /** Newest date on the whole site, for "last shipped". */
@@ -122,7 +122,7 @@ export function latestActivity(): Project[] {
   return [...projects].sort(byActivity);
 }
 
-/** Group a world's projects for listing. */
+/** Group a category's projects for listing. */
 export function groupByStatus(list: Project[]): { label: string; projects: Project[] }[] {
   const groups: { label: string; statuses: Status[] }[] = [
     { label: "Live and playable", statuses: ["live", "playable"] },
@@ -149,8 +149,8 @@ export function initials(p: Project): string {
 export type CapsuleData = {
   slug: string;
   name: string;
-  world: WorldId;
-  worldName: string;
+  category: CategoryId;
+  categoryName: string;
   kind: string;
   status: Status;
   line: string;
@@ -170,8 +170,8 @@ export function toCapsule(p: Project): CapsuleData {
   return {
     slug: p.slug,
     name: p.name,
-    world: p.world,
-    worldName: worldById(p.world).name,
+    category: p.category,
+    categoryName: categoryById(p.category).name,
     kind: p.kind,
     status: p.status,
     line: p.line,
@@ -208,7 +208,7 @@ export function featuredItems(): FeaturedItem[] {
       if (!p) return null;
       const image = f.image ?? p.hero;
       if (!image) return null;
-      return { ...f, image, status: p.status, thumbKicker: `${worldById(p.world).name} · ${p.name}` };
+      return { ...f, image, status: p.status, thumbKicker: `${categoryById(p.category).name} · ${p.name}` };
     })
     .filter((f): f is FeaturedItem => Boolean(f));
 }

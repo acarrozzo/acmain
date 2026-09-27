@@ -18,7 +18,7 @@ import { bftz } from "./bftz";
 
 /**
  * Every project on the site. To add one: create a file in this folder,
- * import it here. Order does not matter; worlds decide display order.
+ * import it here. Order does not matter; categories decide display order.
  */
 export const projects: Project[] = [
   // Design

@@ -138,8 +138,8 @@ export function MastheadClient({
 }
 
 /**
- * The site tree under a world's tab: a link to the whole world, then every
- * project as a status glyph and a name. Guests from other worlds sit under
+ * The site tree under a category's tab: a link to the whole category, then every
+ * project as a status glyph and a name. Guests from other categories sit under
  * a hairline. The wrapper's top padding bridges the gap to the tab so the
  * pointer never leaves the item on the way down.
  */

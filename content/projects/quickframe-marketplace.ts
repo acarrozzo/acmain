@@ -6,8 +6,8 @@ export const quickframeMarketplace: Project = {
   slug: "quickframe-marketplace",
   name: "QuickFrame Marketplace",
   short: "Marketplace",
-  world: "design",
-  kind: "Case study",
+  category: "design",
+  kind: "Product",
   status: "live",
   line: "A shared workspace for brands and video creators to make custom commercials, from the first brief to final delivery.",
   blurb:

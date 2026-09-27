@@ -14,22 +14,22 @@ import {
   getProject,
   latestEntryOf,
   projects,
-  projectsInWorld,
+  projectsInCategory,
   toCapsule,
-  worldById,
-  worldPath,
+  categoryById,
+  categoryPath,
 } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 
-type Params = Promise<{ world: string; slug: string }>;
+type Params = Promise<{ category: string; slug: string }>;
 
 export function generateStaticParams() {
-  return projects.map((p) => ({ world: worldById(p.world).slug, slug: p.slug }));
+  return projects.map((p) => ({ category: categoryById(p.category).slug, slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { world, slug } = await params;
-  const p = getProject(world, slug);
+  const { category, slug } = await params;
+  const p = getProject(category, slug);
   if (!p) return {};
   return {
     title: p.name,
@@ -39,14 +39,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default async function ProjectPage({ params }: { params: Params }) {
-  const { world, slug } = await params;
-  const p = getProject(world, slug);
+  const { category, slug } = await params;
+  const p = getProject(category, slug);
   if (!p) notFound();
 
-  const w = worldById(p.world);
+  const w = categoryById(p.category);
   const entries = entriesOf(p);
   const latest = latestEntryOf(p);
-  const siblings = projectsInWorld(w).filter((s) => s.slug !== p.slug).slice(0, 3).map(toCapsule);
+  const siblings = projectsInCategory(w).filter((s) => s.slug !== p.slug).slice(0, 3).map(toCapsule);
 
   const slides: Slide[] = [
     ...(p.hero ? [{ kind: "img" as const, src: p.hero, alt: `${p.name} artwork` }] : []),
@@ -56,7 +56,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
   const years = p.started && p.ended ? `${p.started}–${p.ended}` : p.started ? `${p.started}–` : null;
 
   /**
-   * A body with figures is a case study: it tells its story inline and skips
+   * A body with figures is a story: it tells its story inline and skips
    * the screenshot strip. When it opens on a figure, that figure leads the page.
    */
   const inline = (p.body ?? []).some(isFigure);
@@ -69,7 +69,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
     <>
       <Masthead backdrop={w.backdrop} />
       <main className="container-page">
-        <Crumbs items={[{ label: "AC.", href: "/" }, { label: w.label ?? w.name, href: worldPath(w) }, { label: p.name }]} />
+        <Crumbs items={[{ label: "AC.", href: "/" }, { label: w.label ?? w.name, href: categoryPath(w) }, { label: p.name }]} />
         <div className="pagehead">
           <div className="flex flex-wrap items-center gap-3">
             <Kicker>{p.kind}</Kicker>
@@ -89,7 +89,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
 
               {blocks && blocks.length > 0 && (
                 <section className="sec">
-                  <SectionHead kicker={p.world === "games" ? "About this game" : "About"} />
+                  <SectionHead kicker={p.category === "games" ? "About this game" : "About"} />
                   <Story blocks={blocks} />
                 </section>
               )}
@@ -128,9 +128,9 @@ export default async function ProjectPage({ params }: { params: Params }) {
                   <dd className="mono">{years}</dd>
                 </>
               )}
-              <dt>World</dt>
+              <dt>Category</dt>
               <dd>
-                <a href={worldPath(w)} className="text-accent">
+                <a href={categoryPath(w)} className="text-accent">
                   {w.name}
                 </a>
               </dd>
@@ -141,7 +141,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
                 </span>
               ))}
             </dl>
-            <Tags items={p.tags ?? []} world={p.world} />
+            <Tags items={p.tags ?? []} category={p.category} />
             {(p.cta || (p.links && p.links.length > 0)) && (
               <div className="acts">
                 {p.cta && (
@@ -167,7 +167,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
 
         {siblings.length > 0 && (
           <section className="sec sec-after">
-            <SectionHead kicker={`More in ${w.name}`} more={`All of ${w.name} →`} moreHref={worldPath(w)} />
+            <SectionHead kicker={`More in ${w.name}`} more={`All of ${w.name} →`} moreHref={categoryPath(w)} />
             <CapsuleGrid items={siblings} />
           </section>
         )}
