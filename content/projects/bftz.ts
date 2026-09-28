@@ -15,7 +15,7 @@ export const bftz: Project = {
   bar: "#c2933b",
   tags: ["Band", "2010–2015"],
   body: [
-    "BFTZ formed out of a job at Steve & Barry's, played a lot of shows in the city between 2010 and 2015, and recorded a four-song demo you can still listen to. The experimental songs that didn't fit anywhere else live on as a persona at AC Music.",
+    "BFTZ formed out of a job at Steve & Barry's, played a lot of shows in the city between 2010 and 2015, and recorded a four-song demo you can still listen to. The experimental songs that didn't fit anywhere else have a project waiting for them at AC Music, still empty for now.",
   ],
   entries: [
     { date: "2015", title: "Last show" },

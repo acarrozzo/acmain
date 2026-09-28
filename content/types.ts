@@ -108,7 +108,7 @@ export type Project = {
   mark?: string;
   /** Square artwork (albums) instead of 16:9. */
   square?: boolean;
-  /** A thin accent bar under the card body, e.g. a persona color. */
+  /** A thin accent bar under the card body, e.g. a project's accent color. */
   bar?: string;
   /** Current version label, e.g. "v0.1.8". */
   version?: string;

@@ -16,6 +16,13 @@ import { towerTest } from "./tower-test";
 import { acMusic } from "./ac-music";
 import { ss4st } from "./ss4st";
 import { bftz } from "./bftz";
+import { caravaggiosRevenge } from "./caravaggios-revenge";
+import { saintAnthony } from "./saint-anthony";
+import { acousticCore } from "./acoustic-core";
+import { septimusAdams } from "./septimus-adams";
+import { firstHuman } from "./first-human";
+import { kids } from "./kids";
+import { misc } from "./misc";
 
 /**
  * Every project on the site. To add one: create a file in this folder,
@@ -37,6 +44,13 @@ export const projects: Project[] = [
   towerTest,
   // Music
   acMusic,
+  caravaggiosRevenge,
+  saintAnthony,
+  septimusAdams,
+  acousticCore,
+  kids,
+  firstHuman,
+  misc,
   ss4st,
   bftz,
 ];

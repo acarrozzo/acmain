@@ -50,7 +50,12 @@ const CATEGORY_PERIOD = 150; // seconds per revolution of the categories
 const MOON_R_REST = 78; // moon orbit radius, from the category's centre
 const MOON_R_ZOOM = 106;
 const MOON = 60; // a zoomed moon's diameter
-const SYS = 2 * (MOON_R_ZOOM + MOON / 2); // the hit circle: the zoomed system
+/**
+ * The zoomed ring, in px. Moons are a fixed size while the box scales, so a
+ * crowded system opens as wide as it needs to keep a gap between its moons.
+ */
+const zoomRadius = (n: number, unit: number) => Math.max(MOON_R_ZOOM * unit, (n * (MOON + 12)) / (2 * Math.PI));
+const sysSize = (n: number) => 2 * (zoomRadius(n, 1) + MOON / 2); // the hit circle: the zoomed system
 // Seconds per revolution of each category's moons. No two alike, so they never
 // line up. Positive is clockwise; keep it that way.
 const PERIODS = [58, 46, 64];
@@ -132,7 +137,7 @@ export function OrbitalNav({ categories }: Props) {
         const s = sims[i];
         const on = activeRef.current === i;
         const omegaT = on || still ? 0 : TAU / (PERIODS[i] ?? 60);
-        const rT = (on ? MOON_R_ZOOM : MOON_R_REST) * unit;
+        const rT = on ? zoomRadius(w.projects.length, unit) : MOON_R_REST * unit;
         if (still) {
           s.omega = 0;
           s.r = rT;
@@ -284,7 +289,7 @@ export function OrbitalNav({ categories }: Props) {
                 sysEls.current[i] = el;
               }}
               className="sys"
-              style={{ left: `${50 + RING * cos}%`, top: `${50 + RING * sin}%`, width: SYS, height: SYS }}
+              style={{ left: `${50 + RING * cos}%`, top: `${50 + RING * sin}%`, width: sysSize(w.projects.length), height: sysSize(w.projects.length) }}
               data-active={isActive}
               data-dim={dim}
               onMouseEnter={() => enter(i)}

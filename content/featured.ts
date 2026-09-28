@@ -28,7 +28,7 @@ export const featured: Featured[] = [
     image: "/img/p/ss4st.webp",
     kicker: "Music · AC Music · 29 tracks",
     title: "Thirty years of songs, finally heard",
-    dek: "Nine personas, Suno as the studio, the original demos kept for comparison. Not for the industry. For the family.",
+    dek: "Nine projects, Suno as the studio, the original demos kept for comparison. Not for the industry. For the family.",
     date: "2026-04-14",
     primary: { label: "Listen at AC Music", href: "https://anthonymusic.vercel.app/" },
     secondary: { label: "All music", href: "/music" },

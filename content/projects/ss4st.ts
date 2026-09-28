@@ -13,7 +13,7 @@ export const ss4st: Project = {
   bar: "#c026d3",
   tags: ["Instrumental", "3 albums"],
   body: [
-    "SS4ST is the solo instrumental project. Random tunes made here and there for fun, eventually compiled into three albums on Spotify, Apple Music, Amazon and the rest: The Lost Instrumentals (2010), a mix of rock and experimental electronic music recorded when I was much younger; Bizarrr (2016), darker and stranger; and Drift (2018), the one I'd play you first.",
+    "SS4ST is the solo instrumental project. Random tunes made here and there for fun, eventually compiled into three albums on Spotify, Apple Music, Amazon and the rest: The Lost Instrumentals (2010), a mix of rock and experimental electronic music recorded when I was much younger; Bizarrr (2016), darker and stranger; and Drift (2018), the one I'd play you first. There is also an ss4st project at AC Music, reserved for the stranger, rhyme-driven songs, with nothing in it yet.",
   ],
   entries: [
     { date: "2018", title: "Drift", note: "Seven songs. Current favorite." },
