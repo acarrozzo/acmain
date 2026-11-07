@@ -1,0 +1,8 @@
+/* TEMPORARY: puts the old site's body face and default accents back under /v1,
+   ignoring the accent chosen in the new site's solar system. */
+.v1 {
+  --font-sans: var(--font-instrument), "Helvetica Neue", Arial, ui-sans-serif, sans-serif;
+  font-family: var(--font-sans);
+  --accent: #24558f; --accent-hi: #3b78c2; --accent-soft: rgba(36, 85, 143, 0.10);
+}
+.dark .v1 { --accent: #63c99a; --accent-hi: #9cebc2; --accent-soft: rgba(99, 201, 154, 0.14); }

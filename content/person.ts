@@ -9,15 +9,7 @@ export const person = {
   portrait: "/img/p/anthony.webp",
   linkedin: "https://www.linkedin.com/in/acarrozzo/",
 
-  /** Home page hero. */
-  hero: {
-    line: "I design and build software, games and music.",
-    sub: "This is where anyone can learn what I'm about: what I'm making right now, what I've made before, and where it's all going.",
-  },
 
-  /** "About Anthony" box on the home page. */
-  editorBlurb:
-    "Hey, I’m Anthony. Senior Product Designer at MNTN by day. The rest of the time, all of this. Twenty-two years in, still shipping.",
 
   /** Now playing. Hand-picked until AC Music has a feed. */
   nowPlaying: {
@@ -28,9 +20,6 @@ export const person = {
     art: "/img/p/ac-music.webp",
   },
 
-  /** Home page about teaser. */
-  teaser:
-    "Twenty-two years of designing things, and a habit of making games since before that. Currently a Senior Product Designer at MNTN, working on QuickFrame AI. The full story, including the early jobs, is on the about page.",
 
   /** About page. */
   about: [

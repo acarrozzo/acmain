@@ -1,20 +1,16 @@
 import type { Metadata } from "next";
-import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
+import { Fraunces, JetBrains_Mono } from "next/font/google";
 import { ThemeScript } from "@/components/ThemeScript";
+import { accentCss } from "@/lib/accents";
 import { site } from "@/content/site";
 import "./globals.css";
+import "./home.css";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   display: "swap",
   axes: ["opsz"],
-});
-
-const instrument = Instrument_Sans({
-  subsets: ["latin"],
-  variable: "--font-instrument",
-  display: "swap",
 });
 
 const jetbrains = JetBrains_Mono({
@@ -49,11 +45,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${instrument.variable} ${jetbrains.variable}`}
+      className={`${fraunces.variable} ${jetbrains.variable}`}
       suppressHydrationWarning
     >
       <head>
         <ThemeScript />
+        <style dangerouslySetInnerHTML={{ __html: accentCss() }} />
       </head>
       <body className="antialiased">{children}</body>
     </html>

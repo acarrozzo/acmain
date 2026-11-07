@@ -1,24 +1,16 @@
-import { navItems, paletteItems } from "@/lib/nav";
 import { person } from "@/content/person";
-import type { Backdrop as BackdropImages } from "@/content/types";
-import { Backdrop } from "./Backdrop";
-import { MastheadClient } from "./MastheadClient";
+import { headerLinks, paletteItems } from "@/lib/nav";
+import { Header } from "./home/Header";
+import { Forest } from "./home/Blocks";
 
-/**
- * The broadsheet masthead, with the page's backdrop behind it. Server
- * wrapper: builds the nav and palette data. Pass a category's `backdrop`
- * to give its pages their own photo.
- */
-export function Masthead({ backdrop }: { backdrop?: BackdropImages } = {}) {
+/** The site's header on every page but the home, which composes its own. The forest sits behind it. */
+export function Masthead() {
   return (
     <>
-      <Backdrop images={backdrop} />
-      <MastheadClient
-        nav={navItems}
-        palette={paletteItems}
-        name={person.name}
-        role={person.title}
-      />
+      <Forest />
+      <div className="home h-top">
+        <Header name={person.name} links={headerLinks} palette={paletteItems} />
+      </div>
     </>
   );
 }

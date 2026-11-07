@@ -1,0 +1,167 @@
+/**
+ * The four nouns. Everything on the site is one of these.
+ *
+ *   Person   — one. Anthony. See `content/person.ts`.
+ *   Category — a few. A practice you'll still have in twenty years. See `content/categories.ts`.
+ *   Project  — many. A thing with a name and a status. One file each in `content/projects/`.
+ *   Entry    — endless. A dated thing that happened to a project. Lives on its project.
+ *
+ * The home page, category pages, project pages and the log are all rendered
+ * from these records. Adding a project never touches a layout.
+ */
+
+export type CategoryId = "design" | "games" | "music";
+
+/** Where a project is in its life. Retirement is a status, not a deletion. */
+export type Status =
+  | "idea"
+  | "paper"
+  | "prototype"
+  | "playable"
+  | "live"
+  | "resting"
+  | "archived";
+
+export type Link = { label: string; href: string };
+
+/** A ghosted photo behind the top of a page, one per theme. */
+export type Backdrop = { dark: string; light: string };
+
+/**
+ * `date` is "YYYY-MM-DD", "YYYY-MM" or "YYYY" — use the precision you
+ * actually know. Sorting is string order, which works for all three.
+ */
+export type Entry = {
+  date: string;
+  title: string;
+  note?: string;
+  href?: string;
+  /** Shown as a small chip on the changelog, e.g. "v0.1.8". */
+  version?: string;
+};
+
+export type Fact = { label: string; value: string };
+
+/**
+ * A full-width image inside a project's story, with an optional caption.
+ * A `plate` is a brand plate or artwork rather than a screenshot: it keeps
+ * the frame but drops the window bar.
+ */
+export type Figure = {
+  image: string;
+  alt: string;
+  caption?: string;
+  plate?: boolean;
+  /** Half the column, for artwork that needs no room. */
+  half?: boolean;
+  /** Text beside the image, on the same stage; the image takes the left half. */
+  note?: string;
+  /** Buttons under the note. */
+  links?: Link[];
+};
+
+/** A self-hosted or hotlinked clip inside a story, with the same stage as a figure. */
+export type Video = { video: string; caption?: string; poster?: string; /** 1:1 clip (a social cut) rather than 16:9. */ square?: boolean };
+
+/** A quietly highlighted paragraph that stands apart from the story, e.g. a later update. */
+export type Aside = { aside: string; /** Small label above it, e.g. "Update, 2026". */ label?: string };
+
+/** One piece of a project's story: a paragraph, a figure, a video or an aside between paragraphs. */
+export type Block = string | Figure | Video | Aside;
+
+export const isFigure = (b: Block): b is Figure => typeof b !== "string" && "image" in b;
+export const isVideo = (b: Block): b is Video => typeof b !== "string" && "video" in b;
+export const isAside = (b: Block): b is Aside => typeof b !== "string" && "aside" in b;
+
+export type Project = {
+  slug: string;
+  name: string;
+  category: CategoryId;
+  /** Short noun shown above the name: "Game", "Product", "Albums"… */
+  kind: string;
+  status: Status;
+  /** Two or three short words for the moon on the home page orbit. Defaults to `name`. */
+  short?: string;
+  /** One line. Shows on cards and as the page subtitle. */
+  line: string;
+  /**
+   * The project page's story: paragraphs, with figures between them when the
+   * project has a story to tell. A page whose body carries figures
+   * tells the story inline and skips the screenshot strip at the top.
+   */
+  body?: Block[];
+  /** Hero image path under /public: the card image, and the strip's first slide. Optional; a typographic tile stands in. */
+  hero?: string;
+  /** Extra images for the project page's screenshot strip. */
+  gallery?: string[];
+  /** Named screenshots that do not exist yet; shown as typographic tiles. */
+  galleryPending?: string[];
+  links?: Link[];
+  /** The main action when it exists (Play, Listen, Buy). No href = not yet. */
+  cta?: { label: string; href?: string };
+  started?: number;
+  ended?: number;
+  entries?: Entry[];
+  /** Two to four short words shown as chips on the capsule. */
+  tags?: string[];
+  /** Letters for the typographic tile when there is no hero. Default: initials. */
+  mark?: string;
+  /** Square artwork (albums) instead of 16:9. */
+  square?: boolean;
+  /** A thin accent bar under the card body, e.g. a project's accent color. */
+  bar?: string;
+  /** Current version label, e.g. "v0.1.8". */
+  version?: string;
+  /** Short paragraph for the project page's side rail. Defaults to `line`. */
+  blurb?: string;
+  /** Extra rows for the side rail: Stack, Players, Where to buy… */
+  facts?: Fact[];
+};
+
+export type CategorySection = {
+  title: string;
+  items: { name: string; text: string }[];
+};
+
+export type Category = {
+  id: CategoryId;
+  /** URL segment: /work, /games, /music */
+  slug: string;
+  name: string;
+  /** Nav label, when it differs from the name. */
+  label?: string;
+  tagline: string;
+  /** Headline on the category page. */
+  headline: string;
+  intro: string[];
+  /**
+   * How the category page lists its projects: "featured" is a flat grid in
+   * `featured` order (a portfolio); "status" groups them by where they are
+   * in their life (a workshop), with filters and a featured banner.
+   */
+  listing: "featured" | "status";
+  /** Ordered project slugs to show first. Anything not listed follows. */
+  featured?: string[];
+  /** Projects from other categories that also belong on this page. */
+  also?: string[];
+  /** Image for the category's tile on the home page. */
+  hero?: string;
+  /** This category's own backdrop, on its door and its project pages. Defaults to the site's. */
+  backdrop?: Backdrop;
+  sections?: CategorySection[];
+  elsewhere?: Link[];
+};
+
+/** A hand-picked story for the home page carousel. */
+export type Featured = {
+  /** The project it belongs to; supplies the image and status. */
+  project: string;
+  /** Override the image. */
+  image?: string;
+  kicker: string;
+  title: string;
+  dek: string;
+  date: string;
+  primary: Link;
+  secondary?: Link;
+};

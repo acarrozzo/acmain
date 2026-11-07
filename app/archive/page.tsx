@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
-import { Btn, Crumbs, Kicker, SectionHead } from "@/components/ui";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -19,34 +18,22 @@ const inside = [
   { name: "For funsies", text: "The wallpapers. Minimal, astronomy-flavored, free to take." },
 ];
 
+/** The original site, linked and described, never edited. */
 export default function ArchivePage() {
   return (
     <>
       <Masthead />
-      <main className="container-page">
-        <Crumbs items={[{ label: "Home", href: "/" }, { label: "Archive" }]} />
-        <div className="pagehead">
-          <Kicker>Archive · 2000 to 2025</Kicker>
-          <h1>The original site, kept exactly as it was.</h1>
-          <p className="dek">
-            acarrozzo.com began in the 90s as a place for me and my friends to share hilarious Photoshop stuff. It grew into a portfolio and stayed one for twenty years. It is archived here, unedited, as a stable comparison to life before the machines came along and made us all superheroes.
-          </p>
-          <p className="dek">Nothing gets deleted around here. It gets archived.</p>
-          <div>
-            <Btn href={site.archiveUrl} primary>
-              {site.archiveLabel}
-            </Btn>
-          </div>
-        </div>
-        <section className="sec">
-          <SectionHead kicker="What’s in there" />
-          <div className="what">
-            {inside.map((it) => (
-              <div key={it.name}>
-                <b>{it.name}</b>
-                <p>{it.text}</p>
-              </div>
-            ))}
+      <main className="home h-top">
+        <nav className="h-crumbs" aria-label="Breadcrumb"><a href="/">Home</a><i>/</i><span>Archive</span></nav>
+        <div className="h-pk"><span>2000 to 2025</span></div>
+        <h1 className="h-page-h1">The original site, kept exactly as it was.</h1>
+        <p className="h-intro">acarrozzo.com began in the 90s as a place for me and my friends to share hilarious Photoshop stuff. It grew into a portfolio and stayed one for twenty years. It is archived here, unedited, as a stable comparison to life before the machines came along and made us all superheroes.</p>
+        <p className="h-intro">Nothing gets deleted around here. It gets archived.</p>
+        <div className="h-btns"><a className="h-pri" href={site.archiveUrl}>{site.archiveLabel}</a></div>
+        <section className="h-sec">
+          <div className="h-sh"><h2>What&apos;s in there</h2></div>
+          <div className="h-what">
+            {inside.map((it) => <div key={it.name}><b>{it.name}</b><p>{it.text}</p></div>)}
           </div>
         </section>
       </main>

@@ -66,14 +66,7 @@ export function CommandPalette({ items }: { items: PaletteItem[] }) {
 
   return (
     <>
-      <button type="button" className="search" onClick={() => setOpen(true)} aria-label="Search the site">
-        <svg viewBox="0 0 24 24" aria-hidden="true" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="11" cy="11" r="7" />
-          <path d="M20 20l-3.5-3.5" />
-        </svg>
-        <span className="lbl">Search</span>
-        <kbd>⌘K</kbd>
-      </button>
+      <button type="button" onClick={() => setOpen(true)} aria-label="Search the site" title="Jump to a page or project">⌘K</button>
       {open && (
         <div className="pal-back" onMouseDown={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
           <div className="pal" role="dialog" aria-modal="true" aria-label="Jump to a page or project">

@@ -151,17 +151,3 @@ export type Category = {
   sections?: CategorySection[];
   elsewhere?: Link[];
 };
-
-/** A hand-picked story for the home page carousel. */
-export type Featured = {
-  /** The project it belongs to; supplies the image and status. */
-  project: string;
-  /** Override the image. */
-  image?: string;
-  kicker: string;
-  title: string;
-  dek: string;
-  date: string;
-  primary: Link;
-  secondary?: Link;
-};

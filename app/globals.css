@@ -83,7 +83,7 @@
   --color-accent-soft: var(--accent-soft);
 
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-instrument), "Helvetica Neue", Arial, ui-sans-serif, sans-serif;
+  --font-sans: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
 }
 

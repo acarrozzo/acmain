@@ -40,8 +40,13 @@ export const navItems: NavItem[] = [
     children: projectsInCategory(w).map((p) => ({ label: p.name, href: projectPath(p), status: p.status })),
   })),
   { label: "About", href: "/about" },
-  /** Temporary: the design-system workbench. Remove when it has done its job. */
   { label: "System", href: "/system" },
+];
+
+/** The header: the practices and About. System is linked from the footer. */
+export const headerLinks = [
+  ...categories.map((w) => ({ label: w.name, href: categoryPath(w) })),
+  { label: "About", href: "/about" },
 ];
 
 /** Everything the command palette can jump to. */

@@ -12,12 +12,6 @@ export const site = {
    * `backdrop` in `content/categories.ts`.
    */
   backdrop: { dark: "/img/bg/forest-dark.webp", light: "/img/bg/sky-light.webp" },
-  /**
-   * The photo that rises up behind the bottom of every page and the
-   * footer: the night sky in dark, the grass in light. Site-wide only;
-   * categories don't override this one.
-   */
-  backdropBottom: { dark: "/img/bg/space-dark.webp", light: "/img/bg/beach.webp" },
   description:
     "Anthony Carrozzo is a product designer from Long Island who has been designing for over twenty years and making games for longer. This is where anyone can learn what he's about: software, games, music, and what's being built right now.",
   email: "acarrozzo@gmail.com",

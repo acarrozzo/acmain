@@ -2,22 +2,21 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
-import { Mark } from "@/components/Mark";
 import { EntryList } from "@/components/Entries";
-import { CapsuleGrid } from "@/components/Capsule";
-import { HeroCarousel, type Slide } from "@/components/HeroCarousel";
+import { Preview } from "@/components/home/Preview";
+import { CompactRows } from "@/components/home/Sections";
 import { Fig, Gallery, Story, Vid } from "@/components/Story";
 import { isFigure, isVideo, type Video } from "@/content/types";
-import { Btn, Crumbs, Kicker, SectionHead, StatusChip, Tags } from "@/components/ui";
 import {
   entriesOf,
   getProject,
   latestEntryOf,
   projects,
   projectsInCategory,
-  toCapsule,
+  projectPath,
   categoryById,
   categoryPath,
+  STATUS_LABEL,
 } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 
@@ -46,12 +45,12 @@ export default async function ProjectPage({ params }: { params: Params }) {
   const w = categoryById(p.category);
   const entries = entriesOf(p);
   const latest = latestEntryOf(p);
-  const siblings = projectsInCategory(w).filter((s) => s.slug !== p.slug).slice(0, 3).map(toCapsule);
+  const siblingProjects = projectsInCategory(w).filter((s) => s.slug !== p.slug).slice(0, 4);
 
-  const slides: Slide[] = [
-    ...(p.hero ? [{ kind: "img" as const, src: p.hero, alt: `${p.name} artwork` }] : []),
-    ...(p.gallery ?? []).map((src, i) => ({ kind: "img" as const, src, alt: `${p.name} screenshot ${i + 2}` })),
-    ...(p.galleryPending ?? []).map((label) => ({ kind: "tile" as const, label })),
+  /** The screenshot strip: the hero first, then the gallery. */
+  const slides: { src: string; caption?: string }[] = [
+    ...(p.hero ? [{ src: p.hero, caption: "Artwork" }] : []),
+    ...(p.gallery ?? []).map((src, i) => ({ src, caption: `Screen ${i + 2}` })),
   ];
   const years = p.started && p.ended ? `${p.started}–${p.ended}` : p.started ? `${p.started}–` : null;
 
@@ -69,126 +68,89 @@ export default async function ProjectPage({ params }: { params: Params }) {
   const blocks = lead ? body.slice(1) : body.slice(leadVids.length);
   const figures = body.filter(isFigure);
 
+  const facts: { k: string; v: React.ReactNode }[] = [
+    { k: "Status", v: STATUS_LABEL[p.status] },
+    ...(p.version ? [{ k: "Version", v: p.version }] : []),
+    ...(latest ? [{ k: "Last tended", v: formatDate(latest.date) }] : []),
+    ...(years ? [{ k: "Years", v: years }] : []),
+    { k: "Category", v: <a href={categoryPath(w)}>{w.name}</a> },
+    ...(p.facts ?? []).map((f) => ({ k: f.label, v: f.value })),
+  ];
+
   return (
     <>
-      <Masthead backdrop={w.backdrop} />
-      <main className="container-page">
-        <Crumbs items={[{ label: "Home", href: "/" }, { label: w.label ?? w.name, href: categoryPath(w) }, { label: p.name }]} />
-        <div className="pagehead">
-          <div className="flex flex-wrap items-center gap-3">
-            <Kicker>{p.kind}</Kicker>
-            <StatusChip status={p.status} />
-            <span className="mono text-muted">
-              {[p.version, latest ? `last tended ${formatDate(latest.date)}` : null, years].filter(Boolean).join(" · ")}
-            </span>
-          </div>
-          <h1>{p.name}</h1>
-          <p className="dek">{p.line}</p>
-        </div>
-
-        <div className="proj">
-          <Gallery figures={figures}>
-            <div className="flex flex-col">
-              {lead ? (
-                <Fig f={lead} lead />
-              ) : leadVids.length > 0 ? (
-                <div className={leadVids.length > 1 ? "vid-row" : undefined}>
-                  {leadVids.map((v) => (
-                    <Vid key={v.video} v={v} />
-                  ))}
-                </div>
-              ) : slides.length > 0 && !inline ? (
-                <HeroCarousel slides={slides} />
-              ) : inline ? null : (
-                <div className="type-tile hero" />
-              )}
-
-              {blocks && blocks.length > 0 && (
-                <section className="sec">
-                  <SectionHead kicker={p.category === "games" ? "About this game" : "About"} />
-                  <Story blocks={blocks} />
-                </section>
-              )}
-
-              {entries.length > 0 && (
-                <section className="sec">
-                  <SectionHead kicker="Changelog" title="What changed, and when." dek="newest first" />
-                  <EntryList entries={entries} />
-                </section>
-              )}
-            </div>
-          </Gallery>
-
-          <aside className="rail">
-            <p>{p.blurb ?? p.line}</p>
-            <dl>
-              <dt>Status</dt>
-              <dd>
-                <StatusChip status={p.status} />
-              </dd>
-              {p.version && (
-                <>
-                  <dt>Version</dt>
-                  <dd className="mono">{p.version}</dd>
-                </>
-              )}
-              {latest && (
-                <>
-                  <dt>Last tended</dt>
-                  <dd className="mono">{formatDate(latest.date)}</dd>
-                </>
-              )}
-              {years && (
-                <>
-                  <dt>Years</dt>
-                  <dd className="mono">{years}</dd>
-                </>
-              )}
-              <dt>Category</dt>
-              <dd>
-                <a href={categoryPath(w)} className="text-accent">
-                  {w.name}
-                </a>
-              </dd>
-              {p.facts?.map((f) => (
-                <span key={f.label} className="contents">
-                  <dt>{f.label}</dt>
-                  <dd>{f.value}</dd>
-                </span>
-              ))}
-            </dl>
-            <Tags items={p.tags ?? []} category={p.category} />
-            {(p.cta || (p.links && p.links.length > 0)) && (
-              <div className="acts">
-                {p.cta && (
-                  <Btn href={p.cta.href} primary disabled={!p.cta.href}>
-                    {p.cta.label}
-                  </Btn>
-                )}
-                {p.links?.map((l) => (
-                  <Btn key={l.href} href={l.href}>
-                    {l.label}
-                  </Btn>
-                ))}
-              </div>
-            )}
-          </aside>
-        </div>
-
-        {inline && (
-          <div className="fin" aria-hidden="true">
-            <Mark className="fin-mark" />
+      <Masthead />
+      <main className="home h-top">
+        <nav className="h-crumbs" aria-label="Breadcrumb"><a href="/">Home</a><i>/</i><a href={categoryPath(w)}>{w.label ?? w.name}</a><i>/</i><span>{p.name}</span></nav>
+        <div className="h-pk"><span>{p.kind}</span>{years && <><i>·</i><span>{years}</span></>}{p.version && <><i>·</i><span>{p.version}</span></>}</div>
+        <h1 className="h-page-h1">{p.name}</h1>
+        <p className="h-intro">{p.blurb ?? p.line}</p>
+        {(p.cta || (p.links && p.links.length > 0)) && (
+          <div className="h-btns">
+            {p.cta && (p.cta.href ? <a className="h-pri" href={p.cta.href}>{p.cta.label}</a> : <span>{p.cta.label}</span>)}
+            {p.links?.filter((l) => l.href !== p.cta?.href).map((l) => <a key={l.href} href={l.href}>{l.label}</a>)}
           </div>
         )}
 
-        {siblings.length > 0 && (
-          <section className="sec sec-after">
-            <SectionHead kicker={`More in ${w.name}`} more={`All of ${w.name} →`} moreHref={categoryPath(w)} />
-            <CapsuleGrid items={siblings} />
+        <Gallery figures={figures}>
+          <div className="h-plate">
+            {lead ? (
+              <Fig f={lead} lead />
+            ) : leadVids.length > 0 ? (
+              <div className={leadVids.length > 1 ? "vid-row" : undefined}>
+                {leadVids.map((v) => <Vid key={v.video} v={v} />)}
+              </div>
+            ) : p.hero ? (
+              <button type="button" className={`h-th${p.square ? " h-sq" : ""}`} aria-label={`Preview ${p.name}`} data-preview={p.hero} data-name={p.name} data-sub={`${w.name} · ${p.line}`} data-href={projectPath(p)}>
+                <img src={p.hero} alt="" />
+              </button>
+            ) : null}
+          </div>
+
+          {blocks && blocks.length > 0 && (
+            <section className="h-sec">
+              <div className="h-sh"><h2>{p.category === "games" ? "About this game" : "About"}</h2></div>
+              <div className="h-body"><Story blocks={blocks} /></div>
+            </section>
+          )}
+        </Gallery>
+
+        <dl className="h-facts">
+          {facts.map((f) => <span key={f.k} className="contents"><dt>{f.k}</dt><dd>{f.v}</dd></span>)}
+        </dl>
+
+        {slides.length > 1 && !inline && (
+          <section className="h-sec">
+            <div className="h-sh"><h2>Screens</h2><span className="h-cnt"><span>{slides.length}</span></span></div>
+            <div className="h-rows">
+              {slides.map((sl) => (
+                <div key={sl.src} className="h-row">
+                  <button type="button" className="h-th" aria-label={`Preview ${sl.caption ?? p.name}`} data-preview={sl.src} data-name={p.name} data-sub={`${w.name} · ${sl.caption ?? ""}`} data-href={projectPath(p)}>
+                    <img src={sl.src} alt="" loading="lazy" />
+                  </button>
+                  <span className="h-tx"><span>{sl.caption ?? ""}</span></span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {entries.length > 0 && (
+          <section className="h-sec">
+            <div className="h-sh"><h2>Changelog</h2><span className="h-cnt"><span>newest first</span></span></div>
+            <EntryList entries={entries} />
+          </section>
+        )}
+
+        {siblingProjects.length > 0 && (
+          <section className="h-sec">
+            <div className="h-sh"><h2>More in {w.name}</h2><span className="h-cnt"><a href={categoryPath(w)}>All of {w.name} →</a></span></div>
+            <CompactRows list={siblingProjects} cat={w} />
           </section>
         )}
       </main>
       <Footer />
+      <Preview />
     </>
   );
 }

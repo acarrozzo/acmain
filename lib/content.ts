@@ -1,10 +1,9 @@
 import { projects } from "@/content/projects";
 import { categories } from "@/content/categories";
-import { featured } from "@/content/featured";
-import type { Entry, Featured, Project, Status, Category, CategoryId } from "@/content/types";
+import type { Entry, Project, Status, Category, CategoryId } from "@/content/types";
 
-export type { Entry, Featured, Project, Status, Category, CategoryId };
-export { projects, categories, featured };
+export type { Entry, Project, Status, Category, CategoryId };
+export { projects, categories };
 
 export type EntryWithProject = Entry & { project: Project; category: Category };
 
@@ -140,75 +139,4 @@ export function initials(p: Project): string {
   if (p.mark) return p.mark;
   const words = p.name.replace(/[^A-Za-z0-9 ]/g, "").split(/\s+/).filter(Boolean);
   return words.slice(0, 2).map((w) => w[0]!.toUpperCase()).join("");
-}
-
-/**
- * Everything a capsule needs, serializable, so the same card renders on
- * the server and inside client components (tabs, filters).
- */
-export type CapsuleData = {
-  slug: string;
-  name: string;
-  category: CategoryId;
-  categoryName: string;
-  kind: string;
-  status: Status;
-  line: string;
-  href: string;
-  hero?: string;
-  pos?: string;
-  square?: boolean;
-  bar?: string;
-  tags: string[];
-  mark: string;
-  date?: string;
-  latest?: string;
-};
-
-export function toCapsule(p: Project): CapsuleData {
-  const latest = latestEntryOf(p);
-  return {
-    slug: p.slug,
-    name: p.name,
-    category: p.category,
-    categoryName: categoryById(p.category).name,
-    kind: p.kind,
-    status: p.status,
-    line: p.line,
-    href: projectPath(p),
-    hero: p.hero,
-    pos: p.slug === "coin-and-castle" ? "center top" : undefined,
-    square: p.square,
-    bar: p.bar,
-    tags: p.tags ?? [],
-    mark: initials(p),
-    date: latest?.date,
-    latest: latest?.title,
-  };
-}
-
-/** The tabs of the "In the workshop" module. */
-export function workshopTabs(): { id: string; label: string; items: CapsuleData[] }[] {
-  const notArchived = (p: Project) => p.status !== "archived";
-  return [
-    { id: "now", label: "Fresh commits", items: latestActivity().filter(notArchived).slice(0, 6).map(toCapsule) },
-    { id: "building", label: "Building", items: building().map(toCapsule) },
-    { id: "live", label: "Live", items: projects.filter((p) => p.status === "live").sort(byActivity).map(toCapsule) },
-    { id: "resting", label: "Resting", items: projects.filter((p) => p.status === "resting" || p.status === "archived").sort(byActivity).map(toCapsule) },
-  ].filter((t) => t.items.length > 0);
-}
-
-export type FeaturedItem = Featured & { image: string; status: Status; thumbKicker: string };
-
-/** The home carousel, with images and status resolved from the project. */
-export function featuredItems(): FeaturedItem[] {
-  return featured
-    .map((f) => {
-      const p = projectBySlug(f.project);
-      if (!p) return null;
-      const image = f.image ?? p.hero;
-      if (!image) return null;
-      return { ...f, image, status: p.status, thumbKicker: `${categoryById(p.category).name} · ${p.name}` };
-    })
-    .filter((f): f is FeaturedItem => Boolean(f));
 }

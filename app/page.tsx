@@ -1,40 +1,28 @@
-import { Masthead } from "@/components/Masthead";
-import { Footer } from "@/components/Footer";
-import {
-  Editor,
-  FeaturedSection,
-  HeroOrbit,
-  NowPlaying,
-  WorkshopSection,
-  CategoryGrid,
-} from "@/components/Home";
-import { categoryById } from "@/lib/content";
+import { Header } from "@/components/home/Header";
+import { SolarSystem } from "@/components/home/SolarSystem";
+import { Sections } from "@/components/home/Sections";
+import { Preview } from "@/components/home/Preview";
+import { About, Forest, Hero, HomeFooter } from "@/components/home/Blocks";
+import { person } from "@/content/person";
+import { categories, categoryPath, projectsInCategory } from "@/lib/content";
+import { headerLinks, paletteItems } from "@/lib/nav";
 
 export default function Home() {
+  const planets = categories.map((c) => ({ name: c.name, count: projectsInCategory(c).length, href: categoryPath(c) }));
   return (
     <>
-      <Masthead />
-      <main className="container-page">
-        <HeroOrbit />
-        <FeaturedSection />
-
-        <section className="band cols">
-          <div>
-            <WorkshopSection />
-          </div>
-          <aside className="flex flex-col">
-            <NowPlaying />
-            <div className="mt-[36px]">
-              <Editor />
-            </div>
-          </aside>
+      <Forest />
+      <main className="home">
+        <Header name={person.name} links={headerLinks} palette={paletteItems} />
+        <section className="h-hero">
+          <Hero />
+          <SolarSystem planets={planets} />
         </section>
-
-        <CategoryGrid category={categoryById("games")} count={6} title="Playable, on paper, on the table." more="All games →" />
-        <CategoryGrid category={categoryById("design")} count={3} title="Selected work." more="The professional door →" />
-        <CategoryGrid category={categoryById("music")} count={6} title="Nine projects, three albums, one band." more="Listen →" />
+        <Sections />
+        <About />
+        <HomeFooter />
       </main>
-      <Footer />
+      <Preview />
     </>
   );
 }
